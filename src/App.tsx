@@ -13,7 +13,8 @@ function App() {
   ]);
   const [filter, setFilter] = useState<FilterType>('all');
   const [searchTerm, setSearchTerm] = useState('');
-  const [view, setView] = useState<'list' | 'add'>('list');
+  const [view, setView] = useState<'list' | 'add' | 'edit'>('list');
+  const [editingTodoId, setEditingTodoId] = useState<string | null>(null);
 
   const handleAdd = (title: string, priority: PriorityType) => {
     const d = new Date();
@@ -41,12 +42,20 @@ function App() {
     setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
   };
 
-  const handleEdit = (id: string, newTitle: string, newPriority: PriorityType) => {
+  const handleStartEdit = (id: string) => {
+    setEditingTodoId(id);
+    setView('edit');
+  };
+
+  const handleSaveEdit = (newTitle: string, newPriority: PriorityType) => {
+    if (!editingTodoId) return;
     setTodos((prevTodos) =>
       prevTodos.map((todo) =>
-        todo.id === id ? { ...todo, title: newTitle, priority: newPriority } : todo,
+        todo.id === editingTodoId ? { ...todo, title: newTitle, priority: newPriority } : todo,
       )
     );
+    setView('list');
+    setEditingTodoId(null);
   };
 
   // Logika filtrowania
@@ -68,7 +77,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>{view === 'list' ? 'Lista Zadań' : 'Dodaj Nowe Zadanie'}</h1>
+        <h1>{view === 'add' ? 'Dodaj Nowe Zadanie' : view === 'edit' ? 'Edytuj Zadanie' : 'Lista Zadań'}</h1>
         {view === 'list' && <p>Aktywne zadania: {activeCount}</p>}
       </header>
       <main>
@@ -104,11 +113,17 @@ function App() {
               searchTerm={searchTerm}
               onSearchTermChange={setSearchTerm}
             />
-            <TodoList todos={filteredTodos} onToggle={handleToggle} onDelete={handleDelete} onEdit={handleEdit} />
+            <TodoList todos={filteredTodos} onToggle={handleToggle} onDelete={handleDelete} onStartEdit={handleStartEdit} />
           </>
-        ) : (
-          <AddTodoForm onAdd={handleAdd} onCancel={() => setView('list')} />
-        )}
+        ) : view === 'add' ? (
+          <AddTodoForm onSave={handleAdd} onCancel={() => setView('list')} />
+        ) : ( // view === 'edit'
+          <AddTodoForm
+            onSave={handleSaveEdit}
+            onCancel={() => { setView('list'); setEditingTodoId(null); }}
+            initialData={todos.find(t => t.id === editingTodoId)}
+          />
+        ) }
       </main>
     </div>
   );

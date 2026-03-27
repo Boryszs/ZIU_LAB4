@@ -6,10 +6,10 @@ interface TodoListProps {
   todos: Todo[];
   onToggle: (id: string) => void;
   onDelete: (id: string) => void;
-  onEdit: (id: string, newTitle: string, newPriority: PriorityType) => void;
+  onStartEdit: (id: string) => void;
 }
 
-export function TodoList({ todos, onToggle, onDelete, onEdit }: TodoListProps) {
+export function TodoList({ todos, onToggle, onDelete, onStartEdit }: TodoListProps) {
   if (todos.length === 0) {
     return <p>Brak zadań do wyświetlenia.</p>;
   }
@@ -22,7 +22,7 @@ export function TodoList({ todos, onToggle, onDelete, onEdit }: TodoListProps) {
           todo={todo}
           onToggle={onToggle}
           onDelete={onDelete}
-          onEdit={onEdit}
+          onStartEdit={onStartEdit}
         />
       ))}
     </ul>

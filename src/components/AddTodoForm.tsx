@@ -1,23 +1,24 @@
-import React, { useState } from "react";
-import { PriorityType } from "../types/todo.types";
+import React, { useState, useEffect } from "react";
+import { PriorityType, Todo } from "../types/todo.types";
 
 interface AddTodoFormProps {
-  onAdd: (title: string, priority: PriorityType) => void;
+  onSave: (title: string, priority: PriorityType) => void;
   onCancel: () => void;
+  initialData?: Pick<Todo, 'title' | 'priority'>;
 }
-export function AddTodoForm({ onAdd, onCancel }: AddTodoFormProps) {
-  // TODO (1): zadeklaruj stan inputValue za pomocą useState<string>
-  const [inputValue, setInputValue] = useState<string>('');
-  const [priority, setPriority] = useState<PriorityType>('medium'); // Domyślny priorytet
+export function AddTodoForm({ onSave, onCancel, initialData }: AddTodoFormProps) {
+  const [inputValue, setInputValue] = useState<string>(initialData?.title || '');
+  const [priority, setPriority] = useState<PriorityType>(initialData?.priority || 'medium');
+
+  useEffect(() => {
+    setInputValue(initialData?.title || '');
+    setPriority(initialData?.priority || 'medium');
+  }, [initialData]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO (2): sprawdź, czy inputValue.trim() nie jest pusty
-    //           jeśli tak: wywołaj onAdd(inputValue.trim())
-    //           i zresetuj inputValue do pustego stringa
     if (inputValue.trim()) {
-      onAdd(inputValue.trim(), priority);
-      // Stan nie musi być resetowany, komponent zostanie odmontowany
+      onSave(inputValue.trim(), priority);
     }
   };
   return (
@@ -35,7 +36,7 @@ export function AddTodoForm({ onAdd, onCancel }: AddTodoFormProps) {
           <option value="high">Wysoki</option>
         </select>
         <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
-          <button type="submit">Dodaj</button>
+          <button type="submit">{initialData ? 'Zapisz zmiany' : 'Dodaj'}</button>
           <button type="button" onClick={onCancel}>
             Anuluj
           </button>
