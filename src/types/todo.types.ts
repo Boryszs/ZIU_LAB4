@@ -3,6 +3,7 @@ export interface Todo {
   title: string;
   completed: boolean;
   priority: 'low' | 'medium' | 'high';
+  date: string;
 }
 
 export type Filter = 'all' | 'active' | 'completed';

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Filter as FilterType } from '../types/todo.types';
 
 interface FilterBarProps {
@@ -16,27 +16,40 @@ export function FilterBar({ activeFilter, onFilterChange, searchTerm, onSearchTe
     completed: 'Ukończone',
   };
 
+  const [showFilters, setShowFilters] = useState(true); // Stan do kontrolowania widoczności filtrów
+
   return (
-    <div style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
-      <input
-        type="text"
-        placeholder="Wyszukaj zadania..."
-        value={searchTerm}
-        onChange={(e) => onSearchTermChange(e.target.value)}
-        style={{ padding: '8px', border: '1px solid #ccc', borderRadius: '4px', flexGrow: 1 }}
-      />
-      {filters.map((filter) => (
-        <button
-          key={filter}
-          onClick={() => onFilterChange(filter)}
-          style={{
-            backgroundColor: activeFilter === filter ? '#007bff' : '#f8f9fa',
-            color: activeFilter === filter ? 'white' : 'black',
-          }}
-        >
-          {filterNames[filter]}
+    <div style={{ marginTop: '20px', marginBottom: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+      <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+        <input
+          type="text"
+          placeholder="Wyszukaj zadania..."
+          value={searchTerm}
+          onChange={(e) => onSearchTermChange(e.target.value)}
+          style={{ padding: '8px', border: '1px solid #ccc', borderRadius: '4px', width: '250px' }}
+        />
+        <button onClick={() => setShowFilters(!showFilters)} style={{ padding: '8px', border: '1px solid #ccc', borderRadius: '4px', background: '#f8f9fa', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+          </svg>
         </button>
-      ))}
+      </div>
+      {showFilters && (
+        <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+          {filters.map((filter) => (
+            <button
+              key={filter}
+              onClick={() => onFilterChange(filter)}
+              style={{
+                backgroundColor: activeFilter === filter ? '#007bff' : '#f8f9fa',
+                color: activeFilter === filter ? 'white' : 'black',
+              }}
+            >
+              {filterNames[filter]}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

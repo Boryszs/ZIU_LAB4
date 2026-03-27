@@ -36,9 +36,10 @@ export function TodoItem({ todo, onToggle, onDelete, onEdit }: TodoItemProps) {
         display: 'flex',
         alignItems: 'center',
         gap: '8px',
-        padding: '8px',
+        padding: '12px',
         border: '1px solid #ddd',
-        borderRadius: '4px',
+        borderRadius: '8px',
+        backgroundColor: 'white',
       }}
     >
       <input
@@ -46,22 +47,8 @@ export function TodoItem({ todo, onToggle, onDelete, onEdit }: TodoItemProps) {
         checked={todo.completed}
         onChange={() => onToggle(todo.id)}
         disabled={isEditing}
+        style={{ cursor: 'pointer' }}
       />
-      {!isEditing && (
-        <span
-          style={{
-            minWidth: '60px',
-            padding: '2px 5px',
-            borderRadius: '3px',
-            backgroundColor: todo.priority === 'high' ? '#f8d7da' : todo.priority === 'medium' ? '#fff3cd' : '#d4edda',
-            color: todo.priority === 'high' ? '#721c24' : todo.priority === 'medium' ? '#856404' : '#155724',
-            fontSize: '0.8em',
-            textAlign: 'center',
-          }}
-        >
-          {todo.priority.charAt(0).toUpperCase() + todo.priority.slice(1)}
-        </span>
-      )}
       {isEditing ? (
         <>
           <input
@@ -79,12 +66,28 @@ export function TodoItem({ todo, onToggle, onDelete, onEdit }: TodoItemProps) {
           </select>
         </>
       ) : (
-        <span
-          style={{ textDecoration: todo.completed ? 'line-through' : 'none', flexGrow: 1 }}
-          onDoubleClick={() => setIsEditing(true)}
-        >
-          {todo.title}
-        </span>
+        <>
+          <div style={{ flexGrow: 1, textAlign: 'left' }} onDoubleClick={() => setIsEditing(true)}>
+            <span style={{ fontWeight: 'bold', textDecoration: todo.completed ? 'line-through' : 'none' }}>
+              {todo.title}
+            </span>
+            <span style={{ marginLeft: '10px', color: 'grey' }}>
+              {todo.date}
+            </span>
+          </div>
+          <span
+            style={{
+              backgroundColor: '#343a40',
+              color: 'white',
+              padding: '4px 12px',
+              borderRadius: '12px',
+              fontSize: '0.8em',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {todo.priority.charAt(0).toUpperCase() + todo.priority.slice(1)}
+          </span>
+        </>
       )}
       <button onClick={() => (isEditing ? handleSave() : setIsEditing(true))}>
         {isEditing ? 'Zapisz' : 'Edytuj'}
