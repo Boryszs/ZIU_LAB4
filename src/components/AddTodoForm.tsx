@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { PriorityType, Todo } from "../types/todo.types";
+import { useTheme } from "../context/TodoContext";
 
 interface AddTodoFormProps {
   onSave: (title: string, priority: PriorityType) => void;
@@ -9,6 +10,7 @@ interface AddTodoFormProps {
 export function AddTodoForm({ onSave, onCancel, initialData }: AddTodoFormProps) {
   const [inputValue, setInputValue] = useState<string>(initialData?.title || '');
   const [priority, setPriority] = useState<PriorityType>(initialData?.priority || 'medium');
+  const { theme } = useTheme();
 
   useEffect(() => {
     setInputValue(initialData?.title || '');
@@ -22,7 +24,7 @@ export function AddTodoForm({ onSave, onCancel, initialData }: AddTodoFormProps)
     }
   };
   return (
-    <div style={{ padding: '20px', border: '1px solid #ddd', borderRadius: '8px', backgroundColor: '#696969', maxWidth: '350px', width: '100%', margin: '20px auto' }}>
+    <div style={{ padding: '20px', border: '1px solid #ddd', borderRadius: '8px', backgroundColor: theme === 'dark' ? '#2a2a2a' : '#f8f9fa', maxWidth: '350px', width: '100%', margin: '20px auto' }}>
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
         <input
           value={inputValue}

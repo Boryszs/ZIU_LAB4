@@ -1,5 +1,6 @@
 import React from "react";
 import { Todo } from "../types/todo.types";
+import { useTheme } from "../context/TodoContext";
 
 interface TodoItemProps {
   todo: Todo;
@@ -14,6 +15,7 @@ export function TodoItem({
   onDelete,
   onStartEdit,
 }: TodoItemProps) {
+  const { theme } = useTheme();
   return (
     <li
       style={{
@@ -23,7 +25,8 @@ export function TodoItem({
         padding: "12px",
         border: "1px solid #ddd",
         borderRadius: "8px",
-        backgroundColor: "#696969",
+        backgroundColor: theme === 'dark' ? '#2a2a2a' : '#f8f9fa',
+        color: theme === 'dark' ? 'white' : 'black',
       }}
     >
       <input
@@ -43,11 +46,12 @@ export function TodoItem({
           style={{
             fontWeight: "bold",
             textDecoration: todo.completed ? "line-through" : "none",
+            color: theme === 'dark' ? 'white' : 'black',
           }}
         >
           {todo.title}
         </span>
-        <span style={{ marginLeft: "10px", color: "#DCDCDC" }}>
+        <span style={{ marginLeft: "10px", color: theme === 'dark' ? '#aaa' : '#6c757d' }}>
           {todo.date}
         </span>
       </div>
