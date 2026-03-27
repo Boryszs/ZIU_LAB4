@@ -22,7 +22,7 @@ export function AddTodoForm({ onSave, onCancel, initialData }: AddTodoFormProps)
     }
   };
   return (
-    <div style={{ padding: '20px', border: '1px solid #ddd', borderRadius: '8px', backgroundColor: 'white', maxWidth: '350px', width: '100%', margin: '20px auto' }}>
+    <div style={{ padding: '20px', border: '1px solid #ddd', borderRadius: '8px', backgroundColor: '#696969', maxWidth: '350px', width: '100%', margin: '20px auto' }}>
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
         <input
           value={inputValue}
