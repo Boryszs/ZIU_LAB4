@@ -76,6 +76,15 @@ function App() {
 
   return (
     <div className="App">
+      {/* Pole wyszukiwania przeniesione na samą górę */}
+      <input
+        type="text"
+        placeholder="Wyszukaj zadania..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        style={{ padding: '8px', border: '1px solid #ccc', borderRadius: '4px', width: '250px', margin: '20px auto 0 auto', display: 'block' }}
+      />
+
       <header className="App-header">
         <h1>{view === 'add' ? 'Dodaj Nowe Zadanie' : view === 'edit' ? 'Edytuj Zadanie' : 'Lista Zadań'}</h1>
         {view === 'list' && <p>Aktywne zadania: {activeCount}</p>}
@@ -110,8 +119,8 @@ function App() {
             <FilterBar
               activeFilter={filter}
               onFilterChange={setFilter}
-              searchTerm={searchTerm}
-              onSearchTermChange={setSearchTerm}
+              // searchTerm={searchTerm}
+              // onSearchTermChange={setSearchTerm}
             />
             <TodoList todos={filteredTodos} onToggle={handleToggle} onDelete={handleDelete} onStartEdit={handleStartEdit} />
           </>
