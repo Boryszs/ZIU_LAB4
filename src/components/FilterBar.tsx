@@ -33,7 +33,10 @@ export function FilterBar({ activeFilter, onFilterChange }: FilterBarProps) {
               onClick={() => onFilterChange(filter)}
               style={{
                 backgroundColor: activeFilter === filter ? '#007bff' : '#f8f9fa',
-                color: activeFilter === filter ? 'white' : 'black',
+                color: activeFilter === filter ? 'white' : 'grey',
+                border: activeFilter === filter ? '1px solid #007bff' : '1px solid #708090',
+                borderRadius: '4px',
+                padding: '8px 12px',
               }}
             >
               {filterNames[filter]}

@@ -76,14 +76,17 @@ function App() {
 
   return (
     <div className="App">
-      {/* Pole wyszukiwania przeniesione na samą górę */}
-      <input
-        type="text"
-        placeholder="Wyszukaj zadania..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        style={{ padding: '8px', border: '1px solid #ccc', borderRadius: '4px', width: '250px', margin: '20px auto 0 auto', display: 'block' }}
-      />
+      {/* Logo i pole wyszukiwania na samej górze, wyrównane do lewej */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: '40px', margin: '0 auto 0 auto', maxWidth: '700px', boxSizing: 'border-box' }}>
+        <h2 style={{ color: 'grey', margin: 0, whiteSpace: 'nowrap', maxWidth: '250px' }}>ToDo List</h2>
+        <input
+          type="text"
+          placeholder="Wyszukaj zadania..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{ padding: '8px', border: '1px solid #ccc', borderRadius: '4px', flexGrow: 1, maxWidth: '650px' }}
+        />
+      </div>
 
       <header className="App-header">
         <h1>{view === 'add' ? 'Dodaj Nowe Zadanie' : view === 'edit' ? 'Edytuj Zadanie' : 'Lista Zadań'}</h1>

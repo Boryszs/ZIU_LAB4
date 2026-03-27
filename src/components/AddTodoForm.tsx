@@ -36,8 +36,27 @@ export function AddTodoForm({ onSave, onCancel, initialData }: AddTodoFormProps)
           <option value="high">Wysoki</option>
         </select>
         <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
-          <button type="submit">{initialData ? 'Zapisz zmiany' : 'Dodaj'}</button>
-          <button type="button" onClick={onCancel}>
+          <button
+            type="submit"
+            style={{
+              backgroundColor: '#007bff',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              padding: '10px 15px',
+              cursor: 'pointer',
+            }}
+          >
+            {initialData ? 'Zapisz zmiany' : 'Dodaj'}
+          </button>
+          <button type="button" onClick={onCancel} style={{
+            backgroundColor: 'white',
+            color: 'grey',
+            border: '1px solid grey',
+            borderRadius: '4px',
+            padding: '10px 15px',
+            cursor: 'pointer',
+          }}>
             Anuluj
           </button>
         </div>
