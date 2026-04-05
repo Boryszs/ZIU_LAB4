@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './App.css';
+import './index.css' // <--- TO JEST KLUCZOWE
 import { Filter as FilterType, PriorityType } from './types/todo.types';
 import { AddTodoForm } from './components/AddTodoForm';
 import { TodoList } from './components/TodoList';
@@ -7,6 +8,7 @@ import { FilterBar } from './components/FilterBar';
 import { ThemeProvider, useTheme, useTodoContext } from './context/TodoContext';
 import DashboardLayout from './components/dashboard/DashboardLayout';
 import { DashboardSection } from './components/dashboard/Sidebar';
+import { AddTodAddTodoInputTailwindForm } from './components/AddTodoInput.tailwind';
 
 function ThemeButton() {
   const { theme, setTheme } = useTheme();
@@ -152,10 +154,12 @@ function TodoApp() {
               onStartEdit={handleStartEdit}
             />
           </>
-        ) : view === 'add' ? (
-          <AddTodoForm onSave={handleAdd} onCancel={() => setView('list')} />
+        ) : view === 'add' ? 
+        
+        (
+          <AddTodAddTodoInputTailwindForm onSave={handleAdd} onCancel={() => setView('list')} />
         ) : (
-          <AddTodoForm
+          <AddTodAddTodoInputTailwindForm
             onSave={handleSaveEdit}
             onCancel={() => {
               setView('list');
@@ -163,13 +167,26 @@ function TodoApp() {
             }}
             initialData={todos.find((t) => t.id === editingTodoId)}
           />
-        )}
+        )
+
+        // (
+        //   <AddTodoForm onSave={handleAdd} onCancel={() => setView('list')} />
+        // ) : (
+        //   <AddTodoForm
+        //     onSave={handleSaveEdit}
+        //     onCancel={() => {
+        //       setView('list');
+        //       setEditingTodoId(null);
+        //     }}
+        //     initialData={todos.find((t) => t.id === editingTodoId)}
+        //   />
+        // )
+        }
       </main>
     </div>
     
   );
 }
-
 
 
 function App() {

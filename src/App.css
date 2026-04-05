@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 .App {
   background-color: #D3D3D3;
   min-height: 100vh;
