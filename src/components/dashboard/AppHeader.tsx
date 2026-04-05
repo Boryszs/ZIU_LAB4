@@ -11,7 +11,11 @@ import {
 } from "@mui/material";
 import { useTheme } from "../../context/TodoContext";
 
-export default function AppHeader() {
+interface AppHeaderProps {
+  title?: string;
+}
+
+export default function AppHeader({ title = "Dashboard" }: AppHeaderProps) {
   const { theme, setTheme } = useTheme();
 
   return (
@@ -27,13 +31,15 @@ export default function AppHeader() {
         bgcolor: "background.paper",
       }}
     >
-      <Toolbar sx={{ minHeight: 72, display: "flex", justifyContent: "space-between" }}>
+      <Toolbar
+        sx={{ minHeight: 72, display: "flex", justifyContent: "space-between" }}
+      >
         <Box>
           <Typography variant="overline" color="primary.main">
             TodoApp
           </Typography>
           <Typography variant="h5" fontWeight={700}>
-            Dashboard
+            {title}
           </Typography>
         </Box>
 
@@ -43,7 +49,11 @@ export default function AppHeader() {
             onClick={() => setTheme(theme === "light" ? "dark" : "light")}
             aria-label="Przelacz motyw"
           >
-            {theme === "light" ? <DarkModeOutlinedIcon /> : <LightModeOutlinedIcon />}
+            {theme === "light" ? (
+              <DarkModeOutlinedIcon />
+            ) : (
+              <LightModeOutlinedIcon />
+            )}
           </IconButton>
           <IconButton aria-label="Powiadomienia">
             <Badge color="error" variant="dot">

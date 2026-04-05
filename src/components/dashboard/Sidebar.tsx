@@ -16,9 +16,9 @@ import SettingsIcon from "@mui/icons-material/Settings";
 
 const DRAWER_WIDTH = 240;
 const navItems = [
-  { label: "Dashboard", icon: DashboardIcon, path: "/" },
-  { label: "Zadania", icon: TaskIcon, path: "/todos" },
-  { label: "Ustawienia", icon: SettingsIcon, path: "/settings" },
+  { label: "Dashboard", icon: DashboardIcon, path:"/" },
+  { label: "Zadania", icon: TaskIcon, path:"/todos"},
+  { label: "Ustawienia", icon: SettingsIcon, path:"/settings"},
 ];
 
 export default function Sidebar() {
