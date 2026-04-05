@@ -1,4 +1,4 @@
-import { JSX, ReactElement } from "react";
+import { JSX } from "react";
 import { DashboardSection } from "../components/dashboard/Sidebar";
 
 export interface Todo {
