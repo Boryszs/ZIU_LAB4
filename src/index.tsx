@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ThemeProvider } from './context/TodoContext';
+import './index.css';
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
