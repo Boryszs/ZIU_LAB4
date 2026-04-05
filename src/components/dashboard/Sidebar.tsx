@@ -13,15 +13,35 @@ import {
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import TaskIcon from "@mui/icons-material/Task";
 import SettingsIcon from "@mui/icons-material/Settings";
+import { SidebarProps } from "../../types/todo.types";
 
 const DRAWER_WIDTH = 240;
+export type DashboardSection = "dashboard" | "tasks" | "settings";
 const navItems = [
-  { label: "Dashboard", icon: DashboardIcon, path: "/" },
-  { label: "Zadania", icon: TaskIcon, path: "/todos" },
-  { label: "Ustawienia", icon: SettingsIcon, path: "/settings" },
+  {
+    label: "Dashboard",
+    icon: DashboardIcon,
+    path: "/",
+    section: "dashboard" as DashboardSection,
+  },
+  {
+    label: "Zadania",
+    icon: TaskIcon,
+    path: "/todos",
+    section: "tasks" as DashboardSection,
+  },
+  {
+    label: "Ustawienia",
+    icon: SettingsIcon,
+    path: "/settings",
+    section: "settings" as DashboardSection,
+  },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({
+  activeSection,
+  onSectionChange,
+}: SidebarProps) {
   return (
     <Drawer
       variant="permanent"
@@ -46,7 +66,11 @@ export default function Sidebar() {
           const Icon = item.icon;
 
           return (
-            <ListItemButton key={item.path}>
+            <ListItemButton
+              key={item.path}
+              selected={activeSection === item.section}
+              onClick={() => onSectionChange(item.section)}
+            >
               <ListItemIcon sx={{ color: "inherit", minWidth: 40 }}>
                 <Icon />
               </ListItemIcon>

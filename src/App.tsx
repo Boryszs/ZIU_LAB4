@@ -6,6 +6,7 @@ import { TodoList } from './components/TodoList';
 import { FilterBar } from './components/FilterBar';
 import { ThemeProvider, useTheme, useTodoContext } from './context/TodoContext';
 import DashboardLayout from './components/dashboard/DashboardLayout';
+import { DashboardSection } from './components/dashboard/Sidebar';
 
 function ThemeButton() {
   const { theme, setTheme } = useTheme();
@@ -169,12 +170,19 @@ function TodoApp() {
   );
 }
 
+
+
 function App() {
+    const [activeSection, setActiveSection] =
+    useState<DashboardSection>("dashboard");
+
   return (
     <ThemeProvider>
-      <DashboardLayout>
-
-      </DashboardLayout>
+      <DashboardLayout
+        activeSection={activeSection}
+        onSectionChange={setActiveSection}
+        appTodo={TodoApp}
+      ></DashboardLayout>
       {/* <Layout>
         <Sidebar />
         <TodoApp />

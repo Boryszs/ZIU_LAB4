@@ -1,3 +1,6 @@
+import { JSX, ReactElement } from "react";
+import { DashboardSection } from "../components/dashboard/Sidebar";
+
 export interface Todo {
   id: string;
   title: string;
@@ -14,3 +17,10 @@ export type TodoAction =
   | { type: 'TOGGLE'; payload: string }
   | { type: 'DELETE'; payload: string }
   | { type: 'EDIT'; payload: { id: string; title: string; priority: PriorityType } };
+
+
+  export interface SidebarProps {
+    activeSection: DashboardSection;
+    onSectionChange: (section: DashboardSection) => void;
+    appTodo?: () => JSX.Element;
+  }

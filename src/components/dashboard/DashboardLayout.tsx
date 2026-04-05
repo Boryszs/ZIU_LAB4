@@ -2,17 +2,28 @@ import { Box, Toolbar } from "@mui/material";
 import AppHeader from "./AppHeader";
 import Sidebar from "./Sidebar";
 import StatsGrid from "./StatsGrid";
-export default function DashboardLayout() {
+import { SidebarProps } from "../../types/todo.types";
+
+export default function DashboardLayout({
+  activeSection,
+  onSectionChange,
+  appTodo,
+}: SidebarProps) {
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
-      <Sidebar />
+      <Sidebar
+        activeSection={activeSection}
+        onSectionChange={onSectionChange}
+      />
       <Box
         component="main"
         sx={{ flexGrow: 1, p: 3, bgcolor: "background.default" }}
       >
         <AppHeader />
         <Toolbar />
-        <StatsGrid />
+        {activeSection === "dashboard" && <StatsGrid />}
+        {activeSection === "tasks" && appTodo?.()}
+        {activeSection === "settings" && <StatsGrid />}
       </Box>
     </Box>
   );
