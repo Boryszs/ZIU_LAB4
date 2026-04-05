@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import './App.css';
 import './index.css' // <--- TO JEST KLUCZOWE
 import { Filter as FilterType, PriorityType } from './types/todo.types';
-import { AddTodoForm } from './components/AddTodoForm';
-import { TodoList } from './components/TodoList';
 import { FilterBar } from './components/FilterBar';
 import { ThemeProvider, useTheme, useTodoContext } from './context/TodoContext';
 import DashboardLayout from './components/dashboard/DashboardLayout';
 import { DashboardSection } from './components/dashboard/Sidebar';
 import { AddTodAddTodoInputTailwindForm } from './components/AddTodoInput.tailwind';
+import { TodoListTailwind } from './components/TodoListTailwind';
+import { TodoList } from './components/TodoList';
 
 function ThemeButton() {
   const { theme, setTheme } = useTheme();
@@ -101,7 +101,7 @@ function TodoApp() {
   const activeCount = todos.filter((t) => !t.completed).length;
 
   return (
-    <div className="App" style={{ backgroundColor: theme === 'dark' ? '#1e1e1e' : '#D3D3D3' }}>
+    <div className="App" style={{ backgroundColor: theme === 'dark' ? '#1e1e1e' : '#ffffff', minHeight: '100vh' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: '40px', margin: '0 auto 0 auto', maxWidth: '700px', boxSizing: 'border-box' }}>
         <h2 style={{ margin: 0, whiteSpace: 'nowrap', maxWidth: '250px', color: theme === 'dark' ? '#f8f9fa' : 'grey' }}>ToDo List</h2>
         <input
@@ -146,7 +146,14 @@ function TodoApp() {
               +
             </button>
             <FilterBar activeFilter={filter} onFilterChange={setFilter} />
-            <TodoList
+            {/* <TodoList
+              todos={filteredTodos}
+              filter={filter}
+              onToggle={handleToggle}
+              onDelete={handleDelete}
+              onStartEdit={handleStartEdit}
+            /> */}
+            <TodoListTailwind
               todos={filteredTodos}
               filter={filter}
               onToggle={handleToggle}
