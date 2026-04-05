@@ -42,19 +42,25 @@ export default function Sidebar() {
       </Toolbar>
       <Divider sx={{ borderColor: "rgba(255,255,255,0.2)" }} />
       <List>
-        {navItems.map(
-          (item) =>
-            // TODO 4: Renderuj ListItemButton dla każdego navItem
-            // // Użyj item.icon jako komponent w ListItemIcon
-            null,
-        )}
+        {navItems.map((item) => {
+          const Icon = item.icon;
+
+          return (
+            <ListItemButton key={item.path}>
+              <ListItemIcon sx={{ color: "inherit", minWidth: 40 }}>
+                <Icon />
+              </ListItemIcon>
+              <ListItemText primary={item.label} />
+            </ListItemButton>
+          );
+        })}
       </List>
       <Box sx={{ flexGrow: 1 }} />
       <Box sx={{ p: 2, display: "flex", alignItems: "center", gap: 1 }}>
         <Avatar sx={{ width: 36, height: 36, bgcolor: "primary.dark" }}>
           U
         </Avatar>
-        <Typography variant="body2">Użytkownik</Typography>
+        <Typography variant="body2">Uzytkownik</Typography>
       </Box>
     </Drawer>
   );
