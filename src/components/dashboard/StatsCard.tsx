@@ -17,8 +17,6 @@ export default function StatsCard({
   return (
     <Card>
       <CardContent>
-        Akademia Tarnowska | Zaawansowany Interfejs Użytkownika | Konspekt Lab 5
-        Prowadzący: mgr inż. DominikAksamit
         <Box
           sx={{
             display: "flex",
