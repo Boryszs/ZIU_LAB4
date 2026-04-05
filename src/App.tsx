@@ -117,12 +117,7 @@ function TodoApp() {
     setEditingTodoId(null);
   };
 
-  // Logika filtrowania
-  const filteredTodos = todos.filter((todo) => {
-    if (filter === 'active') return !todo.completed;
-    if (filter === 'completed') return todo.completed;
-    return true; // 'all'
-  }).filter(todo =>
+  const filteredTodos = todos.filter((todo) =>
     todo.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -184,7 +179,13 @@ function TodoApp() {
               // searchTerm={searchTerm}
               // onSearchTermChange={setSearchTerm}
             />
-            <TodoList todos={filteredTodos} onToggle={handleToggle} onDelete={handleDelete} onStartEdit={handleStartEdit} />
+            <TodoList
+              todos={filteredTodos}
+              filter={filter}
+              onToggle={handleToggle}
+              onDelete={handleDelete}
+              onStartEdit={handleStartEdit}
+            />
           </>
         ) : view === 'add' ? (
           <AddTodoForm onSave={handleAdd} onCancel={() => setView('list')} />
