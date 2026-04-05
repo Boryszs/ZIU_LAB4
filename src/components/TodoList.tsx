@@ -138,7 +138,7 @@ export function TodoList({
               size="small"
               color={priorityColor[todo.priority]}
               variant={todo.completed ? "outlined" : "filled"}
-              sx={{ mr: 6, width: 80}}
+              sx={{ mr: 6, width: 80 }}
             />
           </ListItem>
         ))}
