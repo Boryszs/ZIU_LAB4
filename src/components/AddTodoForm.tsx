@@ -1,68 +1,117 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import AddIcon from "@mui/icons-material/Add";
+import CancelIcon from "@mui/icons-material/Cancel";
+import SaveIcon from "@mui/icons-material/Save";
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { PriorityType, Todo } from "../types/todo.types";
-import { useTheme } from "../context/TodoContext";
 
 interface AddTodoFormProps {
   onSave: (title: string, priority: PriorityType) => void;
   onCancel: () => void;
-  initialData?: Pick<Todo, 'title' | 'priority'>;
+  initialData?: Pick<Todo, "title" | "priority">;
 }
-export function AddTodoForm({ onSave, onCancel, initialData }: AddTodoFormProps) {
-  const [inputValue, setInputValue] = useState<string>(initialData?.title || '');
-  const [priority, setPriority] = useState<PriorityType>(initialData?.priority || 'medium');
-  const { theme } = useTheme();
+
+export function AddTodoForm({
+  onSave,
+  onCancel,
+  initialData,
+}: AddTodoFormProps) {
+  const [inputValue, setInputValue] = useState<string>(
+    initialData?.title || "",
+  );
+  const [priority, setPriority] = useState<PriorityType>(
+    initialData?.priority || "medium",
+  );
 
   useEffect(() => {
-    setInputValue(initialData?.title || '');
-    setPriority(initialData?.priority || 'medium');
+    setInputValue(initialData?.title || "");
+    setPriority(initialData?.priority || "medium");
   }, [initialData]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (inputValue.trim()) {
-      onSave(inputValue.trim(), priority);
+    if (!inputValue.trim()) {
+      return;
     }
+
+    onSave(inputValue.trim(), priority);
   };
+
   return (
-    <div style={{ padding: '20px', border: '1px solid #ddd', borderRadius: '8px', backgroundColor: theme === 'dark' ? '#2a2a2a' : '#f8f9fa', maxWidth: '350px', width: '100%', margin: '20px auto' }}>
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-        <input
+    <Paper
+      elevation={3}
+      sx={{
+        p: 3,
+        maxWidth: 420,
+        width: "100%",
+        mx: "auto",
+        my: 3,
+        borderRadius: 3,
+      }}
+    >
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{ display: "grid", gap: 2, textAlign: "left" }}
+      >
+        <Typography variant="h6">
+          {initialData ? "Edytuj zadanie" : "Dodaj nowe zadanie"}
+        </Typography>
+
+        <TextField
+          fullWidth
+          size="medium"
+          label="Tresc zadania"
+          placeholder="Wpisz tresc zadania..."
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-          placeholder="Dodaj nowe zadanie..."
-          style={{ padding: '10px', fontSize: '1rem' }}
         />
-        <select value={priority} onChange={(e) => setPriority(e.target.value as PriorityType)} style={{ padding: '10px', fontSize: '1rem' }}>
-          <option value="low">Niski</option>
-          <option value="medium">Średni</option>
-          <option value="high">Wysoki</option>
-        </select>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
-          <button
-            type="submit"
-            style={{
-              backgroundColor: '#007bff',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              padding: '10px 15px',
-              cursor: 'pointer',
-            }}
+
+        <FormControl fullWidth size="medium">
+          <InputLabel id="priority-label">Priorytet</InputLabel>
+          <Select
+            labelId="priority-label"
+            value={priority}
+            label="Priorytet"
+            sx={{ textAlign: "left" }}
+            onChange={(e) => setPriority(e.target.value as PriorityType)}
           >
-            {initialData ? 'Zapisz zmiany' : 'Dodaj'}
-          </button>
-          <button type="button" onClick={onCancel} style={{
-            backgroundColor: 'white',
-            color: 'grey',
-            border: '1px solid grey',
-            borderRadius: '4px',
-            padding: '10px 15px',
-            cursor: 'pointer',
-          }}>
+            <MenuItem value="low">Niski</MenuItem>
+            <MenuItem value="medium">Sredni</MenuItem>
+            <MenuItem value="high">Wysoki</MenuItem>
+          </Select>
+        </FormControl>
+
+        <Box sx={{ display: "flex", gap: 1.5, justifyContent: "flex-end" }}>
+          <Button
+            type="button"
+            variant="outlined"
+            color="inherit"
+            onClick={onCancel}
+            startIcon={<CancelIcon />}
+          >
             Anuluj
-          </button>
-        </div>
-      </form>
-    </div>
+          </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            startIcon={initialData ? <SaveIcon /> : <AddIcon />}
+            disabled={!inputValue.trim()}
+          >
+            {initialData ? "Zapisz zmiany" : "Dodaj"}
+          </Button>
+        </Box>
+      </Box>
+    </Paper>
   );
 }
