@@ -74,12 +74,12 @@ export const TodoListTailwind: React.FC<TodoListProps> = ({
 
           <div className="flex flex-wrap items-center gap-3">
             <span
-              className={`rounded-full px-3 py-1 text-xs font-semibold ${
+              className={`rounded-full px-3 text-center w-16 py-1 text-xs font-semibold ${
                 todo.priority === 'high'
                   ? 'border border-red-200 bg-red-100 text-red-700'
                   : todo.priority === 'medium'
                   ? 'border border-amber-200 bg-amber-100 text-amber-800'
-                  : 'border border-slate-200 bg-slate-100 text-slate-700'
+                  : 'border border-slate-300 bg-slate-100 text-slate-700'
               }`}
             >
               {todo.priority === 'high'
