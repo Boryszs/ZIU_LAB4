@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import './App.css';
-import './index.css' // <--- TO JEST KLUCZOWE
+import './index.css'
 import { Filter as FilterType, PriorityType } from './types/todo.types';
 import { FilterBar } from './components/FilterBar';
 import { ThemeProvider, useTheme, useTodoContext } from './context/TodoContext';
 import DashboardLayout from './components/dashboard/DashboardLayout';
 import { DashboardSection } from './components/dashboard/Sidebar';
-import { AddTodAddTodoInputTailwindForm } from './components/AddTodoInput.tailwind';
+import { AddTodAddTodoInputTailwindForm } from './components/AddTodoInputTailwind';
 import { TodoListTailwind } from './components/TodoListTailwind';
-import { TodoList } from './components/TodoList';
 
 function ThemeButton() {
   const { theme, setTheme } = useTheme();
