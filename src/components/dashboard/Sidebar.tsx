@@ -1,5 +1,4 @@
 import {
-  Drawer,
   List,
   ListItemButton,
   ListItemIcon,
@@ -13,46 +12,30 @@ import {
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import TaskIcon from "@mui/icons-material/Task";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { SidebarProps } from "../../types/todo.types";
 
 const DRAWER_WIDTH = 240;
+
 export type DashboardSection = "dashboard" | "tasks" | "settings";
+
 const navItems = [
-  {
-    label: "Dashboard",
-    icon: DashboardIcon,
-    path: "/",
-    section: "dashboard" as DashboardSection,
-  },
-  {
-    label: "Zadania",
-    icon: TaskIcon,
-    path: "/todos",
-    section: "tasks" as DashboardSection,
-  },
-  {
-    label: "Ustawienia",
-    icon: SettingsIcon,
-    path: "/settings",
-    section: "settings" as DashboardSection,
-  },
+  { label: "Dashboard", icon: DashboardIcon, section: "dashboard" },
+  { label: "Zadania", icon: TaskIcon, section: "tasks" },
+  { label: "Ustawienia", icon: SettingsIcon, section: "settings" },
 ];
 
-export default function Sidebar({
-  activeSection,
-  onSectionChange,
-}: SidebarProps) {
+export default function Sidebar({ activeSection, onSectionChange }: any) {
   return (
-    <Drawer
-      variant="permanent"
+    <Box
       sx={{
+        display: { xs: "none", md: "flex" },
+        flexDirection: "column",
         width: DRAWER_WIDTH,
-        "& .MuiDrawer-paper": {
-          width: DRAWER_WIDTH,
-          boxSizing: "border-box",
-          bgcolor: "primary.main",
-          color: "white",
-        },
+        height: "100vh",
+        position: "fixed", // 🔥 klucz
+        top: 0,
+        left: 0,
+        bgcolor: "primary.main",
+        color: "white",
       }}
     >
       <Toolbar>
@@ -60,14 +43,16 @@ export default function Sidebar({
           TodoApp
         </Typography>
       </Toolbar>
+
       <Divider sx={{ borderColor: "rgba(255,255,255,0.2)" }} />
+
       <List>
         {navItems.map((item) => {
           const Icon = item.icon;
 
           return (
             <ListItemButton
-              key={item.path}
+              key={item.section}
               selected={activeSection === item.section}
               onClick={() => onSectionChange(item.section)}
             >
@@ -79,13 +64,13 @@ export default function Sidebar({
           );
         })}
       </List>
+
       <Box sx={{ flexGrow: 1 }} />
+
       <Box sx={{ p: 2, display: "flex", alignItems: "center", gap: 1 }}>
-        <Avatar sx={{ width: 36, height: 36, bgcolor: "primary.dark" }}>
-          U
-        </Avatar>
+        <Avatar>U</Avatar>
         <Typography variant="body2">Uzytkownik</Typography>
       </Box>
-    </Drawer>
+    </Box>
   );
 }

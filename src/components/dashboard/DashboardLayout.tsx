@@ -11,20 +11,30 @@ export default function DashboardLayout({
 }: SidebarProps) {
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
+      
       <Sidebar
         activeSection={activeSection}
         onSectionChange={onSectionChange}
       />
+
       <Box
         component="main"
-        sx={{ flexGrow: 1, p: 3, bgcolor: "background.default" }}
+        sx={{
+          flexGrow: 1,
+          ml: { md: "240px" }, // 🔥 KLUCZ
+          width: { md: "calc(100% - 240px)" }, // 🔥 BONUS (usuwa pustkę)
+          p: 3,
+          bgcolor: "background.default",
+        }}
       >
         <AppHeader />
         <Toolbar />
+
         {activeSection === "dashboard" && <StatsGrid />}
         {activeSection === "tasks" && appTodo?.()}
         {activeSection === "settings" && <StatsGrid />}
       </Box>
+
     </Box>
   );
 }
