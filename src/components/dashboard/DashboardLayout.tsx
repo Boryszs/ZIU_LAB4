@@ -19,7 +19,15 @@ export default function DashboardLayout({
   ];
 
   return (
-    <Box sx={{ display: "flex", minHeight: "100vh" }}>
+    <Box sx={{ 
+    display: "flex", 
+    flexDirection: "column", // Elementy jeden pod drugim
+    alignItems: "center",    // Centrowanie w poziomie
+    justifyContent: "center", // Centrowanie w pionie
+    minHeight: "100vh",
+    bgcolor: "background.default", // Używa koloru z motywu
+    p: 2 // Padding, żeby na mobile karta nie dotykała krawędzi
+  }}>
       <Sidebar
         activeSection={activeSection}
         onSectionChange={onSectionChange}

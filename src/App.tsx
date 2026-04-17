@@ -120,6 +120,7 @@ function TodoApp() {
       style={{
         backgroundColor: theme === "dark" ? "#1e1e1e" : "#ffffff",
         minHeight: "100vh",
+        padding: "16px"
       }}
     >
       <div
