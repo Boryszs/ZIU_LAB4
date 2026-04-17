@@ -9,21 +9,16 @@ import {
   Avatar,
   Box,
 } from "@mui/material";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import TaskIcon from "@mui/icons-material/Task";
-import SettingsIcon from "@mui/icons-material/Settings";
 
 const DRAWER_WIDTH = 240;
 
 export type DashboardSection = "dashboard" | "tasks" | "settings";
 
-const navItems = [
-  { label: "Dashboard", icon: DashboardIcon, section: "dashboard" },
-  { label: "Zadania", icon: TaskIcon, section: "tasks" },
-  { label: "Ustawienia", icon: SettingsIcon, section: "settings" },
-];
-
-export default function Sidebar({ activeSection, onSectionChange }: any) {
+export default function Sidebar({
+  activeSection,
+  onSectionChange,
+  navItems,
+}: any) {
   return (
     <Box
       sx={{
@@ -47,7 +42,7 @@ export default function Sidebar({ activeSection, onSectionChange }: any) {
       <Divider sx={{ borderColor: "rgba(255,255,255,0.2)" }} />
 
       <List>
-        {navItems.map((item) => {
+        {navItems.map((item: any) => {
           const Icon = item.icon;
 
           return (

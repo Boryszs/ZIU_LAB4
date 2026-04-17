@@ -9,6 +9,7 @@ import {
   IconButton,
   List,
   ListItemButton,
+  ListItemIcon,
   ListItemText,
   Toolbar,
   Typography,
@@ -18,7 +19,12 @@ import { useTheme } from "../../context/TodoContext";
 
 const DRAWER_WIDTH = 240;
 
-export default function AppHeader({ title = "Dashboard" }: any) {
+export default function AppHeader({
+  title = "Dashboard",
+  activeSection,
+  onSectionChange,
+  navItems,
+}: any) {
   const { theme, setTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -97,6 +103,25 @@ export default function AppHeader({ title = "Dashboard" }: any) {
           }}
         >
           <List>
+            {navItems.map((item: any) => {
+              const Icon = item.icon;
+
+              return (
+                <ListItemButton
+                  key={item.section}
+                  selected={activeSection === item.section}
+                  onClick={() => onSectionChange(item.section)}
+                >
+                  <ListItemIcon sx={{ color: "inherit", minWidth: 40 }}>
+                    <Icon />
+                  </ListItemIcon>
+                  <ListItemText primary={item.label} />
+                </ListItemButton>
+              );
+            })}
+          </List>
+
+          {/* <List>
             <ListItemButton>
               <ListItemText primary="Dashboard" />
             </ListItemButton>
@@ -106,7 +131,7 @@ export default function AppHeader({ title = "Dashboard" }: any) {
             <ListItemButton>
               <ListItemText primary="Ustawienia" />
             </ListItemButton>
-          </List>
+          </List> */}
         </Box>
       )}
     </>

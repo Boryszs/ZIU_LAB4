@@ -3,17 +3,27 @@ import AppHeader from "./AppHeader";
 import Sidebar from "./Sidebar";
 import StatsGrid from "./StatsGrid";
 import { SidebarProps } from "../../types/todo.types";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import TaskIcon from "@mui/icons-material/Task";
+import SettingsIcon from "@mui/icons-material/Settings";
 
 export default function DashboardLayout({
   activeSection,
   onSectionChange,
   appTodo,
 }: SidebarProps) {
+  const navItems = [
+    { label: "Dashboard", icon: DashboardIcon, section: "dashboard" },
+    { label: "Zadania", icon: TaskIcon, section: "tasks" },
+    { label: "Ustawienia", icon: SettingsIcon, section: "settings" },
+  ];
+
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
       <Sidebar
         activeSection={activeSection}
         onSectionChange={onSectionChange}
+        navItems={navItems}
       />
 
       <Box
@@ -26,13 +36,16 @@ export default function DashboardLayout({
           bgcolor: "background.default",
         }}
       >
-        <AppHeader />
+        <AppHeader
+          activeSection={activeSection}
+          onSectionChange={onSectionChange}
+          navItems={navItems}
+        />
         <Toolbar />
 
-        {appTodo?.()}
-        {/* {activeSection === "dashboard" && <StatsGrid />} */}
-        {/* {activeSection === "tasks" && appTodo?.()} */}
-        {/* {activeSection === "settings" && <StatsGrid />} */}
+        {activeSection === "dashboard" && <StatsGrid />}
+        {activeSection === "tasks" && appTodo?.()}
+        {activeSection === "settings" && <StatsGrid />}
       </Box>
     </Box>
   );
