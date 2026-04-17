@@ -6,6 +6,7 @@ import { SidebarProps } from "../../types/todo.types";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import TaskIcon from "@mui/icons-material/Task";
 import SettingsIcon from "@mui/icons-material/Settings";
+import { Step1Form } from "../Step1Form";
 
 export default function DashboardLayout({
   activeSection,
@@ -53,7 +54,7 @@ export default function DashboardLayout({
 
         {activeSection === "dashboard" && <StatsGrid />}
         {activeSection === "tasks" && appTodo?.()}
-        {activeSection === "settings" && <StatsGrid />}
+        {activeSection === "settings" && <Step1Form></Step1Form>}
       </Box>
     </Box>
   );
