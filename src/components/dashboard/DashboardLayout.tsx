@@ -11,7 +11,6 @@ export default function DashboardLayout({
 }: SidebarProps) {
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
-      
       <Sidebar
         activeSection={activeSection}
         onSectionChange={onSectionChange}
@@ -30,11 +29,11 @@ export default function DashboardLayout({
         <AppHeader />
         <Toolbar />
 
-        {activeSection === "dashboard" && <StatsGrid />}
-        {activeSection === "tasks" && appTodo?.()}
-        {activeSection === "settings" && <StatsGrid />}
+        {appTodo?.()}
+        {/* {activeSection === "dashboard" && <StatsGrid />} */}
+        {/* {activeSection === "tasks" && appTodo?.()} */}
+        {/* {activeSection === "settings" && <StatsGrid />} */}
       </Box>
-
     </Box>
   );
 }

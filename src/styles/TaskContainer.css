@@ -1,0 +1,14 @@
+/* 1. Oznacz rodzica jako kontener */
+.card-wrapper {
+  container-type: inline-size;
+} /* 2. Styl bazowy (mobile-first) */
+.task-card {
+  display: flex;
+  flex-direction: column;
+} /* 3. Container query - reaguje na rodzica, nie na viewport */
+@container (min-width: 400px) {
+  .task-card {
+    flex-direction: row;
+    align-items: center;
+  }
+} /* Ten sam komponent w wąskim sidebarze = kolumna */ /* Ten sam komponent w szerokiej sekcji main = wiersz */ /* Zero dodatkowych media queries! */

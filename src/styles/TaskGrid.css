@@ -1,0 +1,53 @@
+/* TaskGrid.css */
+.task-grid {
+  display: grid;
+  /* auto-fit: siatka responsywna BEZ media queries */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+}
+
+.task-card__thumbnail {
+  width: 100%;
+
+  /* ustaw proporcje 16:9 */
+  aspect-ratio: 16 / 9;
+
+  /* wypełnij kontener bez rozciągania obrazu */
+  object-fit: cover;
+
+  /* Dlaczego aspect-ratio > padding-hack? */
+  /* STARY: padding-top: 56.25%; height: 0; position: relative; */
+  /* NOWY: aspect-ratio: 16 / 9; <- jedna czytelna linia */
+}
+
+/* aspect-ratio: proporcje elementu */
+.video-embed {
+  aspect-ratio: 16 / 9;
+} /* film */
+.avatar {
+  aspect-ratio: 1;
+} /* kwadrat / kółko */
+.product-card {
+  aspect-ratio: 3 / 4;
+} /* pionowy kafelek */ /* object-fit: jak obraz wypełnia kontener */
+.thumbnail {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover; /* przytnij, zachowaj proporcje - najczęściej */ /* object-fit: contain; <- cały obraz widoczny, letterbox */ /* object-fit: fill; <- rozciągnij (unikaj!) */
+  object-position: center top; /* punkt kadrowania */
+} /* Stary padding-hack (do unikania od 2021): padding-top: 56.25%; height: 0; position: relative; overflow: hidden; */
+
+/* : has() */
+/* Karta z obrazkiem otrzymuje dodatkowy rząd gridu */
+.task-card:has(img) {
+  grid-template-rows: auto 1fr auto;
+} /* Czerwona etykieta gdy input niepoprawny */
+.form-group:has(input:invalid) label {
+  color: red;
+} /* Zablokuj scroll body gdy menu otwarte */
+body:has(.nav__menu--open) {
+  overflow: hidden;
+} /* Layout dostosowuje się do obecności sidebara */
+.layout:has(.sidebar:not([hidden])) .main {
+  margin-left: var(--sidebar-width);
+}

@@ -37,12 +37,14 @@ export default function AppHeader({ title = "Dashboard" }: any) {
         }}
       >
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-          
           {/* LEFT */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <IconButton
-              onClick={() => setIsOpen(prev => !prev)}
+              onClick={() => setIsOpen((prev) => !prev)}
               sx={{ display: { xs: "flex", md: "none" } }}
+              edge="start"
+              color="inherit"
+              aria-label="otwórz menu"
             >
               <MenuIcon />
             </IconButton>
@@ -61,11 +63,18 @@ export default function AppHeader({ title = "Dashboard" }: any) {
           <Box sx={{ display: "flex", gap: 1 }}>
             <IconButton
               onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+              edge="start"
+              color="inherit"
+              aria-label="dark mode"
             >
-              {theme === "light" ? <DarkModeOutlinedIcon /> : <LightModeOutlinedIcon />}
+              {theme === "light" ? (
+                <DarkModeOutlinedIcon />
+              ) : (
+                <LightModeOutlinedIcon />
+              )}
             </IconButton>
 
-            <IconButton>
+            <IconButton edge="start" color="inherit" aria-label="otwórz menu">
               <Badge color="error" variant="dot">
                 <NotificationsNoneOutlinedIcon />
               </Badge>
