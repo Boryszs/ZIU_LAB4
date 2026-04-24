@@ -202,7 +202,7 @@ export const Step1Form = ({ defaultValues, onNext, externalError }: Props) => {
 
         {errors.password && (
           <span
-            id="password-error-1"
+            id="password-error"
             role="alert"
             className="text-red-600 text-sm"
           >

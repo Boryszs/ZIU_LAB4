@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Step2Form } from "./Step2Form";
 import { Step3Form } from "./Step3Form";
-import { Step1Data } from "../schemas/schemas";
+import { Step1Data, Step2Data } from "../schemas/schemas";
 import { Step1Form } from "./Step1Form";
 
 export default function MultiStepForm() {
@@ -9,11 +9,11 @@ export default function MultiStepForm() {
 
   const [formData, setFormData] = useState<{
     step1?: Step1Data;
-    step2?: any;
+    step2?: Step2Data;
   }>({});
 
   const [emailError, setEmailError] = useState<string | undefined>();
-  const [step3Data, setStep3Data] = useState<{ rodo: boolean } | undefined>();
+  const [step3Data] = useState<{ rodo: boolean } | undefined>();
 
   const headingRef = useRef<HTMLHeadingElement>(null);
 

@@ -43,6 +43,12 @@ export const Step2Form = ({ onNext, onBack, defaultValues }: Step2Props) => {
   const { fields, append, remove } = useFieldArray({
     control,
     name: "categories",
+    rules: {
+      minLength: {
+        value: 1,
+        message: "Dodaj co najmniej jedną kategorię",
+      },
+    },
   });
 
   const onSubmit = async (data: Step2Data) => {
@@ -106,9 +112,9 @@ export const Step2Form = ({ onNext, onBack, defaultValues }: Step2Props) => {
           + Dodaj kategorię
         </button>
 
-        {errors.categories && typeof errors.categories.message === "string" && (
-          <span role="alert" className="text-red-600 text-sm">
-            {errors.categories.message}
+        {errors.categories?.root && (
+          <span role="alert" className="text-red-600 text-sm block mt-1">
+            {errors.categories.root.message}
           </span>
         )}
       </fieldset>

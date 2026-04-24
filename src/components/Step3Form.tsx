@@ -1,6 +1,12 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Step1Data, Step2Data } from "../schemas/schemas";
+import {
+  Step1Data,
+  Step2Data,
+  Step3Data,
+  step3Schema,
+} from "../schemas/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 // =======================
 // TYPES
@@ -42,7 +48,8 @@ export const Step3Form = ({
     handleSubmit,
     setError,
     formState: { errors, isSubmitting },
-  } = useForm<{ rodo: boolean }>({
+  } = useForm<Step3Data>({
+    resolver: zodResolver(step3Schema),
     defaultValues: defaultValues || { rodo: false },
   });
 
@@ -132,7 +139,7 @@ export const Step3Form = ({
 
       {/* SERVER ERROR */}
       {errors.root?.serverError && (
-        <div role="alert" className="text-red-600 text-sm">
+        <div role="alert" aria-live="assertive" className="text-red-600 text-sm">
           {errors.root.serverError.message}
         </div>
       )}
