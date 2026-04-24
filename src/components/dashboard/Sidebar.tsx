@@ -12,7 +12,7 @@ import {
 
 const DRAWER_WIDTH = 240;
 
-export type DashboardSection = "dashboard" | "tasks" | "settings";
+export type DashboardSection = "dashboard" | "tasks" | "settings" | "login";
 
 export default function Sidebar({
   activeSection,

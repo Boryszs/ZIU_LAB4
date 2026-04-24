@@ -253,7 +253,7 @@ function TodoApp() {
 
 function App() {
   const [activeSection, setActiveSection] =
-    useState<DashboardSection>("dashboard");
+    useState<DashboardSection>("login");
 
   return (
     <ThemeProvider>

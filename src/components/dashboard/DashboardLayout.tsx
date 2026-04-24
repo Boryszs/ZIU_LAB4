@@ -6,7 +6,8 @@ import { SidebarProps } from "../../types/todo.types";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import TaskIcon from "@mui/icons-material/Task";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { Step1Form } from "../Step1Form";
+import MultiStepForm from "../MultiStepForm";
+import LoginIcon from "@mui/icons-material/Login";
 
 export default function DashboardLayout({
   activeSection,
@@ -17,6 +18,7 @@ export default function DashboardLayout({
     { label: "Dashboard", icon: DashboardIcon, section: "dashboard" },
     { label: "Zadania", icon: TaskIcon, section: "tasks" },
     { label: "Ustawienia", icon: SettingsIcon, section: "settings" },
+    { label: "Logowanie", icon: LoginIcon, section: "login" },
   ];
 
   return (
@@ -54,7 +56,8 @@ export default function DashboardLayout({
 
         {activeSection === "dashboard" && <StatsGrid />}
         {activeSection === "tasks" && appTodo?.()}
-        {activeSection === "settings" && <Step1Form></Step1Form>}
+        {activeSection === "settings" }
+        {activeSection === "login" && <MultiStepForm></MultiStepForm>}
       </Box>
     </Box>
   );
