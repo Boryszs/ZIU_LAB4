@@ -1,43 +1,75 @@
 import React, { useState, useRef, useEffect } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Step2Form } from "./Step2Form";
 import { Step3Form } from "./Step3Form";
-import { Step1Data, Step2Data } from "../schemas/schemas";
+import { FullFormData, fullSchema } from "../schemas/schemas";
 import { Step1Form } from "./Step1Form";
 
 export default function MultiStepForm() {
   const [currentStep, setCurrentStep] = useState(1);
-
-  const [formData, setFormData] = useState<{
-    step1?: Step1Data;
-    step2?: Step2Data;
-  }>({});
-
-  const [emailError, setEmailError] = useState<string | undefined>();
-  const [step3Data] = useState<{ rodo: boolean } | undefined>();
-
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const methods = useForm<FullFormData>({
+    resolver: zodResolver(fullSchema),
+    mode: "onBlur",
+    reValidateMode: "onChange",
+    shouldUnregister: false,
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      categories: [{ value: "" }],
+      notifications: {
+        email: false,
+        push: false,
+      },
+      newsletter: false,
+      rodo: false,
+    },
+  });
 
   useEffect(() => {
     headingRef.current?.focus();
   }, [currentStep]);
 
-  const handleStep1Complete = (data: Step1Data) => {
-    setFormData((prev) => ({ ...prev, step1: data }));
-    setEmailError(undefined);
-    setCurrentStep(2);
+  const handleStep1Complete = async () => {
+    const isValid = await methods.trigger([
+      "firstName",
+      "lastName",
+      "email",
+      "password",
+      "confirmPassword",
+    ]);
+
+    if (isValid) {
+      setCurrentStep(2);
+    }
   };
 
-  const handleStep2Complete = (data: any) => {
-    setFormData((prev) => ({ ...prev, step2: data }));
-    setCurrentStep(3);
+  const handleStep2Complete = async () => {
+    const isValid = await methods.trigger([
+      "categories",
+      "notifications",
+      "newsletter",
+    ]);
+
+    if (isValid) {
+      methods.clearErrors("root.serverError");
+      setCurrentStep(3);
+    }
   };
 
-  const goToStep1 = (error?: string) => {
-    setEmailError(error);
+  const goToStep1 = () => {
+    methods.clearErrors("root.serverError");
     setCurrentStep(1);
   };
 
-  const goToStep2 = () => setCurrentStep(2);
+  const goToStep2 = () => {
+    methods.clearErrors("root.serverError");
+    setCurrentStep(2);
+  };
 
   return (
     <main aria-label="Formularz rejestracji" className="max-w-md mx-auto p-4">
@@ -61,31 +93,17 @@ export default function MultiStepForm() {
         {currentStep === 3 && "Podsumowanie"}
       </h2>
 
-      {currentStep === 1 && (
-        <Step1Form
-          onNext={handleStep1Complete}
-          defaultValues={formData.step1}
-          externalError={emailError}
-        />
-      )}
+      <FormProvider {...methods}>
+        {currentStep === 1 && <Step1Form onNext={handleStep1Complete} />}
 
-      {currentStep === 2 && (
-        <Step2Form
-          onNext={handleStep2Complete}
-          onBack={goToStep1}
-          defaultValues={formData.step2}
-        />
-      )}
+        {currentStep === 2 && (
+          <Step2Form onNext={handleStep2Complete} onBack={goToStep1} />
+        )}
 
-      {currentStep === 3 && formData.step1 && formData.step2 && (
-        <Step3Form
-          step1={formData.step1}
-          step2={formData.step2}
-          onBack={goToStep2}
-          goToStep1={goToStep1}
-          defaultValues={step3Data}
-        />
-      )}
+        {currentStep === 3 && (
+          <Step3Form onBack={goToStep2} goToStep1={goToStep1} />
+        )}
+      </FormProvider>
     </main>
   );
 }

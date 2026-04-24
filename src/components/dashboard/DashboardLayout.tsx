@@ -6,8 +6,8 @@ import { SidebarProps } from "../../types/todo.types";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import TaskIcon from "@mui/icons-material/Task";
 import SettingsIcon from "@mui/icons-material/Settings";
-import MultiStepForm from "../MultiStepForm";
 import LoginIcon from "@mui/icons-material/Login";
+import MultiStepForm from "../MultiStepForm";
 
 export default function DashboardLayout({
   activeSection,

@@ -1,28 +1,12 @@
 import React from "react";
-import { useForm } from "react-hook-form";
-import {
-  Step1Data,
-  Step2Data,
-  Step3Data,
-  step3Schema,
-} from "../schemas/schemas";
-import { zodResolver } from "@hookform/resolvers/zod";
-
-// =======================
-// TYPES
-// =======================
+import { useFormContext, useWatch } from "react-hook-form";
+import { FullFormData } from "../schemas/schemas";
 
 type Step3Props = {
-  step1: Step1Data;
-  step2: Step2Data;
-  goToStep1: (error?: string) => void;
+  goToStep1: () => void;
   onBack: () => void;
-  defaultValues?: { rodo: boolean };
 };
 
-// =======================
-// FAKE API
-// =======================
 const fakeRegister = async () => {
   await new Promise((r) => setTimeout(r, 1000));
 
@@ -33,87 +17,77 @@ const fakeRegister = async () => {
   return { status: 200 };
 };
 
-// =======================
-// COMPONENT
-// =======================
-export const Step3Form = ({
-  step1,
-  step2,
-  goToStep1,
-  onBack,
-  defaultValues,
-}: Step3Props) => {
+export const Step3Form = ({ goToStep1, onBack }: Step3Props) => {
   const {
     register,
     handleSubmit,
     setError,
+    clearErrors,
+    control,
+    getValues,
     formState: { errors, isSubmitting },
-  } = useForm<Step3Data>({
-    resolver: zodResolver(step3Schema),
-    defaultValues: defaultValues || { rodo: false },
-  });
+  } = useFormContext<FullFormData>();
 
-  const onSubmit = async (data: any) => {
-    const payload = {
-      ...step1,
-      ...step2,
-      rodo: data.rodo,
-    };
+  const values = useWatch({ control });
 
-    console.log("WYSYŁANE DANE FORMULARZA:", payload);
+  const onSubmit = async () => {
+    clearErrors("root.serverError");
+    const data = getValues();
+
+    console.log("WYSYLANE DANE FORMULARZA:", data);
 
     const response = await fakeRegister();
 
     if (response.status === 409) {
-      goToStep1("Ten adres e-mail jest już zajęty");
+      setError("email", {
+        type: "server",
+        message: "Ten adres e-mail jest juz zarejestrowany",
+      });
+      goToStep1();
       return;
     }
 
     if (response.status === 500) {
       setError("root.serverError", {
-        message: "Błąd serwera, spróbuj ponownie",
+        type: "server",
+        message: "Blad serwera, sproboj ponownie",
       });
       return;
     }
 
-    alert("Rejestracja zakończona sukcesem 🎉");
+    alert("Rejestracja zakonczona sukcesem");
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
-      {/* READ ONLY */}
       <section aria-label="Podsumowanie danych" className="text-sm space-y-2">
         <p>
-          <strong>Imię:</strong> {step1.firstName}
+          <strong>Imie:</strong> {values.firstName}
         </p>
         <p>
-          <strong>Nazwisko:</strong> {step1.lastName}
+          <strong>Nazwisko:</strong> {values.lastName}
         </p>
         <p>
-          <strong>Email:</strong> {step1.email}
+          <strong>Email:</strong> {values.email}
         </p>
-
         <p>
           <strong>Kategorie:</strong>{" "}
-          {step2.categories.map((c) => c.value).join(", ")}
+          {values.categories?.map((category) => category.value).join(", ")}
         </p>
-
         <p>
           <strong>Powiadomienia:</strong>{" "}
           {[
-            step2.notifications.email && "Email",
-            step2.notifications.push && "Push",
+            values.notifications?.email && "Email",
+            values.notifications?.push && "Push",
           ]
             .filter(Boolean)
             .join(", ") || "Brak"}
         </p>
-
         <p>
-          <strong>Newsletter:</strong> {step2.newsletter ? "Tak" : "Nie"}
+          <strong>Newsletter:</strong> {values.newsletter ? "Tak" : "Nie"}
         </p>
       </section>
 
-      {/* RODO */}
       <div>
         <label htmlFor="rodo" className="flex items-center gap-2">
           <input
@@ -123,11 +97,9 @@ export const Step3Form = ({
             aria-required="true"
             aria-invalid={!!errors.rodo}
             aria-describedby={errors.rodo ? "rodo-error" : undefined}
-            {...register("rodo", {
-              required: "Musisz zaakceptować RODO",
-            })}
+            {...register("rodo")}
           />
-          Akceptuję regulamin i politykę prywatności *
+          Akceptuje regulamin i polityke prywatnosci *
         </label>
 
         {errors.rodo && (
@@ -137,32 +109,28 @@ export const Step3Form = ({
         )}
       </div>
 
-      {/* SERVER ERROR */}
       {errors.root?.serverError && (
         <div role="alert" aria-live="assertive" className="text-red-600 text-sm">
           {errors.root.serverError.message}
         </div>
       )}
 
-      {/* BUTTONS */}
       <div className="flex gap-2">
-        {/* BACK */}
         <button
           type="button"
-          onClick={() => onBack()}
+          onClick={onBack}
           className="w-1/2 border border-gray-300 py-2 rounded hover:bg-gray-100"
         >
           Wstecz
         </button>
 
-        {/* SUBMIT */}
         <button
           type="submit"
           disabled={isSubmitting}
           aria-busy={isSubmitting}
           className="w-1/2 bg-green-600 text-white py-2 rounded hover:bg-green-700"
         >
-          {isSubmitting ? "Rejestrowanie…" : "Zarejestruj się"}
+          {isSubmitting ? "Rejestrowanie..." : "Zarejestruj sie"}
         </button>
       </div>
     </form>
