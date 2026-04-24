@@ -25,8 +25,8 @@ export function TodoItem({
         padding: "12px",
         border: "1px solid #ddd",
         borderRadius: "8px",
-        backgroundColor: theme === 'dark' ? '#2a2a2a' : '#f8f9fa',
-        color: theme === 'dark' ? 'white' : 'black',
+        backgroundColor: theme === "dark" ? "#2a2a2a" : "#f8f9fa",
+        color: theme === "dark" ? "white" : "black",
       }}
     >
       <input
@@ -46,12 +46,17 @@ export function TodoItem({
           style={{
             fontWeight: "bold",
             textDecoration: todo.completed ? "line-through" : "none",
-            color: theme === 'dark' ? 'white' : 'black',
+            color: theme === "dark" ? "#adb5bd" : "#595959",
           }}
         >
           {todo.title}
         </span>
-        <span style={{ marginLeft: "10px", color: theme === 'dark' ? '#aaa' : '#6c757d' }}>
+        <span
+          style={{
+            marginLeft: "10px",
+            color: theme === "dark" ? "#aaa" : "#6c757d",
+          }}
+        >
           {todo.date}
         </span>
       </div>
@@ -73,16 +78,18 @@ export function TodoItem({
           onDelete(todo.id);
         }}
         style={{
-          border: "1px solid red",
+          border: "1px solid #d32f2f",
           backgroundColor: "white",
           color: "red",
           borderRadius: "4px",
+          padding: "6px 12px",
           cursor: "pointer",
           display: "flex", // Added to align icon and text
           alignItems: "center", // Added to align icon and text
         }}
       >
         <svg
+          aria-label="delete"
           xmlns="http://www.w3.org/2000/svg"
           width="16"
           height="16"
