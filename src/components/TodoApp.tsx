@@ -43,8 +43,9 @@ export default function TodoApp() {
         <header className="mx-auto flex w-full max-w-[700px] flex-wrap items-center gap-4 sm:flex-nowrap sm:gap-10">
           <h2
             id="todo-app-title"
-            className="m-0 max-w-[250px] whitespace-nowrap text-2xl font-semibold text-[#595959] dark:text-slate-50"
+            className="sr-only"
           >
+            Aplikacja listy zadan
           </h2>
           <SearchResults
             results={filteredTodos}

@@ -61,6 +61,7 @@ export default function AppHeader({ navItems }: AppHeaderProps) {
               aria-label={
                 theme === "light" ? "Wlacz tryb ciemny" : "Wlacz tryb jasny"
               }
+              aria-pressed={theme === "dark"}
             >
               {theme === "light" ? <MoonIcon /> : <SunIcon />}
               <span>{theme === "light" ? "Tryb ciemny" : "Tryb jasny"}</span>
@@ -69,7 +70,7 @@ export default function AppHeader({ navItems }: AppHeaderProps) {
             <button
               type="button"
               className="relative hidden h-10 w-10 items-center justify-center rounded-full transition hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-slate-200 dark:hover:bg-slate-800 sm:flex"
-              aria-label="powiadomienia"
+              aria-label="Powiadomienia"
             >
               <BellIcon />
               <span
