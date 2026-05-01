@@ -93,13 +93,13 @@ export function TodoList({
             </button>
 
             <article className="min-w-0 flex-1 text-left">
-              <p
-                className={`truncate font-semibold ${
-                  todo.completed
-                    ? "text-slate-400 line-through"
-                    : "text-slate-900 dark:text-slate-50"
-                }`}
-              >
+                  <p
+                    className={`truncate font-semibold ${
+                      todo.completed
+                        ? "text-slate-600 line-through dark:text-slate-300"
+                        : "text-slate-900 dark:text-slate-50"
+                    }`}
+                  >
                 {todo.title}
               </p>
               <p

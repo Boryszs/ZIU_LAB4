@@ -33,6 +33,43 @@ code {
   border: 0;
 }
 
+/* focus border */
+:where(
+    a,
+    button,
+    input,
+    select,
+    textarea,
+    summary,
+    [role="button"],
+    [role="checkbox"],
+    [tabindex]:not([tabindex="-1"])
+  ):focus-visible {
+  outline: 3px solid #cbd5e1 !important;
+  outline-offset: 3px;
+  box-shadow:
+    0 0 0 2px #ffffff,
+    0 0 0 6px rgba(203, 213, 225, 0.6) !important;
+}
+
+.dark
+  :where(
+    a,
+    button,
+    input,
+    select,
+    textarea,
+    summary,
+    [role="button"],
+    [role="checkbox"],
+    [tabindex]:not([tabindex="-1"])
+  ):focus-visible {
+  outline-color: #ffffff !important;
+  box-shadow:
+    0 0 0 2px #111827,
+    0 0 0 6px rgba(255, 255, 255, 0.72) !important;
+}
+
 /* POPRAWNIE - mobile-first */
 
 .task-grid {

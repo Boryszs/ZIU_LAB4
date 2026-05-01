@@ -45,7 +45,6 @@ export default function TodoApp() {
             id="todo-app-title"
             className="m-0 max-w-[250px] whitespace-nowrap text-2xl font-semibold text-[#595959] dark:text-slate-50"
           >
-            ToDo List
           </h2>
           <SearchResults
             results={filteredTodos}

@@ -51,13 +51,20 @@ export function ModalDialog({
           >
             {children}
           </div>
-          <div className="mt-6 text-right">
+          <div className="mt-6 flex flex-wrap justify-end gap-3">
+            <button
+              type="button"
+              onClick={onClose}
+              className="rounded-lg border border-slate-300 bg-white px-4 py-2 font-semibold text-slate-700 transition hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+            >
+              Zamknij
+            </button>
             <button
               type="button"
               onClick={onClose}
               className="rounded-lg bg-[#1565C0] px-4 py-2 font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300"
             >
-              Zamknij
+              OK
             </button>
           </div>
         </div>
