@@ -31,7 +31,6 @@ export function SearchResults({
         <input
           id="todo-search"
           type="search"
-          aria-label="Wyszukaj zadania"
           aria-describedby="search-status"
           placeholder="Wyszukaj zadania..."
           value={query}

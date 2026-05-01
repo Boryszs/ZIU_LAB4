@@ -37,7 +37,7 @@ export default function AppHeader({ navItems }: AppHeaderProps) {
               onClick={() => setIsOpen((prev) => !prev)}
               className="flex h-10 w-10 items-center justify-center rounded-full transition hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-slate-200 dark:hover:bg-slate-800 md:hidden"
               aria-controls="mobile-menu"
-              aria-label="Otwórz menu"
+              aria-label={isOpen ? "Zamknij menu" : "Otwórz menu"}
               aria-expanded={isOpen}
             >
               <MenuIcon />
@@ -72,7 +72,10 @@ export default function AppHeader({ navItems }: AppHeaderProps) {
               aria-label="powiadomienia"
             >
               <BellIcon />
-              <span className="absolute right-2.5 top-2.5 h-2.5 w-2.5 rounded-full bg-red-600 ring-2 ring-white dark:ring-slate-900" />
+              <span
+                aria-hidden="true"
+                className="absolute right-2.5 top-2.5 h-2.5 w-2.5 rounded-full bg-red-600 ring-2 ring-white dark:ring-slate-900"
+              />
             </button>
           </div>
         </div>

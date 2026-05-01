@@ -9,7 +9,10 @@ export default function StatsGrid() {
   const pending = todos.filter((todo) => !todo.completed).length;
 
   return (
-    <section className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+    <section
+      aria-label="Statystyki zadań"
+      className="grid grid-cols-1 gap-6 sm:grid-cols-3"
+    >
       <StatsCard
         title="Wszystkie zadania"
         value={total}
