@@ -1,8 +1,9 @@
-import { useState, useMemo } from "react";
+import { useMemo, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { BellIcon, MenuIcon, MoonIcon, SunIcon } from "../icons";
 import { useTheme } from "../../context/TodoContext";
 import type { NavItem } from "./Sidebar";
+import { FocusTrap } from "../FocusTrap";
 
 interface AppHeaderProps {
   navItems: NavItem[];
@@ -11,10 +12,13 @@ interface AppHeaderProps {
 export default function AppHeader({ navItems }: AppHeaderProps) {
   const { theme, setTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
   const location = useLocation();
 
   const title = useMemo(() => {
-    const currentItem = navItems.find((item) => item.path === location.pathname);
+    const currentItem = navItems.find(
+      (item) => item.path === location.pathname,
+    );
     return currentItem?.label || "Dashboard";
   }, [location.pathname, navItems]);
 
@@ -28,6 +32,7 @@ export default function AppHeader({ navItems }: AppHeaderProps) {
         <div className="flex h-16 items-center justify-between gap-3 px-4 sm:px-6">
           <div className="flex min-w-0 items-center gap-2">
             <button
+              ref={menuButtonRef}
               type="button"
               onClick={() => setIsOpen((prev) => !prev)}
               className="flex h-10 w-10 items-center justify-center rounded-full transition hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-slate-200 dark:hover:bg-slate-800 md:hidden"
@@ -74,36 +79,38 @@ export default function AppHeader({ navItems }: AppHeaderProps) {
       </header>
 
       {isOpen && (
-        <nav
-          id="mobile-menu"
-          className="fixed left-0 top-16 z-[1200] w-full bg-white shadow-lg dark:bg-slate-900 md:hidden"
-          aria-label="Menu mobilne"
-        >
-          <ul className="py-2">
-            {navItems.map((item) => {
-              const Icon = item.icon;
+        <FocusTrap onEscape={() => setIsOpen(false)} triggerRef={menuButtonRef}>
+          <nav
+            id="mobile-menu"
+            className="fixed left-0 top-16 z-[1200] w-full bg-white shadow-lg dark:bg-slate-900 md:hidden"
+            aria-label="Menu mobilne"
+          >
+            <ul className="py-2">
+              {navItems.map((item) => {
+                const Icon = item.icon;
 
-              return (
-                <li key={item.path}>
-                  <NavLink
-                    to={item.path}
-                    onClick={handleLinkClick}
-                    className={({ isActive }) =>
-                      `flex min-h-[48px] w-full items-center gap-4 px-4 text-left transition ${
-                        isActive
-                          ? "bg-blue-50 text-[#1565C0] dark:bg-blue-950 dark:text-blue-200"
-                          : "text-slate-700 hover:bg-slate-50 dark:text-slate-100 dark:hover:bg-slate-800"
-                      }`
-                    }
-                  >
-                    <Icon className="h-6 w-6 shrink-0" />
-                    <span>{item.label}</span>
-                  </NavLink>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
+                return (
+                  <li key={item.path}>
+                    <NavLink
+                      to={item.path}
+                      onClick={handleLinkClick}
+                      className={({ isActive }) =>
+                        `flex min-h-[48px] w-full items-center gap-4 px-4 text-left transition ${
+                          isActive
+                            ? "bg-blue-50 text-[#1565C0] dark:bg-blue-950 dark:text-blue-200"
+                            : "text-slate-700 hover:bg-slate-50 dark:text-slate-100 dark:hover:bg-slate-800"
+                        }`
+                      }
+                    >
+                      <Icon className="h-6 w-6 shrink-0" />
+                      <span>{item.label}</span>
+                    </NavLink>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+         </FocusTrap> 
       )}
     </>
   );
