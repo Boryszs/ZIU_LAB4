@@ -1,12 +1,13 @@
-import { Box, Toolbar } from "@mui/material";
 import AppHeader from "./AppHeader";
-import Sidebar from "./Sidebar";
+import Sidebar, { type DashboardNavItem } from "./Sidebar";
 import StatsGrid from "./StatsGrid";
 import { SidebarProps } from "../../types/todo.types";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import TaskIcon from "@mui/icons-material/Task";
-import SettingsIcon from "@mui/icons-material/Settings";
-import LoginIcon from "@mui/icons-material/Login";
+import {
+  DashboardIcon,
+  LoginIcon,
+  SettingsIcon,
+  TaskIcon,
+} from "../icons";
 import MultiStepForm from "../MultiStepForm";
 
 export default function DashboardLayout({
@@ -14,7 +15,7 @@ export default function DashboardLayout({
   onSectionChange,
   appTodo,
 }: SidebarProps) {
-  const navItems = [
+  const navItems: DashboardNavItem[] = [
     { label: "Dashboard", icon: DashboardIcon, section: "dashboard" },
     { label: "Zadania", icon: TaskIcon, section: "tasks" },
     { label: "Ustawienia", icon: SettingsIcon, section: "settings" },
@@ -22,43 +23,26 @@ export default function DashboardLayout({
   ];
 
   return (
-    <Box sx={{ 
-    display: "flex", 
-    flexDirection: "column", // Elementy jeden pod drugim
-    alignItems: "center",    // Centrowanie w poziomie
-    justifyContent: "center", // Centrowanie w pionie
-    minHeight: "100vh",
-    bgcolor: "background.default", // Używa koloru z motywu
-    p: 2 // Padding, żeby na mobile karta nie dotykała krawędzi
-  }}>
+    <div className="min-h-screen bg-[#F5F7FA] text-slate-900 transition-colors dark:bg-slate-950 dark:text-slate-100">
       <Sidebar
         activeSection={activeSection}
         onSectionChange={onSectionChange}
         navItems={navItems}
       />
 
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          ml: { md: "240px" }, // 🔥 KLUCZ
-          width: { md: "calc(100% - 240px)" }, // 🔥 BONUS (usuwa pustkę)
-          p: 3,
-          bgcolor: "background.default",
-        }}
-      >
+      <main className="min-h-screen w-full bg-[#F5F7FA] p-6 pt-0 transition-colors dark:bg-slate-950 md:ml-[240px] md:w-[calc(100%_-_240px)]">
         <AppHeader
           activeSection={activeSection}
           onSectionChange={onSectionChange}
           navItems={navItems}
         />
-        <Toolbar />
+
+        <div className="h-16" />
 
         {activeSection === "dashboard" && <StatsGrid />}
         {activeSection === "tasks" && appTodo?.()}
-        {activeSection === "settings" }
-        {activeSection === "login" && <MultiStepForm></MultiStepForm>}
-      </Box>
-    </Box>
+        {activeSection === "login" && <MultiStepForm />}
+      </main>
+    </div>
   );
 }

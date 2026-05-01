@@ -1,8 +1,7 @@
-// tailwind.config.js
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
   darkMode: "class",
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  content: ["./public/index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       colors: {
@@ -16,7 +15,7 @@ export default {
         warning: "#E65100",
         danger: "#B71C1C",
       },
-      fontFamily: { sans: ["Inter", "system-ui", "sans-serif"] },
+      fontFamily: { sans: ["Roboto", "Helvetica", "Arial", "sans-serif"] },
       borderRadius: { xl: "1rem", "2xl": "1.5rem" },
     },
   },

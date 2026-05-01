@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useReducer, useState, ReactNode } from 'react';
 import { todoReducer } from '../reducers/todoReducer';
 import { PriorityType, Todo } from '../types/todo.types';
 
@@ -23,6 +23,11 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [todos, dispatch] = useReducer(todoReducer, initialTodos);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+    document.documentElement.style.colorScheme = theme;
+  }, [theme]);
 
   return (
     <ThemeContext.Provider

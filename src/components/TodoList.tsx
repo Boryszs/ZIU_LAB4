@@ -1,19 +1,10 @@
 import { useMemo } from "react";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import {
-  Checkbox,
-  Chip,
-  IconButton,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Paper,
-  Typography,
-} from "@mui/material";
+  CheckBoxBlankIcon,
+  CheckBoxIcon,
+  DeleteIcon,
+  EditIcon,
+} from "./icons";
 import { Filter, Todo } from "../types/todo.types";
 
 interface TodoListProps {
@@ -24,17 +15,34 @@ interface TodoListProps {
   onStartEdit: (id: string) => void;
 }
 
-const priorityColor = {
-  low: "default",
-  medium: "warning",
-  high: "error",
-} as const;
-
 const priorityLabel = {
   low: "Niski",
   medium: "Sredni",
   high: "Wysoki",
 } as const;
+
+const priorityClass = {
+  low: "border-slate-300 bg-slate-100 text-slate-700 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200",
+  medium:
+    "border-amber-200 bg-amber-100 text-amber-800 dark:border-amber-700 dark:bg-amber-950 dark:text-amber-200",
+  high: "border-red-200 bg-red-100 text-red-700 dark:border-red-700 dark:bg-red-950 dark:text-red-200",
+} as const;
+
+function formatTodoDate(value: string) {
+  const timestamp = Number(value);
+
+  if (Number.isFinite(timestamp) && value.trim() !== "") {
+    return new Intl.DateTimeFormat("pl-PL", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    })
+      .format(new Date(timestamp))
+      .replace(/\./g, "-");
+  }
+
+  return value;
+}
 
 export function TodoList({
   todos,
@@ -44,105 +52,90 @@ export function TodoList({
   onStartEdit,
 }: TodoListProps) {
   const filteredTodos = useMemo(() => {
-    if (filter === "active") {
-      return todos.filter((todo) => !todo.completed);
-    }
-    if (filter === "completed") {
-      return todos.filter((todo) => todo.completed);
-    }
+    if (filter === "active") return todos.filter((todo) => !todo.completed);
+    if (filter === "completed") return todos.filter((todo) => todo.completed);
     return todos;
   }, [todos, filter]);
 
   if (filteredTodos.length === 0) {
     return (
-      <Typography color="text.secondary" textAlign="center" sx={{ mt: 4 }}>
+      <p className="mx-auto mt-8 text-center text-slate-500 dark:text-slate-400">
         Brak zadan. Dodaj pierwsze!
-      </Typography>
+      </p>
     );
   }
 
   return (
-    <Paper
-      variant="outlined"
-      sx={{
-        overflow: "hidden",
-        maxWidth: 700,
-        width: "100%",
-        mx: "auto",
-        my: 3,
-        borderRadius: 3,
-      }}
-    >
-      <List disablePadding>
-        {filteredTodos.map((todo, idx) => (
-          <ListItem
+    <section className="mx-auto my-6 w-full max-w-[700px] overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
+      <ul className="divide-y divide-slate-200 dark:divide-slate-700">
+        {filteredTodos.map((todo) => (
+          <li
             key={todo.id}
-            divider={idx < filteredTodos.length - 1}
-            sx={{
-              bgcolor: todo.completed ? "action.hover" : "background.paper",
-              alignItems: "center",
-              gap: 1,
-            }}
-            secondaryAction={
-              <>
-                <IconButton
-                  edge="end"
-                  color="primary"
-                  onClick={() => onStartEdit(todo.id)}
-                  aria-label="Edytuj zadanie"
-                  sx={{ mr: 0.5 }}
-                >
-                  <EditOutlinedIcon />
-                </IconButton>
-                <IconButton
-                  edge="end"
-                  color="error"
-                  onClick={() => onDelete(todo.id)}
-                  aria-label="Usun zadanie"
-                >
-                  <DeleteOutlineIcon />
-                </IconButton>
-              </>
-            }
+            className={`flex items-center gap-3 px-4 py-3 transition sm:px-5 ${
+              todo.completed
+                ? "bg-slate-50 dark:bg-slate-800/70"
+                : "bg-white hover:bg-slate-50/70 dark:bg-slate-900 dark:hover:bg-slate-800/70"
+            }`}
           >
-            <ListItemIcon sx={{ minWidth: 44 }}>
-              <Checkbox
-                checked={todo.completed}
-                onChange={() => onToggle(todo.id)}
-                icon={<CheckBoxOutlineBlankIcon />}
-                checkedIcon={<CheckBoxIcon />}
-                slotProps={{ input: { "aria-label": todo.title } }}
-              />
-            </ListItemIcon>
+            <button
+              type="button"
+              role="checkbox"
+              aria-checked={todo.completed}
+              aria-label={todo.title}
+              onClick={() => onToggle(todo.id)}
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[#1565C0] transition hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-100"
+            >
+              {todo.completed ? <CheckBoxIcon /> : <CheckBoxBlankIcon />}
+            </button>
 
-            <ListItemText
-              primary={todo.title}
-              secondary={todo.date}
-              slotProps={{
-                primary: {
-                  sx: {
-                    textDecoration: todo.completed ? "line-through" : "none",
-                    color: todo.completed ? "text.disabled" : "text.primary",
-                    fontWeight: 600,
-                  },
-                },
-                secondary: {
-                  sx: {
-                    textDecoration: todo.completed ? "line-through" : "none",
-                  },
-                },
-              }}
-            />
-            <Chip
-              label={priorityLabel[todo.priority]}
-              size="small"
-              color={priorityColor[todo.priority]}
-              variant={todo.completed ? "outlined" : "filled"}
-              sx={{ mr: 6, width: 80 }}
-            />
-          </ListItem>
+            <div className="min-w-0 flex-1 text-left">
+              <p
+                className={`truncate font-semibold ${
+                  todo.completed
+                    ? "text-slate-400 line-through"
+                    : "text-slate-900 dark:text-slate-50"
+                }`}
+              >
+                {todo.title}
+              </p>
+              <p
+                className={`text-sm text-slate-500 ${
+                  todo.completed ? "line-through" : ""
+                }`}
+              >
+                {formatTodoDate(todo.date)}
+              </p>
+            </div>
+
+            <span
+              className={`mr-2 w-20 rounded-full border px-3 py-1 text-center text-xs font-semibold ${
+                priorityClass[todo.priority]
+              } ${todo.completed ? "bg-transparent opacity-70" : ""}`}
+            >
+              {priorityLabel[todo.priority]}
+            </span>
+
+            <div className="flex shrink-0 gap-1">
+              <button
+                type="button"
+                onClick={() => onStartEdit(todo.id)}
+                aria-label="Edytuj zadanie"
+                className="flex h-10 w-10 items-center justify-center rounded-full text-blue-700 transition hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-100"
+              >
+                <EditIcon />
+              </button>
+              <button
+                type="button"
+                onClick={() => onDelete(todo.id)}
+                aria-label="Usun zadanie"
+                className="flex h-10 w-10 items-center justify-center rounded-full text-red-700 transition hover:bg-red-50 focus:outline-none focus:ring-4 focus:ring-red-100"
+              >
+                <DeleteIcon />
+              </button>
+            </div>
+          </li>
         ))}
-      </List>
-    </Paper>
+      </ul>
+    </section>
   );
 }

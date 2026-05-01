@@ -1,5 +1,5 @@
 import { JSX } from "react";
-import { DashboardSection } from "../components/dashboard/Sidebar";
+import type { DashboardSection } from "../components/dashboard/Sidebar";
 
 export interface Todo {
   id: string;
