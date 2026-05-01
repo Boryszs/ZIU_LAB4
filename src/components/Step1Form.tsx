@@ -40,6 +40,18 @@ export const Step1Form = ({ onNext }: Props) => {
     passwordValue && confirmPasswordValue
       ? passwordValue === confirmPasswordValue
       : true;
+  const passwordDescribedBy = errors.password
+    ? "password-error"
+    : passwordValue
+      ? "password-hint"
+      : undefined;
+  const confirmPasswordDescribedBy =
+    [
+      !passwordsMatch ? "confirmPassword-error-2" : undefined,
+      errors.confirmPassword ? "confirmPassword-error" : undefined,
+    ]
+      .filter(Boolean)
+      .join(" ") || undefined;
 
   return (
     <form
@@ -129,9 +141,7 @@ export const Step1Form = ({ onNext }: Props) => {
             required
             aria-required="true"
             aria-invalid={!!errors.password}
-            aria-describedby={
-              errors.password ? "password-error" : "password-hint"
-            }
+            aria-describedby={passwordDescribedBy}
             {...register("password")}
             className="w-full border px-3 py-2 rounded pr-10 focus:ring-2 focus:ring-blue-500 [&::-ms-reveal]:hidden"
           />
@@ -139,6 +149,7 @@ export const Step1Form = ({ onNext }: Props) => {
           <button
             type="button"
             aria-label={showPassword ? "Ukryj hasło" : "Pokaż hasło"}
+            aria-pressed={showPassword}
             onClick={() => setShowPassword((prev) => !prev)}
             className="absolute inset-y-0 right-0 flex items-center pr-3 text-sm text-gray-600"
           >
@@ -179,12 +190,7 @@ export const Step1Form = ({ onNext }: Props) => {
             required
             aria-required="true"
             aria-invalid={!!errors.confirmPassword || !passwordsMatch}
-            aria-describedby={[
-              !passwordsMatch ? "confirmPassword-error-2" : undefined,
-              errors.confirmPassword ? "confirmPassword-error" : undefined,
-            ]
-              .filter(Boolean)
-              .join(" ")}
+            aria-describedby={confirmPasswordDescribedBy}
             {...register("confirmPassword")}
             className="w-full border px-3 py-2 rounded pr-10 focus:ring-2 focus:ring-blue-500 [&::-ms-reveal]:hidden"
           />
@@ -192,6 +198,7 @@ export const Step1Form = ({ onNext }: Props) => {
           <button
             type="button"
             aria-label={showConfirmPassword ? "Ukryj hasło" : "Pokaż hasło"}
+            aria-pressed={showConfirmPassword}
             onClick={() => setShowConfirmPassword((prev) => !prev)}
             className="absolute inset-y-0 right-0 flex items-center pr-3 text-sm text-gray-600"
           >

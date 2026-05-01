@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Modal } from "./components/Modal";
+import { ModalDialog } from "./components/ModalDialog";
 
 export default function SettingsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -11,13 +11,18 @@ export default function SettingsPage() {
       <p className="mb-6">Strona ustawień jest w budowie.</p>
       <button
         ref={openModalButtonRef}
+        type="button"
+        aria-controls="settings-modal"
+        aria-expanded={isModalOpen}
+        aria-haspopup="dialog"
         onClick={() => setIsModalOpen(true)}
         className="rounded-md bg-slate-700 px-4 py-2 text-white hover:bg-slate-800 dark:bg-slate-600 dark:hover:bg-slate-500"
       >
         Otwórz okno modalne
       </button>
 
-      <Modal
+      <ModalDialog
+        id="settings-modal"
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         triggerRef={openModalButtonRef}
@@ -25,9 +30,9 @@ export default function SettingsPage() {
       >
         <p>
           To jest treść okna modalnego. Fokus jest uwięziony wewnątrz. Naciśnij
-          'Escape' lub przycisk 'Zamknij', aby wyjść.
+          Escape lub przycisk Zamknij, aby wyjść.
         </p>
-      </Modal>
+      </ModalDialog>
     </section>
   );
 }

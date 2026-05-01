@@ -1,27 +1,62 @@
-import { useEffect, useRef } from "react";
-
-const FOCUSABLE_SELECTORS = [
-  "a[href]",
-  "button:not([disabled])",
-  "input:not([disabled])",
-  "select:not([disabled])",
-  "textarea:not([disabled])",
-  '[tabindex]:not([tabindex="-1"])',
-  "details > summary",
-].join(", ");
-
-/**
- * FocusTrap — utrzymuje fokus klawiaturowy wewnątrz kontenera.
- *
- * @param {React.ReactNode} children — zawartość pułapki
- * @param {Function} onEscape — funkcja wywoływana przy naciśnięciu Escape
- * @param {React.RefObject} triggerRef — element, który otworzył pułapkę
- */
+import { useEffect, useRef, type ReactNode, type RefObject } from "react";
 
 interface FocusTrapProps {
-  children: React.ReactNode;
+  children: ReactNode;
   onEscape?: () => void;
-  triggerRef?: React.RefObject<HTMLElement | null>;
+  triggerRef?: RefObject<HTMLElement | null>;
+}
+
+function isDisabledControl(element: HTMLElement) {
+  return (
+    "disabled" in element &&
+    Boolean((element as HTMLButtonElement | HTMLInputElement).disabled)
+  );
+}
+
+function isFocusableElement(element: HTMLElement) {
+  if (element.closest('[aria-hidden="true"], [inert]')) return false;
+  if (isDisabledControl(element)) return false;
+
+  const style = window.getComputedStyle(element);
+  if (style.display === "none" || style.visibility === "hidden") return false;
+  if (element.tabIndex < 0) return false;
+
+  const tagName = element.tagName.toLowerCase();
+
+  if (tagName === "a" || tagName === "area") {
+    return element.hasAttribute("href");
+  }
+
+  if (tagName === "input") {
+    return (element as HTMLInputElement).type !== "hidden";
+  }
+
+  if (["button", "select", "textarea", "summary"].includes(tagName)) {
+    return true;
+  }
+
+  return element.isContentEditable || element.hasAttribute("tabindex");
+}
+
+function getFocusable(container: HTMLElement) {
+  const focusable: HTMLElement[] = [];
+  const walker = document.createTreeWalker(
+    container,
+    NodeFilter.SHOW_ELEMENT,
+    {
+      acceptNode(node) {
+        return isFocusableElement(node as HTMLElement)
+          ? NodeFilter.FILTER_ACCEPT
+          : NodeFilter.FILTER_SKIP;
+      },
+    },
+  );
+
+  while (walker.nextNode()) {
+    focusable.push(walker.currentNode as HTMLElement);
+  }
+
+  return focusable;
 }
 
 export function FocusTrap({ children, onEscape, triggerRef }: FocusTrapProps) {
@@ -30,40 +65,60 @@ export function FocusTrap({ children, onEscape, triggerRef }: FocusTrapProps) {
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-    // Pobierz wszystkie elementy z możliwością fokusu
-    const getFocusable = () =>
-      Array.from(
-        container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTORS),
-      ).filter((el) => !el.closest('[aria-hidden="true"]'));
-    // Ustaw fokus na pierwszym elemencie po podłączeniu komponentu
-    const firstFocusable = getFocusable()[0];
-    firstFocusable?.focus();
+    const trapContainer: HTMLElement = container;
 
-    function handleKeyDown(e: KeyboardEvent) {
-      const focusable = getFocusable();
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
+    const previouslyFocusedElement =
+      triggerRef?.current ??
+      (document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null);
 
-      if (e.key === "Escape") {
+    const focusFirstElement = () => {
+      const firstFocusable = getFocusable(trapContainer)[0];
+      (firstFocusable ?? trapContainer).focus();
+    };
+
+    focusFirstElement();
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        event.preventDefault();
         onEscape?.();
-        // Przywraca fokus do elementu, który otworzył pułapkę
-        triggerRef?.current?.focus();
         return;
       }
 
-      if (e.key !== "Tab") return;
-      if (e.shiftKey) {
-        // Shift+Tab: jeśli na pierwszym — przejdź na ostatni
+      if (event.key !== "Tab") return;
+
+      const focusable = getFocusable(trapContainer);
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (focusable.length === 0) {
+        event.preventDefault();
+        trapContainer.focus();
+        return;
+      }
+
+      if (focusable.length === 1) {
+        event.preventDefault();
+        first.focus();
+        return;
+      }
+
+      if (!trapContainer.contains(document.activeElement)) {
+        event.preventDefault();
+        first.focus();
+        return;
+      }
+
+      if (event.shiftKey) {
         if (document.activeElement === first) {
-          e.preventDefault();
+          event.preventDefault();
           last?.focus();
         }
-      } else {
-        // Tab: jeśli na ostatnim — przejdź na pierwszy
-        if (document.activeElement === last) {
-          e.preventDefault();
-          first?.focus();
-        }
+      } else if (document.activeElement === last) {
+        event.preventDefault();
+        first?.focus();
       }
     }
 
@@ -71,11 +126,13 @@ export function FocusTrap({ children, onEscape, triggerRef }: FocusTrapProps) {
 
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
-      // Przywróć fokus przy odłączeniu komponentu
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      triggerRef?.current?.focus();
+      previouslyFocusedElement?.focus();
     };
   }, [onEscape, triggerRef]);
 
-  return <div ref={containerRef}>{children}</div>;
+  return (
+    <div ref={containerRef} tabIndex={-1}>
+      {children}
+    </div>
+  );
 }

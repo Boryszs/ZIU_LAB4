@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useTodoContext } from "../context/TodoContext";
 import { Filter as FilterType, PriorityType } from "../types/todo.types";
 import { AddTodoForm } from "./AddTodoForm";
@@ -9,10 +9,8 @@ import { TodoList } from "./TodoList";
 export default function TodoApp() {
     const [filter, setFilter] = useState<FilterType>("all");
     const [searchTerm, setSearchTerm] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
     const [view, setView] = useState<"list" | "add" | "edit">("list");
     const [editingTodoId, setEditingTodoId] = useState<string | null>(null);
-    const loadingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
     const { todos, addTodo, toggleTodo, deleteTodo, editTodo } = useTodoContext();
   
     const handleAdd = (title: string, priority: PriorityType) => {
@@ -37,28 +35,6 @@ export default function TodoApp() {
     );
     const activeCount = todos.filter((todo) => !todo.completed).length;
   
-    useEffect(() => {
-      if (loadingTimeout.current) {
-        clearTimeout(loadingTimeout.current);
-      }
-  
-      if (searchTerm === "") {
-        setIsLoading(false);
-        return;
-      }
-  
-      setIsLoading(true);
-      loadingTimeout.current = setTimeout(() => {
-        setIsLoading(false);
-      }, 250);
-  
-      return () => {
-        if (loadingTimeout.current) {
-          clearTimeout(loadingTimeout.current);
-        }
-      };
-    }, [searchTerm]);
-  
     return (
       <section
         aria-labelledby="todo-app-title"
@@ -77,7 +53,6 @@ export default function TodoApp() {
             onQueryChange={(value) => {
               setSearchTerm(value);
             }}
-            isLoading={isLoading}
           />
         </header>
   
@@ -99,7 +74,7 @@ export default function TodoApp() {
           )}
         </header>
   
-        <main aria-labelledby="todo-view-heading">
+        <section aria-labelledby="todo-view-heading">
           {view === "list" ? (
             <>
               <button
@@ -131,7 +106,7 @@ export default function TodoApp() {
               initialData={todos.find((todo) => todo.id === editingTodoId)}
             />
           )}
-        </main>
+        </section>
       </section>
     );
   }

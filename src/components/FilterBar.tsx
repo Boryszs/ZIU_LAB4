@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { Filter as FilterType } from "../types/todo.types";
 
 interface FilterBarProps {
@@ -8,20 +8,26 @@ interface FilterBarProps {
 
 export function FilterBar({ activeFilter, onFilterChange }: FilterBarProps) {
   const filters: FilterType[] = ["all", "active", "completed"];
+  const filtersId = useId();
   const filterNames: Record<FilterType, string> = {
     all: "Wszystkie",
     active: "Aktywne",
-    completed: "Ukonczone",
+    completed: "Ukończone",
   };
 
   const [showFilters, setShowFilters] = useState(true);
 
   return (
-    <section aria-label="Filtr zadań" className="mx-auto my-5 flex w-full max-w-[700px] flex-col items-center gap-2.5">
+    <section
+      aria-label="Filtr zadań"
+      className="mx-auto my-5 flex w-full max-w-[700px] flex-col items-center gap-2.5"
+    >
       <div className="flex w-full justify-end">
         <button
           type="button"
           aria-label="Pokaż lub ukryj filtry zadań"
+          aria-controls={filtersId}
+          aria-expanded={showFilters}
           onClick={() => setShowFilters((prev) => !prev)}
           className="flex h-9 w-9 items-center justify-center rounded border border-slate-300 bg-slate-50 text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-slate-200 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
         >
@@ -42,7 +48,12 @@ export function FilterBar({ activeFilter, onFilterChange }: FilterBarProps) {
       </div>
 
       {showFilters && (
-        <div role="toolbar" aria-label="Filtry zadań" className="flex justify-center gap-2.5">
+        <div
+          id={filtersId}
+          role="toolbar"
+          aria-label="Filtry zadań"
+          className="flex justify-center gap-2.5"
+        >
           {filters.map((filter) => {
             const isActive = activeFilter === filter;
 

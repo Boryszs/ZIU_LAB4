@@ -87,6 +87,7 @@ export function TodoItem({
         {todo.priority.charAt(0).toUpperCase() + todo.priority.slice(1)}
       </span>
       <button
+        type="button"
         aria-label={`Usuń zadanie ${todo.title}`}
         onClick={(e) => {
           e.stopPropagation();

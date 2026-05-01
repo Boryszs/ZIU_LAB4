@@ -72,7 +72,7 @@ export default function MultiStepForm() {
   };
 
   return (
-    <main
+    <section
       aria-label="Formularz rejestracji"
       className="mx-auto w-full max-w-[540px] rounded-2xl border border-slate-300 bg-white p-5 shadow-sm transition-colors dark:border-slate-800 dark:bg-slate-900 dark:[&_input]:border-slate-700 dark:[&_input]:bg-slate-950 dark:[&_input]:text-slate-100 dark:[&_label]:text-slate-200 dark:[&_legend]:text-slate-200"
     >
@@ -126,6 +126,6 @@ export default function MultiStepForm() {
           <Step3Form onBack={goToStep2} goToStep1={goToStep1} />
         )}
       </FormProvider>
-    </main>
+    </section>
   );
 }

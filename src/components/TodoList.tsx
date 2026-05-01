@@ -123,7 +123,7 @@ export function TodoList({
               <button
                 type="button"
                 onClick={() => onStartEdit(todo.id)}
-                aria-label="Edytuj zadanie"
+                aria-label={`Edytuj zadanie ${todo.title}`}
                 className="flex h-10 w-10 items-center justify-center rounded-full text-blue-700 transition hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-100"
               >
                 <EditIcon />
@@ -131,7 +131,7 @@ export function TodoList({
               <button
                 type="button"
                 onClick={() => onDelete(todo.id)}
-                aria-label="Usun zadanie"
+                aria-label={`Usuń zadanie ${todo.title}`}
                 className="flex h-10 w-10 items-center justify-center rounded-full text-red-700 transition hover:bg-red-50 focus:outline-none focus:ring-4 focus:ring-red-100"
               >
                 <DeleteIcon />

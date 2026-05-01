@@ -24,7 +24,9 @@ function App() {
       <a href="#main-content" className="skip-link">
         Przejdź do treści głównej
       </a>
-      <BrowserRouter>
+      <BrowserRouter
+        future={{ v7_relativeSplatPath: true, v7_startTransition: true }}
+      >
         <ThemeProvider>
           <Routes>
             <Route path="/" element={<DashboardLayout appTodo={TodoApp} />}>
