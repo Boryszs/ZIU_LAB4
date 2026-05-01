@@ -150,7 +150,7 @@ export const Step1Form = ({ onNext }: Props) => {
           <span
             id="password-hint"
             aria-live="polite"
-            className="text-gray-700 text-sm"
+            className="text-sm text-gray-700 dark:text-white"
           >
             Siła hasła: {strength.label}
           </span>

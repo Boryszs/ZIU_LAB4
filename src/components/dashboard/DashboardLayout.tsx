@@ -30,14 +30,14 @@ export default function DashboardLayout({
         navItems={navItems}
       />
 
-      <main className="min-h-screen w-full bg-[#F5F7FA] p-6 pt-0 transition-colors dark:bg-slate-950 md:ml-[240px] md:w-[calc(100%_-_240px)]">
+      <main className="min-h-screen w-full bg-[#F5F7FA] p-6 pt-0 transition-colors dark:bg-slate-950 md:ml-[264px] md:w-[calc(100%_-_264px)]">
         <AppHeader
           activeSection={activeSection}
           onSectionChange={onSectionChange}
           navItems={navItems}
         />
 
-        <div className="h-16" />
+        <div className="h-24" />
 
         {activeSection === "dashboard" && <StatsGrid />}
         {activeSection === "tasks" && appTodo?.()}

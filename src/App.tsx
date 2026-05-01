@@ -37,7 +37,7 @@ function TodoApp() {
   const activeCount = todos.filter((todo) => !todo.completed).length;
 
   return (
-    <div className="min-h-screen bg-white p-4 transition-colors dark:bg-[#1e1e1e]">
+    <div className="min-h-screen bg-[#F5F7FA] p-4 transition-colors dark:bg-slate-950">
       <div className="mx-auto flex w-full max-w-[700px] flex-wrap items-center gap-4 sm:flex-nowrap sm:gap-10">
         <h2 className="m-0 max-w-[250px] whitespace-nowrap text-2xl font-semibold text-[#595959] dark:text-slate-50">
           ToDo List

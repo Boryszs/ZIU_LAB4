@@ -21,12 +21,23 @@ const initialTodos: Todo[] = [
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    const savedTheme = window.localStorage.getItem('theme');
+
+    if (savedTheme === 'light' || savedTheme === 'dark') {
+      return savedTheme;
+    }
+
+    return window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light';
+  });
   const [todos, dispatch] = useReducer(todoReducer, initialTodos);
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
     document.documentElement.style.colorScheme = theme;
+    window.localStorage.setItem('theme', theme);
   }, [theme]);
 
   return (

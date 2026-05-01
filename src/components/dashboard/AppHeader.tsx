@@ -26,8 +26,8 @@ export default function AppHeader({
 
   return (
     <>
-      <header className="fixed top-0 z-[1100] w-full border-b border-slate-200 bg-white text-slate-900 shadow-sm transition-colors dark:border-slate-800 dark:bg-slate-900 dark:text-slate-50 md:ml-[240px] md:w-[calc(100%_-_240px)]">
-        <div className="flex h-16 items-center justify-between px-4 sm:px-6">
+      <header className="fixed left-0 right-0 top-0 z-[1100] border-b border-slate-200 bg-white/95 text-slate-900 shadow-sm backdrop-blur transition-colors dark:border-slate-800 dark:bg-slate-950/95 dark:text-slate-50 md:left-[264px]">
+        <div className="flex h-16 items-center justify-between gap-3 px-4 sm:px-6">
           <div className="flex min-w-0 items-center gap-2">
             <button
               type="button"
@@ -49,19 +49,22 @@ export default function AppHeader({
             </div>
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex shrink-0 items-center gap-2">
             <button
               type="button"
               onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-              className="flex h-10 w-10 items-center justify-center rounded-full transition hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-slate-200 dark:hover:bg-slate-800"
-              aria-label="dark mode"
+              className="flex h-10 min-w-[132px] items-center justify-center gap-2 rounded-full border border-slate-300 bg-transparent px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-slate-200 dark:border-slate-700 dark:text-slate-100 dark:hover:bg-slate-800 dark:focus:ring-slate-700"
+              aria-label={
+                theme === "light" ? "Wlacz tryb ciemny" : "Wlacz tryb jasny"
+              }
             >
               {theme === "light" ? <MoonIcon /> : <SunIcon />}
+              <span>{theme === "light" ? "Tryb ciemny" : "Tryb jasny"}</span>
             </button>
 
             <button
               type="button"
-              className="relative flex h-10 w-10 items-center justify-center rounded-full transition hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-slate-200 dark:hover:bg-slate-800"
+              className="relative hidden h-10 w-10 items-center justify-center rounded-full transition hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-slate-200 dark:hover:bg-slate-800 sm:flex"
               aria-label="powiadomienia"
             >
               <BellIcon />

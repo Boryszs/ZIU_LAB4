@@ -22,10 +22,10 @@ const priorityLabel = {
 } as const;
 
 const priorityClass = {
-  low: "border-slate-300 bg-slate-100 text-slate-700 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200",
+  low: "border-slate-400 bg-slate-200 text-slate-800 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100",
   medium:
-    "border-amber-200 bg-amber-100 text-amber-800 dark:border-amber-700 dark:bg-amber-950 dark:text-amber-200",
-  high: "border-red-200 bg-red-100 text-red-700 dark:border-red-700 dark:bg-red-950 dark:text-red-200",
+    "border-amber-400 bg-amber-300 text-amber-950 dark:border-amber-700 dark:bg-amber-800 dark:text-amber-50",
+  high: "border-red-300 bg-red-200 text-red-900 dark:border-red-700 dark:bg-red-900 dark:text-red-100",
 } as const;
 
 function formatTodoDate(value: string) {
@@ -66,7 +66,7 @@ export function TodoList({
   }
 
   return (
-    <section className="mx-auto my-6 w-full max-w-[700px] overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
+    <section className="mx-auto my-6 w-full max-w-[700px] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_2px_12px_rgba(0,0,0,0.08)] dark:border-slate-800 dark:bg-slate-900">
       <ul className="divide-y divide-slate-200 dark:divide-slate-700">
         {filteredTodos.map((todo) => (
           <li
