@@ -43,18 +43,22 @@ export function TodoItem({
         }}
         style={{ cursor: "pointer" }}
       />
-      <div
-        role="button"
-        tabIndex={0}
+      <button
+        type="button"
         aria-label={`Edytuj zadanie ${todo.title}`}
-        style={{ flexGrow: 1, textAlign: "left", cursor: "pointer" }}
-        onClick={() => onStartEdit(todo.id)}
-        onKeyDown={(event: React.KeyboardEvent<HTMLDivElement>) => {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            onStartEdit(todo.id);
-          }
+        style={{
+          flexGrow: 1,
+          width: "100%",
+          textAlign: "left",
+          cursor: "pointer",
+          background: "transparent",
+          border: "none",
+          padding: 0,
+          margin: 0,
+          font: "inherit",
+          color: "inherit",
         }}
+        onClick={() => onStartEdit(todo.id)}
       >
         <span
           style={{
@@ -73,7 +77,7 @@ export function TodoItem({
         >
           {todo.date}
         </span>
-      </div>
+      </button>
       <span
         style={{
           backgroundColor: "#343a40",

@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import type { AppIcon } from "../icons";
 
 export interface NavItem {
@@ -12,6 +12,8 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ navItems }: SidebarProps) {
+  const location = useLocation();
+
   return (
     <aside aria-label="Panel bocznej nawigacji" className="fixed left-0 top-0 hidden h-screen w-[264px] flex-col border-r border-slate-300 bg-white text-slate-900 shadow-[8px_0_24px_rgba(15,23,42,0.08)] transition-colors dark:border-slate-800 dark:bg-slate-950 dark:text-slate-50 md:flex">
       <header className="flex h-20 items-center gap-3 px-5">
@@ -37,6 +39,7 @@ export default function Sidebar({ navItems }: SidebarProps) {
               <li key={item.path}>
                 <NavLink
                   to={item.path}
+                  aria-current={location.pathname === item.path ? "page" : undefined}
                   className={({ isActive }) =>
                     `group relative flex min-h-[48px] w-full items-center gap-3 rounded-xl px-3 text-left text-sm font-semibold transition ${
                       isActive

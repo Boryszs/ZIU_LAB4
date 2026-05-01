@@ -97,6 +97,7 @@ export default function AppHeader({ navItems }: AppHeaderProps) {
                   <li key={item.path}>
                     <NavLink
                       to={item.path}
+                      aria-current={location.pathname === item.path ? "page" : undefined}
                       onClick={handleLinkClick}
                       className={({ isActive }) =>
                         `flex min-h-[48px] w-full items-center gap-4 px-4 text-left transition ${
