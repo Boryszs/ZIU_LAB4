@@ -66,8 +66,8 @@ export function TodoList({
   }
 
   return (
-    <section className="mx-auto my-6 w-full max-w-[700px] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_2px_12px_rgba(0,0,0,0.08)] dark:border-slate-800 dark:bg-slate-900">
-      <ul className="divide-y divide-slate-200 dark:divide-slate-700">
+    <section aria-label="Lista zadań" className="mx-auto my-6 w-full max-w-[700px] overflow-hidden rounded-2xl border border-slate-300 bg-white shadow-[0_2px_12px_rgba(0,0,0,0.08)] dark:border-slate-800 dark:bg-slate-900">
+      <ul className="divide-y divide-slate-300 dark:divide-slate-700">
         {filteredTodos.map((todo) => (
           <li
             key={todo.id}
@@ -81,14 +81,18 @@ export function TodoList({
               type="button"
               role="checkbox"
               aria-checked={todo.completed}
-              aria-label={todo.title}
+              aria-label={
+                todo.completed
+                  ? `Oznacz zadanie '${todo.title}' jako nieukończone`
+                  : `Oznacz zadanie '${todo.title}' jako ukończone`
+              }
               onClick={() => onToggle(todo.id)}
               className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[#1565C0] transition hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-100"
             >
               {todo.completed ? <CheckBoxIcon /> : <CheckBoxBlankIcon />}
             </button>
 
-            <div className="min-w-0 flex-1 text-left">
+            <article className="min-w-0 flex-1 text-left">
               <p
                 className={`truncate font-semibold ${
                   todo.completed
@@ -105,7 +109,7 @@ export function TodoList({
               >
                 {formatTodoDate(todo.date)}
               </p>
-            </div>
+            </article>
 
             <span
               className={`mr-2 w-20 rounded-full border px-3 py-1 text-center text-xs font-semibold ${
@@ -115,7 +119,7 @@ export function TodoList({
               {priorityLabel[todo.priority]}
             </span>
 
-            <div className="flex shrink-0 gap-1">
+            <footer className="flex shrink-0 gap-1">
               <button
                 type="button"
                 onClick={() => onStartEdit(todo.id)}
@@ -132,7 +136,7 @@ export function TodoList({
               >
                 <DeleteIcon />
               </button>
-            </div>
+            </footer>
           </li>
         ))}
       </ul>

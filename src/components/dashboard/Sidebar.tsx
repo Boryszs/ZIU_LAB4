@@ -1,27 +1,20 @@
+import { NavLink } from "react-router-dom";
 import type { AppIcon } from "../icons";
 
-export type DashboardSection = "dashboard" | "tasks" | "settings" | "login";
-
-export interface DashboardNavItem {
+export interface NavItem {
   label: string;
   icon: AppIcon;
-  section: DashboardSection;
+  path: string;
 }
 
 interface SidebarProps {
-  activeSection: DashboardSection;
-  onSectionChange: (section: DashboardSection) => void;
-  navItems: DashboardNavItem[];
+  navItems: NavItem[];
 }
 
-export default function Sidebar({
-  activeSection,
-  onSectionChange,
-  navItems,
-}: SidebarProps) {
+export default function Sidebar({ navItems }: SidebarProps) {
   return (
-    <aside className="fixed left-0 top-0 hidden h-screen w-[264px] flex-col border-r border-slate-200 bg-white text-slate-900 shadow-[8px_0_24px_rgba(15,23,42,0.08)] transition-colors dark:border-slate-800 dark:bg-slate-950 dark:text-slate-50 md:flex">
-      <div className="flex h-20 items-center gap-3 px-5">
+    <aside aria-label="Panel bocznej nawigacji" className="fixed left-0 top-0 hidden h-screen w-[264px] flex-col border-r border-slate-300 bg-white text-slate-900 shadow-[8px_0_24px_rgba(15,23,42,0.08)] transition-colors dark:border-slate-800 dark:bg-slate-950 dark:text-slate-50 md:flex">
+      <header className="flex h-20 items-center gap-3 px-5">
         <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#1565C0] text-lg font-bold text-white shadow-sm">
           T
         </div>
@@ -31,39 +24,42 @@ export default function Sidebar({
             Panel zadan
           </p>
         </div>
-      </div>
+      </header>
 
-      <div className="mx-5 border-t border-slate-200 dark:border-slate-800" />
+      <hr className="mx-5 border-t border-slate-300 dark:border-slate-800" />
 
-      <nav className="px-3 py-4" aria-label="Glowne">
+      <nav className="px-3 py-4" aria-label="Główna nawigacja">
         <ul className="grid gap-1">
           {navItems.map((item) => {
             const Icon = item.icon;
-            const isActive = activeSection === item.section;
 
             return (
-              <li key={item.section}>
-                <button
-                  type="button"
-                  onClick={() => onSectionChange(item.section)}
-                  className={`group relative flex min-h-[48px] w-full items-center gap-3 rounded-xl px-3 text-left text-sm font-semibold transition ${
-                    isActive
+              <li key={item.path}>
+                <NavLink
+                  to={item.path}
+                  className={({ isActive }) =>
+                    `group relative flex min-h-[48px] w-full items-center gap-3 rounded-xl px-3 text-left text-sm font-semibold transition ${
+                      isActive
                       ? "bg-[#1565C0] text-white shadow-sm"
                       : "text-slate-600 hover:bg-slate-100 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-white"
-                  }`}
-                  aria-current={isActive ? "page" : undefined}
+                    }`
+                  }
                 >
-                  <span
-                    className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition ${
-                      isActive
-                        ? "bg-white/15"
-                        : "bg-slate-100 text-slate-500 group-hover:text-[#1565C0] dark:bg-slate-900 dark:text-slate-400"
-                    }`}
-                  >
-                    <Icon className="h-5 w-5" />
-                  </span>
-                  <span>{item.label}</span>
-                </button>
+                  {({ isActive }) => (
+                    <>
+                      <span
+                        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition ${
+                          isActive
+                            ? "bg-white/15"
+                            : "bg-slate-100 text-slate-500 group-hover:text-[#1565C0] dark:bg-slate-900 dark:text-slate-400"
+                        }`}
+                      >
+                        <Icon className="h-5 w-5" />
+                      </span>
+                      <span>{item.label}</span>
+                    </>
+                  )}
+                </NavLink>
               </li>
             );
           })}
@@ -72,7 +68,7 @@ export default function Sidebar({
 
       <div className="flex-1" />
 
-      <div className="m-4 rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-900">
+      <footer className="m-4 rounded-2xl border border-slate-300 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-900">
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1565C0] font-semibold text-white">
             U
@@ -86,7 +82,7 @@ export default function Sidebar({
             </p>
           </div>
         </div>
-      </div>
+      </footer>
     </aside>
   );
 }

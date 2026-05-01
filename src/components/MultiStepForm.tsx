@@ -74,7 +74,7 @@ export default function MultiStepForm() {
   return (
     <main
       aria-label="Formularz rejestracji"
-      className="mx-auto w-full max-w-[540px] rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-colors dark:border-slate-800 dark:bg-slate-900 dark:[&_input]:border-slate-700 dark:[&_input]:bg-slate-950 dark:[&_input]:text-slate-100 dark:[&_label]:text-slate-200 dark:[&_legend]:text-slate-200"
+      className="mx-auto w-full max-w-[540px] rounded-2xl border border-slate-300 bg-white p-5 shadow-sm transition-colors dark:border-slate-800 dark:bg-slate-900 dark:[&_input]:border-slate-700 dark:[&_input]:bg-slate-950 dark:[&_input]:text-slate-100 dark:[&_label]:text-slate-200 dark:[&_legend]:text-slate-200"
     >
       <nav aria-label="Postęp rejestracji" className="mb-4">
         <ol className="flex flex-wrap items-center justify-center gap-2 text-center text-sm text-slate-700 dark:text-slate-300">

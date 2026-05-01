@@ -1,12 +1,21 @@
-import { useState } from "react";
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+  useOutletContext,
+} from "react-router-dom";
 import { Filter as FilterType, PriorityType } from "./types/todo.types";
 import { FilterBar } from "./components/FilterBar";
 import { ThemeProvider, useTodoContext } from "./context/TodoContext";
 import DashboardLayout from "./components/dashboard/DashboardLayout";
-import type { DashboardSection } from "./components/dashboard/Sidebar";
 import { AddTodoForm } from "./components/AddTodoForm";
 import { TodoList } from "./components/TodoList";
+import { useState } from "react";
+import StatsGrid from "./components/dashboard/StatsGrid";
+import MultiStepForm from "./components/MultiStepForm";
 
+// The TodoApp component remains as the logic for the "Tasks" page.
 function TodoApp() {
   const [filter, setFilter] = useState<FilterType>("all");
   const [searchTerm, setSearchTerm] = useState("");
@@ -37,22 +46,42 @@ function TodoApp() {
   const activeCount = todos.filter((todo) => !todo.completed).length;
 
   return (
-    <div className="min-h-screen bg-[#F5F7FA] p-4 transition-colors dark:bg-slate-950">
-      <div className="mx-auto flex w-full max-w-[700px] flex-wrap items-center gap-4 sm:flex-nowrap sm:gap-10">
-        <h2 className="m-0 max-w-[250px] whitespace-nowrap text-2xl font-semibold text-[#595959] dark:text-slate-50">
+    <section
+      aria-labelledby="todo-app-title"
+      className="min-h-screen bg-[#F5F7FA] p-4 transition-colors dark:bg-slate-950"
+    >
+      <header className="mx-auto flex w-full max-w-[700px] flex-wrap items-center gap-4 sm:flex-nowrap sm:gap-10">
+        <h2
+          id="todo-app-title"
+          className="m-0 max-w-[250px] whitespace-nowrap text-2xl font-semibold text-[#595959] dark:text-slate-50"
+        >
           ToDo List
         </h2>
-        <input
-          type="text"
-          placeholder="Wyszukaj zadania..."
-          value={searchTerm}
-          onChange={(event) => setSearchTerm(event.target.value)}
-          className="h-10 min-w-0 flex-grow rounded border border-slate-300 bg-white px-2 text-base text-slate-900 outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-400"
-        />
-      </div>
+        <div
+          role="search"
+          aria-label="Wyszukiwarka zadań"
+          className="flex-grow"
+        >
+          <label htmlFor="todo-search" className="sr-only">
+            Wyszukaj zadania
+          </label>
+          <input
+            id="todo-search"
+            type="search"
+            aria-label="Wyszukaj zadania"
+            placeholder="Wyszukaj zadania..."
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
+            className="h-10 w-full rounded border border-slate-300 bg-white px-2 text-base text-slate-900 outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-400"
+          />
+        </div>
+      </header>
 
       <header className="flex flex-col items-center justify-center px-5 py-5 text-center">
-        <h1 className="m-0 text-2xl font-semibold text-[#2a2a2a] dark:text-slate-50 sm:text-3xl">
+        <h1
+          id="todo-view-heading"
+          className="m-0 text-2xl font-semibold text-[#2a2a2a] dark:text-slate-50 sm:text-3xl"
+        >
           {view === "add"
             ? "Dodaj Nowe Zadanie"
             : view === "edit"
@@ -66,7 +95,7 @@ function TodoApp() {
         )}
       </header>
 
-      <main>
+      <main aria-labelledby="todo-view-heading">
         {view === "list" ? (
           <>
             <button
@@ -99,22 +128,42 @@ function TodoApp() {
           />
         )}
       </main>
-    </div>
+    </section>
   );
 }
 
-function App() {
-  const [activeSection, setActiveSection] =
-    useState<DashboardSection>("login");
+// A placeholder for the settings page
+const SettingsPage = () => (
+  <section className="text-center">Strona ustawień jest w budowie.</section>
+);
 
+// A wrapper to pass the TodoApp component via Outlet context
+const TasksPage = () => {
+  const { appTodo } = useOutletContext<{ appTodo: () => React.ReactNode }>();
+  return <>{appTodo()}</>;
+};
+
+function App() {
   return (
-    <ThemeProvider>
-      <DashboardLayout
-        activeSection={activeSection}
-        onSectionChange={setActiveSection}
-        appTodo={TodoApp}
-      />
-    </ThemeProvider>
+    <>
+      <a href="#main-content" className="skip-link">
+        Przejdź do treści głównej
+      </a>
+      <BrowserRouter>
+        <ThemeProvider>
+          <Routes>
+            <Route path="/" element={<DashboardLayout appTodo={TodoApp} />}>
+              <Route index element={<Navigate to="/dashboard" replace />} />
+              <Route path="dashboard" element={<StatsGrid />} />
+              <Route path="tasks" element={<TasksPage />} />
+              <Route path="settings" element={<SettingsPage />} />
+              <Route path="login" element={<MultiStepForm />} />
+              <Route path="register" element={<MultiStepForm />} />
+            </Route>
+          </Routes>
+        </ThemeProvider>
+      </BrowserRouter>
+    </>
   );
 }
 

@@ -1,39 +1,38 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 import { BellIcon, MenuIcon, MoonIcon, SunIcon } from "../icons";
 import { useTheme } from "../../context/TodoContext";
-import type { DashboardNavItem, DashboardSection } from "./Sidebar";
+import type { NavItem } from "./Sidebar";
 
 interface AppHeaderProps {
-  title?: string;
-  activeSection: DashboardSection;
-  onSectionChange: (section: DashboardSection) => void;
-  navItems: DashboardNavItem[];
+  navItems: NavItem[];
 }
 
-export default function AppHeader({
-  title = "Dashboard",
-  activeSection,
-  onSectionChange,
-  navItems,
-}: AppHeaderProps) {
+export default function AppHeader({ navItems }: AppHeaderProps) {
   const { theme, setTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
 
-  const handleSectionChange = (section: DashboardSection) => {
-    onSectionChange(section);
+  const title = useMemo(() => {
+    const currentItem = navItems.find((item) => item.path === location.pathname);
+    return currentItem?.label || "Dashboard";
+  }, [location.pathname, navItems]);
+
+  const handleLinkClick = () => {
     setIsOpen(false);
   };
 
   return (
     <>
-      <header className="fixed left-0 right-0 top-0 z-[1100] border-b border-slate-200 bg-white/95 text-slate-900 shadow-sm backdrop-blur transition-colors dark:border-slate-800 dark:bg-slate-950/95 dark:text-slate-50 md:left-[264px]">
+      <header className="fixed left-0 right-0 top-0 z-[1100] border-b border-slate-300 bg-white/95 text-slate-900 shadow-sm backdrop-blur transition-colors dark:border-slate-800 dark:bg-slate-950/95 dark:text-slate-50 md:left-[264px]">
         <div className="flex h-16 items-center justify-between gap-3 px-4 sm:px-6">
           <div className="flex min-w-0 items-center gap-2">
             <button
               type="button"
               onClick={() => setIsOpen((prev) => !prev)}
               className="flex h-10 w-10 items-center justify-center rounded-full transition hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-slate-200 dark:hover:bg-slate-800 md:hidden"
-              aria-label="otworz menu"
+              aria-controls="mobile-menu"
+              aria-label="Otwórz menu"
               aria-expanded={isOpen}
             >
               <MenuIcon />
@@ -76,29 +75,30 @@ export default function AppHeader({
 
       {isOpen && (
         <nav
+          id="mobile-menu"
           className="fixed left-0 top-16 z-[1200] w-full bg-white shadow-lg dark:bg-slate-900 md:hidden"
           aria-label="Menu mobilne"
         >
           <ul className="py-2">
             {navItems.map((item) => {
               const Icon = item.icon;
-              const isActive = activeSection === item.section;
 
               return (
-                <li key={item.section}>
-                  <button
-                    type="button"
-                    onClick={() => handleSectionChange(item.section)}
-                    className={`flex min-h-[48px] w-full items-center gap-4 px-4 text-left transition ${
-                      isActive
-                        ? "bg-blue-50 text-[#1565C0] dark:bg-blue-950 dark:text-blue-200"
-                        : "text-slate-700 hover:bg-slate-50 dark:text-slate-100 dark:hover:bg-slate-800"
-                    }`}
-                    aria-current={isActive ? "page" : undefined}
+                <li key={item.path}>
+                  <NavLink
+                    to={item.path}
+                    onClick={handleLinkClick}
+                    className={({ isActive }) =>
+                      `flex min-h-[48px] w-full items-center gap-4 px-4 text-left transition ${
+                        isActive
+                          ? "bg-blue-50 text-[#1565C0] dark:bg-blue-950 dark:text-blue-200"
+                          : "text-slate-700 hover:bg-slate-50 dark:text-slate-100 dark:hover:bg-slate-800"
+                      }`
+                    }
                   >
                     <Icon className="h-6 w-6 shrink-0" />
                     <span>{item.label}</span>
-                  </button>
+                  </NavLink>
                 </li>
               );
             })}

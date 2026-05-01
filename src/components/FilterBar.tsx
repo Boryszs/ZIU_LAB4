@@ -17,11 +17,11 @@ export function FilterBar({ activeFilter, onFilterChange }: FilterBarProps) {
   const [showFilters, setShowFilters] = useState(true);
 
   return (
-    <div className="mx-auto my-5 flex w-full max-w-[700px] flex-col items-center gap-2.5">
+    <section aria-label="Filtr zadań" className="mx-auto my-5 flex w-full max-w-[700px] flex-col items-center gap-2.5">
       <div className="flex w-full justify-end">
         <button
           type="button"
-          aria-label="filtr-button"
+          aria-label="Pokaż lub ukryj filtry zadań"
           onClick={() => setShowFilters((prev) => !prev)}
           className="flex h-9 w-9 items-center justify-center rounded border border-slate-300 bg-slate-50 text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-slate-200 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
         >
@@ -42,14 +42,15 @@ export function FilterBar({ activeFilter, onFilterChange }: FilterBarProps) {
       </div>
 
       {showFilters && (
-        <div className="flex justify-center gap-2.5">
+        <div role="toolbar" aria-label="Filtry zadań" className="flex justify-center gap-2.5">
           {filters.map((filter) => {
             const isActive = activeFilter === filter;
 
             return (
               <button
                 type="button"
-                aria-label="filtry"
+                aria-label={`Pokaż ${filterNames[filter].toLowerCase()} zadania`}
+                aria-pressed={isActive}
                 key={filter}
                 onClick={() => onFilterChange(filter)}
                 className={`rounded border px-3 py-2 transition focus:outline-none focus:ring-4 ${
@@ -64,6 +65,6 @@ export function FilterBar({ activeFilter, onFilterChange }: FilterBarProps) {
           })}
         </div>
       )}
-    </div>
+    </section>
   );
 }

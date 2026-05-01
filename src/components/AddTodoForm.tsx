@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useId, useState, type FormEvent } from "react";
 import { PriorityType, Todo } from "../types/todo.types";
 import { AddIcon, CancelIcon, SaveIcon } from "./icons";
 
@@ -25,12 +25,16 @@ export function AddTodoForm({ onSave, onCancel, initialData }: AddTodoFormProps)
     onSave(inputValue.trim(), priority);
   };
 
+  const headingId = useId();
   const isEditing = Boolean(initialData);
 
   return (
-    <section className="mx-auto my-6 w-full max-w-[420px] rounded-3xl bg-white p-6 text-left shadow-[0_8px_22px_rgba(15,23,42,0.18)] transition-colors dark:bg-slate-900 sm:p-7">
+    <section
+      aria-labelledby={headingId}
+      className="mx-auto my-6 w-full max-w-[420px] rounded-3xl bg-white p-6 text-left shadow-[0_8px_22px_rgba(15,23,42,0.18)] transition-colors dark:bg-slate-900 sm:p-7"
+    >
       <form className="grid gap-4" onSubmit={handleSubmit}>
-        <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-50">
+        <h2 id={headingId} className="text-xl font-semibold text-slate-900 dark:text-slate-50">
           {isEditing ? "Edytuj zadanie" : "Dodaj nowe zadanie"}
         </h2>
 

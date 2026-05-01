@@ -36,7 +36,7 @@ export const TodoListTailwind: React.FC<TodoListProps> = ({
 
   if (filteredTodos.length === 0) {
     return (
-      <div className="mx-auto mt-6 w-full max-w-[80%] rounded-3xl border border-slate-200 bg-white p-8 text-center text-slate-500 shadow-sm">
+      <div className="mx-auto mt-6 w-full max-w-[80%] rounded-3xl border border-slate-300 bg-white p-8 text-center text-slate-500 shadow-sm">
         Brak zadań. Dodaj nowe zadanie!
       </div>
     );
