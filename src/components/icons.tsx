@@ -135,6 +135,17 @@ export function LoginIcon(props: IconProps) {
   );
 }
 
+export function RegisterIcon(props: IconProps) {
+  return (
+    <SvgIcon {...props}>
+      <path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" />
+      <circle cx="9.5" cy="7" r="4" />
+      <path d="M19 8v6" />
+      <path d="M22 11h-6" />
+    </SvgIcon>
+  );
+}
+
 export function MenuIcon(props: IconProps) {
   return (
     <SvgIcon {...props}>

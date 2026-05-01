@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import AppHeader from "./AppHeader";
 import Sidebar, { type NavItem } from "./Sidebar";
-import { DashboardIcon, LoginIcon, SettingsIcon, TaskIcon } from "../icons";
+import { DashboardIcon, RegisterIcon, SettingsIcon, TaskIcon } from "../icons";
 
 interface DashboardLayoutProps {
   appTodo?: () => React.ReactNode;
@@ -12,7 +12,7 @@ export default function DashboardLayout({ appTodo }: DashboardLayoutProps) {
     { label: "Dashboard", icon: DashboardIcon, path: "/dashboard" },
     { label: "Zadania", icon: TaskIcon, path: "/tasks" },
     { label: "Ustawienia", icon: SettingsIcon, path: "/settings" },
-    { label: "Rejestracja", icon: LoginIcon, path: "/register" },
+    { label: "Rejestracja", icon: RegisterIcon, path: "/register" },
   ];
 
   return (
