@@ -7,11 +7,12 @@ import {
 } from "react-router-dom";
 import { Filter as FilterType, PriorityType } from "./types/todo.types";
 import { FilterBar } from "./components/FilterBar";
+import { SearchResults } from "./components/SearchResults";
 import { ThemeProvider, useTodoContext } from "./context/TodoContext";
 import DashboardLayout from "./components/dashboard/DashboardLayout";
 import { AddTodoForm } from "./components/AddTodoForm";
 import { TodoList } from "./components/TodoList";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import StatsGrid from "./components/dashboard/StatsGrid";
 import MultiStepForm from "./components/MultiStepForm";
 
@@ -19,8 +20,10 @@ import MultiStepForm from "./components/MultiStepForm";
 function TodoApp() {
   const [filter, setFilter] = useState<FilterType>("all");
   const [searchTerm, setSearchTerm] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [view, setView] = useState<"list" | "add" | "edit">("list");
   const [editingTodoId, setEditingTodoId] = useState<string | null>(null);
+  const loadingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { todos, addTodo, toggleTodo, deleteTodo, editTodo } = useTodoContext();
 
   const handleAdd = (title: string, priority: PriorityType) => {
@@ -45,6 +48,28 @@ function TodoApp() {
   );
   const activeCount = todos.filter((todo) => !todo.completed).length;
 
+  useEffect(() => {
+    if (loadingTimeout.current) {
+      clearTimeout(loadingTimeout.current);
+    }
+
+    if (searchTerm === "") {
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(true);
+    loadingTimeout.current = setTimeout(() => {
+      setIsLoading(false);
+    }, 250);
+
+    return () => {
+      if (loadingTimeout.current) {
+        clearTimeout(loadingTimeout.current);
+      }
+    };
+  }, [searchTerm]);
+
   return (
     <section
       aria-labelledby="todo-app-title"
@@ -57,24 +82,14 @@ function TodoApp() {
         >
           ToDo List
         </h2>
-        <div
-          role="search"
-          aria-label="Wyszukiwarka zadań"
-          className="flex-grow"
-        >
-          <label htmlFor="todo-search" className="sr-only">
-            Wyszukaj zadania
-          </label>
-          <input
-            id="todo-search"
-            type="search"
-            aria-label="Wyszukaj zadania"
-            placeholder="Wyszukaj zadania..."
-            value={searchTerm}
-            onChange={(event) => setSearchTerm(event.target.value)}
-            className="h-10 w-full rounded border border-slate-300 bg-white px-2 text-base text-slate-900 outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-400"
-          />
-        </div>
+        <SearchResults
+          results={filteredTodos}
+          query={searchTerm}
+          onQueryChange={(value) => {
+            setSearchTerm(value);
+          }}
+          isLoading={isLoading}
+        />
       </header>
 
       <header className="flex flex-col items-center justify-center px-5 py-5 text-center">
