@@ -7,7 +7,7 @@ import { FullFormData, fullSchema } from "../schemas/schemas";
 import { Step1Form } from "./Step1Form";
 
 export default function MultiStepForm() {
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(0);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const methods = useForm<FullFormData>({
     resolver: zodResolver(fullSchema),
@@ -44,7 +44,7 @@ export default function MultiStepForm() {
     ]);
 
     if (isValid) {
-      setCurrentStep(2);
+      setCurrentStep(1);
     }
   };
 
@@ -57,18 +57,18 @@ export default function MultiStepForm() {
 
     if (isValid) {
       methods.clearErrors("root.serverError");
-      setCurrentStep(3);
+      setCurrentStep(2);
     }
   };
 
   const goToStep1 = () => {
     methods.clearErrors("root.serverError");
-    setCurrentStep(1);
+    setCurrentStep(0);
   };
 
   const goToStep2 = () => {
     methods.clearErrors("root.serverError");
-    setCurrentStep(2);
+    setCurrentStep(1);
   };
 
   return (
@@ -79,8 +79,8 @@ export default function MultiStepForm() {
       <nav aria-label="Postęp rejestracji" className="mb-4">
         <ol className="flex flex-wrap items-center justify-center gap-2 text-center text-sm text-slate-700 dark:text-slate-300">
           <li
-            aria-current={currentStep === 1 ? "step" : undefined}
-            className={currentStep === 1 ? "font-semibold text-[#1565C0]" : ""}
+            aria-current={currentStep === 0 ? "step" : undefined}
+            className={currentStep === 0 ? "font-semibold text-[#1565C0]" : ""}
           >
             Krok 1 z 3 – Dane
           </li>
@@ -88,8 +88,8 @@ export default function MultiStepForm() {
             →
           </li>
           <li
-            aria-current={currentStep === 2 ? "step" : undefined}
-            className={currentStep === 2 ? "font-semibold text-[#1565C0]" : ""}
+            aria-current={currentStep === 1 ? "step" : undefined}
+            className={currentStep === 1 ? "font-semibold text-[#1565C0]" : ""}
           >
             Krok 2 z 3 – Preferencje
           </li>
@@ -97,8 +97,8 @@ export default function MultiStepForm() {
             →
           </li>
           <li
-            aria-current={currentStep === 3 ? "step" : undefined}
-            className={currentStep === 3 ? "font-semibold text-[#1565C0]" : ""}
+            aria-current={currentStep === 2 ? "step" : undefined}
+            className={currentStep === 2 ? "font-semibold text-[#1565C0]" : ""}
           >
             3 z 3 Podsumowanie
           </li>
@@ -110,19 +110,19 @@ export default function MultiStepForm() {
         tabIndex={-1}
         className="mb-4 text-xl font-semibold text-slate-900 outline-none dark:text-slate-50"
       >
-        {currentStep === 1 && "Dane osobowe"}
-        {currentStep === 2 && "Preferencje"}
-        {currentStep === 3 && "Podsumowanie"}
+        {currentStep === 0 && "Dane osobowe"}
+        {currentStep === 1 && "Preferencje"}
+        {currentStep === 2 && "Podsumowanie"}
       </h2>
 
       <FormProvider {...methods}>
-        {currentStep === 1 && <Step1Form onNext={handleStep1Complete} />}
+        {currentStep === 0 && <Step1Form onNext={handleStep1Complete} />}
 
-        {currentStep === 2 && (
+        {currentStep === 1 && (
           <Step2Form onNext={handleStep2Complete} onBack={goToStep1} />
         )}
 
-        {currentStep === 3 && (
+        {currentStep === 2 && (
           <Step3Form onBack={goToStep2} goToStep1={goToStep1} />
         )}
       </FormProvider>
