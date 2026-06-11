@@ -1,0 +1,20 @@
+.task-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-rows: auto;
+}
+.task-card {
+  display: grid;
+  grid-row: span 3;
+  grid-template-rows: subgrid; /* dziedzicz rzędy z rodzica */
+} /* Teraz tytuły, opisy i footery są wyrównane między kartami */
+.card__title {
+  grid-row: 1;
+}
+.card__body {
+  grid-row: 2;
+}
+.card__footer {
+  grid-row: 3;
+  align-self: end;
+} /* Wsparcie: Chrome 117+, Firefox 71+, Safari 16+ */

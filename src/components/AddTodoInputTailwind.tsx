@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { PriorityType, Todo } from "../types/todo.types";
+import "../styles/_typography.css";
 
 interface AddTodoFormProps {
   onSave: (title: string, priority: PriorityType) => void;
@@ -37,32 +38,49 @@ export function AddTodAddTodoInputTailwindForm({
 
   return (
     <div className="mx-auto my-3 w-full max-w-[420px] rounded-3xl bg-white p-6 text-left shadow-[0_8px_22px_rgba(15,23,42,0.18)] sm:p-7">
+      {/* Nagłówek: Używa --font-h2 (Płynny rozmiar) */}
+      <h2 className="mb-5 font-bold text-[var(--font-h2)] text-slate-800 leading-tight">
+        {isEditing ? "Edytuj zadanie" : "Nowe zadanie"}
+      </h2>
+
       <form className="grid gap-4" onSubmit={handleSubmit}>
-        <label className="grid gap-1.5">
-          <span className="text-sm font-medium text-slate-700">
-            Tresc zadania
-          </span>
+        {/* Pole: Treść zadania */}
+        <div className="grid gap-1.5">
+          <label
+            htmlFor="todo-title"
+            className="font-medium text-slate-700 text-[var(--font-small)]"
+          >
+            Treść zadania
+          </label>
           <input
-            id="add-todo-title-tailwind"
+            id="todo-title"
             type="text"
-            placeholder="Wpisz tresc zadania..."
+            placeholder="Wpisz treść zadania..."
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            className="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+            /* Input: Używa --font-body (Płynny rozmiar) */
+            className="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 outline-none transition placeholder:text-slate-400 focus:border-sky-500 focus:ring-4 focus:ring-sky-100 text-[var(--font-body)] text-slate-900"
           />
-        </label>
+        </div>
 
-        <label className="grid gap-1.5">
-          <span className="text-sm font-medium text-slate-700">Priorytet</span>
+        {/* Pole: Priorytet */}
+        <div className="grid gap-1.5">
+          <label
+            htmlFor="todo-priority"
+            className="font-medium text-slate-700 text-[var(--font-small)]"
+          >
+            Priorytet
+          </label>
           <div className="relative">
             <select
-              id="add-todo-priority-tailwind"
+              id="todo-priority"
               value={priority}
               onChange={(e) => setPriority(e.target.value as PriorityType)}
-              className="w-full appearance-none rounded-2xl border border-slate-300 bg-white px-4 py-3 pr-11 text-base text-slate-900 outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+              /* Select: Używa --font-body */
+              className="w-full appearance-none rounded-2xl border border-slate-300 bg-white px-4 py-3 pr-11 outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100 text-[var(--font-body)] text-slate-900"
             >
               <option value="low">Niski</option>
-              <option value="medium">Sredni</option>
+              <option value="medium">Średni</option>
               <option value="high">Wysoki</option>
             </select>
             <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-slate-500">
@@ -81,13 +99,14 @@ export function AddTodAddTodoInputTailwindForm({
               </svg>
             </span>
           </div>
-        </label>
+        </div>
 
+        {/* Przyciski: Używają --font-small (Kompaktowy rozmiar) */}
         <div className="flex flex-wrap justify-end gap-3 pt-2">
           <button
             type="button"
             onClick={onCancel}
-            className="inline-flex min-h-[42px] items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+            className="inline-flex min-h-[44px] items-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-2 font-semibold text-slate-700 transition hover:bg-slate-50 text-[var(--font-small)]"
           >
             <svg
               className="h-5 w-5"
@@ -99,10 +118,12 @@ export function AddTodAddTodoInputTailwindForm({
             </svg>
             Anuluj
           </button>
+
           <button
             type="submit"
             disabled={!inputValue.trim()}
-            className="inline-flex min-h-[42px] items-center gap-2 rounded-xl bg-slate-300 px-4 py-2 text-sm font-semibold text-slate-500 transition enabled:bg-sky-600 enabled:text-white enabled:hover:bg-sky-700 disabled:cursor-not-allowed"
+            /* Przycisk akcji również korzysta z --font-small */
+            className="inline-flex min-h-[44px] items-center gap-2 rounded-xl bg-slate-300 px-5 py-2 font-semibold text-slate-500 transition enabled:bg-sky-600 enabled:text-white enabled:hover:bg-sky-700 disabled:cursor-not-allowed text-[var(--font-small)] shadow-sm"
           >
             {isEditing ? (
               <svg
@@ -123,7 +144,7 @@ export function AddTodAddTodoInputTailwindForm({
                 <path d="M19 11H13V5a1 1 0 0 0-2 0v6H5a1 1 0 0 0 0 2h6v6a1 1 0 0 0 2 0v-6h6a1 1 0 0 0 0-2Z" />
               </svg>
             )}
-            {isEditing ? "Zapisz zmiany" : "Dodaj"}
+            {isEditing ? "Zapisz zmiany" : "Dodaj zadanie"}
           </button>
         </div>
       </form>
