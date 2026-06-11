@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useId, useState } from "react";
 import { Filter as FilterType } from "../types/todo.types";
 
 interface FilterBarProps {
@@ -8,88 +8,74 @@ interface FilterBarProps {
 
 export function FilterBar({ activeFilter, onFilterChange }: FilterBarProps) {
   const filters: FilterType[] = ["all", "active", "completed"];
+  const filtersId = useId();
   const filterNames: Record<FilterType, string> = {
     all: "Wszystkie",
     active: "Aktywne",
     completed: "Ukończone",
   };
 
-  const [showFilters, setShowFilters] = useState(true); // Stan do kontrolowania widoczności filtrów
+  const [showFilters, setShowFilters] = useState(true);
 
   return (
-    <div
-      style={{
-        marginTop: "20px",
-        marginBottom: "20px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: "10px",
-        maxWidth: "700px",
-        width: "100%",
-        margin: "20px auto",
-      }}
+    <section
+      aria-label="Filtr zadań"
+      className="mx-auto my-5 flex w-full max-w-[700px] flex-col items-center gap-2.5"
     >
-      <div
-        style={{
-          display: "flex",
-          gap: "10px",
-          justifyContent: "flex-end",
-          width: "100%",
-        }}
-      >
+      <div className="flex w-full justify-end">
         <button
-          aria-label="filtr-button"
-          onClick={() => setShowFilters(!showFilters)}
-          style={{
-            padding: "8px",
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-            background: "#f8f9fa",
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-          }}
+          type="button"
+          aria-label="Pokaż lub ukryj filtry zadań"
+          aria-controls={filtersId}
+          aria-expanded={showFilters}
+          onClick={() => setShowFilters((prev) => !prev)}
+          className="flex h-9 w-9 items-center justify-center rounded border border-slate-300 bg-slate-50 text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-slate-200 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
         >
           <svg
+            className="h-4 w-4"
             xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
+            aria-hidden="true"
           >
-            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
           </svg>
         </button>
       </div>
+
       {showFilters && (
-        <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
-          {filters.map((filter) => (
-            <button
-              aria-label="filtry"
-              key={filter}
-              onClick={() => onFilterChange(filter)}
-              style={{
-                backgroundColor:
-                  activeFilter === filter ? "#0056b3" : "#f8f9fa",
-                color: activeFilter === filter ? "white" : "#595959",
-                border:
-                  activeFilter === filter
-                    ? "1px solid #0056b3"
-                    : "1px solid #708090",
-                borderRadius: "4px",
-                padding: "8px 12px",
-              }}
-            >
-              {filterNames[filter]}
-            </button>
-          ))}
+        <div
+          id={filtersId}
+          role="toolbar"
+          aria-label="Filtry zadań"
+          className="flex justify-center gap-2.5"
+        >
+          {filters.map((filter) => {
+            const isActive = activeFilter === filter;
+
+            return (
+              <button
+                type="button"
+                aria-label={`Pokaż ${filterNames[filter].toLowerCase()} zadania`}
+                aria-pressed={isActive}
+                key={filter}
+                onClick={() => onFilterChange(filter)}
+                className={`rounded border px-3 py-2 transition focus:outline-none focus:ring-4 ${
+                  isActive
+                    ? "border-[#0056b3] bg-[#0056b3] text-white focus:ring-blue-200"
+                    : "border-slate-500 bg-slate-50 text-[#595959] hover:bg-slate-100 focus:ring-slate-200 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
+                }`}
+              >
+                {filterNames[filter]}
+              </button>
+            );
+          })}
         </div>
       )}
-    </div>
+    </section>
   );
 }

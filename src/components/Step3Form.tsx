@@ -128,7 +128,7 @@ export const Step3Form = ({ goToStep1, onBack }: Step3Props) => {
           type="submit"
           disabled={isSubmitting}
           aria-busy={isSubmitting}
-          className="w-1/2 bg-green-600 text-white py-2 rounded hover:bg-green-700"
+          className="w-1/2 bg-green-700 text-white py-2 rounded hover:bg-green-800"
         >
           {isSubmitting ? "Rejestrowanie..." : "Zarejestruj sie"}
         </button>

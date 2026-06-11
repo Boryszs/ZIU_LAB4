@@ -8,7 +8,7 @@ interface AddTodoFormProps {
   initialData?: Pick<Todo, "title" | "priority">;
 }
 
-export function AddTodAddTodoInputTailwindForm({
+export function AddTodoInputTailwindForm({
   onSave,
   onCancel,
   initialData,

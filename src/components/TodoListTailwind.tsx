@@ -36,7 +36,7 @@ export const TodoListTailwind: React.FC<TodoListProps> = ({
 
   if (filteredTodos.length === 0) {
     return (
-      <div className="mx-auto mt-6 w-full max-w-[80%] rounded-3xl border border-slate-200 bg-white p-8 text-center text-slate-500 shadow-sm">
+      <div className="mx-auto mt-6 w-full max-w-[80%] rounded-3xl border border-slate-300 bg-white p-8 text-center text-slate-500 shadow-sm">
         Brak zadań. Dodaj nowe zadanie!
       </div>
     );
@@ -59,9 +59,13 @@ export const TodoListTailwind: React.FC<TodoListProps> = ({
                 id={`todo-${todo.id}`}
                 type="checkbox"
                 checked={todo.completed}
+                aria-label={
+                  todo.completed
+                    ? `Oznacz zadanie ${todo.title} jako aktywne`
+                    : `Oznacz zadanie ${todo.title} jako ukończone`
+                }
                 onChange={() => onToggle(todo.id)}
                 className="mt-1 h-5 w-5"
-                placeholder="np. Kupić mleko"
               />
               <span
                 className={`font-semibold ${todo.completed ? "line-through" : ""}`}
@@ -80,6 +84,7 @@ export const TodoListTailwind: React.FC<TodoListProps> = ({
             {/* Rząd 3: card__footer */}
             <div className="card__footer flex gap-2">
               <button
+                type="button"
                 aria-label={`Edytuj zadanie: ${todo.title}`}
                 onClick={() => onStartEdit(todo.id)}
                 className="text-sm text-blue-700 hover:underline"
@@ -87,6 +92,7 @@ export const TodoListTailwind: React.FC<TodoListProps> = ({
                 Edytuj
               </button>
               <button
+                type="button"
                 aria-label={`Usuń zadanie: ${todo.title}`}
                 onClick={() => onDelete(todo.id)}
                 className="text-sm text-red-700 hover:underline"

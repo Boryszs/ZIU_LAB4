@@ -103,7 +103,6 @@ export const Step2Form = ({ onNext, onBack }: Step2Props) => {
                 type="checkbox"
                 checked={field.value}
                 onChange={field.onChange}
-                aria-label="Powiadomienia e-mail"
               />
               E-mail
             </label>
@@ -119,7 +118,6 @@ export const Step2Form = ({ onNext, onBack }: Step2Props) => {
                 type="checkbox"
                 checked={field.value}
                 onChange={field.onChange}
-                aria-label="Powiadomienia push"
               />
               Push
             </label>
@@ -132,7 +130,6 @@ export const Step2Form = ({ onNext, onBack }: Step2Props) => {
           <input
             type="checkbox"
             {...register("newsletter")}
-            aria-label="Zapisz się do newslettera"
           />
           Newsletter (opcjonalne)
         </label>
