@@ -1,64 +1,28 @@
-import { Box, Toolbar } from "@mui/material";
+import { Outlet } from "react-router-dom";
 import AppHeader from "./AppHeader";
-import Sidebar from "./Sidebar";
-import StatsGrid from "./StatsGrid";
-import { SidebarProps } from "../../types/todo.types";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import TaskIcon from "@mui/icons-material/Task";
-import SettingsIcon from "@mui/icons-material/Settings";
-import MultiStepForm from "../MultiStepForm";
-import LoginIcon from "@mui/icons-material/Login";
+import Sidebar, { type NavItem } from "./Sidebar";
+import { DashboardIcon, RegisterIcon, SettingsIcon, TaskIcon } from "../icons";
 
-export default function DashboardLayout({
-  activeSection,
-  onSectionChange,
-  appTodo,
-}: SidebarProps) {
-  const navItems = [
-    { label: "Dashboard", icon: DashboardIcon, section: "dashboard" },
-    { label: "Zadania", icon: TaskIcon, section: "tasks" },
-    { label: "Ustawienia", icon: SettingsIcon, section: "settings" },
-    { label: "Logowanie", icon: LoginIcon, section: "login" },
+interface DashboardLayoutProps {
+  appTodo?: () => React.ReactNode;
+}
+
+export default function DashboardLayout({ appTodo }: DashboardLayoutProps) {
+  const navItems: NavItem[] = [
+    { label: "Dashboard", icon: DashboardIcon, path: "/dashboard" },
+    { label: "Zadania", icon: TaskIcon, path: "/tasks" },
+    { label: "Ustawienia", icon: SettingsIcon, path: "/settings" },
+    { label: "Rejestracja", icon: RegisterIcon, path: "/register" },
   ];
 
   return (
-    <Box sx={{ 
-    display: "flex", 
-    flexDirection: "column", // Elementy jeden pod drugim
-    alignItems: "center",    // Centrowanie w poziomie
-    justifyContent: "center", // Centrowanie w pionie
-    minHeight: "100vh",
-    bgcolor: "background.default", // Używa koloru z motywu
-    p: 2 // Padding, żeby na mobile karta nie dotykała krawędzi
-  }}>
-      <Sidebar
-        activeSection={activeSection}
-        onSectionChange={onSectionChange}
-        navItems={navItems}
-      />
-
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          ml: { md: "240px" }, // 🔥 KLUCZ
-          width: { md: "calc(100% - 240px)" }, // 🔥 BONUS (usuwa pustkę)
-          p: 3,
-          bgcolor: "background.default",
-        }}
-      >
-        <AppHeader
-          activeSection={activeSection}
-          onSectionChange={onSectionChange}
-          navItems={navItems}
-        />
-        <Toolbar />
-
-        {activeSection === "dashboard" && <StatsGrid />}
-        {activeSection === "tasks" && appTodo?.()}
-        {activeSection === "settings" }
-        {activeSection === "login" && <MultiStepForm></MultiStepForm>}
-      </Box>
-    </Box>
+    <section aria-label="Układ pulpitu" className="min-h-screen bg-[#F5F7FA] text-slate-900 transition-colors dark:bg-slate-950 dark:text-slate-100">
+      <Sidebar navItems={navItems} />
+      <main id="main-content" tabIndex={-1} role="main" aria-label="Główna zawartość aplikacji" className="min-h-screen w-full bg-[#F5F7FA] p-6 pt-0 transition-colors dark:bg-slate-950 md:ml-[264px] md:w-[calc(100%_-_264px)]">
+        <AppHeader navItems={navItems} />
+        <div className="h-24" />
+        <Outlet context={{ appTodo }} />
+      </main>
+    </section>
   );
 }

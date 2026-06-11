@@ -32,14 +32,32 @@ export function TodoItem({
       <input
         type="checkbox"
         checked={todo.completed}
+        aria-label={
+          todo.completed
+            ? `Odznacz zadanie ${todo.title}`
+            : `Zaznacz zadanie ${todo.title}`
+        }
         onChange={(e) => {
           e.stopPropagation();
           onToggle(todo.id);
         }}
         style={{ cursor: "pointer" }}
       />
-      <div
-        style={{ flexGrow: 1, textAlign: "left", cursor: "pointer" }}
+      <button
+        type="button"
+        aria-label={`Edytuj zadanie ${todo.title}`}
+        style={{
+          flexGrow: 1,
+          width: "100%",
+          textAlign: "left",
+          cursor: "pointer",
+          background: "transparent",
+          border: "none",
+          padding: 0,
+          margin: 0,
+          font: "inherit",
+          color: "inherit",
+        }}
         onClick={() => onStartEdit(todo.id)}
       >
         <span
@@ -59,7 +77,7 @@ export function TodoItem({
         >
           {todo.date}
         </span>
-      </div>
+      </button>
       <span
         style={{
           backgroundColor: "#343a40",
@@ -73,6 +91,8 @@ export function TodoItem({
         {todo.priority.charAt(0).toUpperCase() + todo.priority.slice(1)}
       </span>
       <button
+        type="button"
+        aria-label={`Usuń zadanie ${todo.title}`}
         onClick={(e) => {
           e.stopPropagation();
           onDelete(todo.id);
@@ -89,7 +109,7 @@ export function TodoItem({
         }}
       >
         <svg
-          aria-label="delete"
+          aria-hidden="true"
           xmlns="http://www.w3.org/2000/svg"
           width="16"
           height="16"

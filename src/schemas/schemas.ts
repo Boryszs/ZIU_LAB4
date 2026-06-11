@@ -43,3 +43,18 @@ export const step2Schema = z.object({
 });
 
 export type Step2Data = z.infer<typeof step2Schema>;
+
+
+export const step3Schema = z.object({
+  rodo: z.boolean().refine((v) => v === true, {
+    message: "Musisz zaakceptować RODO",
+  }),
+});
+
+export type Step3Data = z.infer<typeof step3Schema>;
+
+export const fullSchema = step1Schema
+  .merge(step2Schema)
+  .merge(step3Schema);
+
+  export type FullFormData = z.infer<typeof fullSchema>;

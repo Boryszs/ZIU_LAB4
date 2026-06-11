@@ -1,71 +1,91 @@
-import {
-  List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Toolbar,
-  Typography,
-  Divider,
-  Avatar,
-  Box,
-} from "@mui/material";
+import { NavLink, useLocation } from "react-router-dom";
+import type { AppIcon } from "../icons";
 
-const DRAWER_WIDTH = 240;
+export interface NavItem {
+  label: string;
+  icon: AppIcon;
+  path: string;
+}
 
-export type DashboardSection = "dashboard" | "tasks" | "settings" | "login";
+interface SidebarProps {
+  navItems: NavItem[];
+}
 
-export default function Sidebar({
-  activeSection,
-  onSectionChange,
-  navItems,
-}: any) {
+export default function Sidebar({ navItems }: SidebarProps) {
+  const location = useLocation();
+
   return (
-    <Box
-      sx={{
-        display: { xs: "none", md: "flex" },
-        flexDirection: "column",
-        width: DRAWER_WIDTH,
-        height: "100vh",
-        position: "fixed", // 🔥 klucz
-        top: 0,
-        left: 0,
-        bgcolor: "primary.main",
-        color: "white",
-      }}
-    >
-      <Toolbar>
-        <Typography variant="h6" fontWeight={700}>
-          TodoApp
-        </Typography>
-      </Toolbar>
+    <aside aria-label="Panel bocznej nawigacji" className="fixed left-0 top-0 hidden h-screen w-[264px] flex-col border-r border-slate-300 bg-white text-slate-900 shadow-[8px_0_24px_rgba(15,23,42,0.08)] transition-colors dark:border-slate-800 dark:bg-slate-950 dark:text-slate-50 md:flex">
+      <header className="flex h-20 items-center gap-3 px-5">
+        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#1565C0] text-lg font-bold text-white shadow-sm">
+          T
+        </div>
+        <div className="min-w-0">
+          <h1 className="truncate text-xl font-bold leading-tight">TodoApp</h1>
+          <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
+            Panel zadan
+          </p>
+        </div>
+      </header>
 
-      <Divider sx={{ borderColor: "rgba(255,255,255,0.2)" }} />
+      <hr className="mx-5 border-t border-slate-300 dark:border-slate-800" />
 
-      <List>
-        {navItems.map((item: any) => {
-          const Icon = item.icon;
+      <nav className="px-3 py-4" aria-label="Główna nawigacja">
+        <ul className="grid gap-1">
+          {navItems.map((item) => {
+            const Icon = item.icon;
 
-          return (
-            <ListItemButton
-              key={item.section}
-              selected={activeSection === item.section}
-              onClick={() => onSectionChange(item.section)}
-            >
-              <ListItemIcon sx={{ color: "inherit", minWidth: 40 }}>
-                <Icon />
-              </ListItemIcon>
-              <ListItemText primary={item.label} />
-            </ListItemButton>
-          );
-        })}
-      </List>
+            return (
+              <li key={item.path}>
+                <NavLink
+                  to={item.path}
+                  aria-current={location.pathname === item.path ? "page" : undefined}
+                  className={({ isActive }) =>
+                    `group relative flex min-h-[48px] w-full items-center gap-3 rounded-xl px-3 text-left text-sm font-semibold transition ${
+                      isActive
+                      ? "bg-[#1565C0] text-white shadow-sm"
+                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-white"
+                    }`
+                  }
+                >
+                  {({ isActive }) => (
+                    <>
+                      <span
+                        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition ${
+                          isActive
+                            ? "bg-white/15"
+                            : "bg-slate-100 text-slate-500 group-hover:text-[#1565C0] dark:bg-slate-900 dark:text-slate-400"
+                        }`}
+                      >
+                        <Icon className="h-5 w-5" />
+                      </span>
+                      <span>{item.label}</span>
+                    </>
+                  )}
+                </NavLink>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
 
-      <Box sx={{ flexGrow: 1 }} />
+      <div className="flex-1" />
 
-      <Box sx={{ p: 2, display: "flex", alignItems: "center", gap: 1 }}>
-        <Avatar>U</Avatar>
-        <Typography variant="body2">Uzytkownik</Typography>
-      </Box>
-    </Box>
+      <footer className="m-4 rounded-2xl border border-slate-300 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-900">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1565C0] font-semibold text-white">
+            U
+          </div>
+          <div className="min-w-0">
+            <p className="truncate text-sm font-semibold text-slate-800 dark:text-slate-100">
+              Uzytkownik
+            </p>
+            <p className="truncate text-xs text-slate-500 dark:text-slate-400">
+              Online
+            </p>
+          </div>
+        </div>
+      </footer>
+    </aside>
   );
 }

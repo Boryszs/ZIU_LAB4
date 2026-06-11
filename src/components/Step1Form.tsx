@@ -1,18 +1,7 @@
 import React from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { step1Schema } from "../schemas/schemas";
+import { useFormContext } from "react-hook-form";
+import { FullFormData } from "../schemas/schemas";
 
-// =======================
-// SCHEMA
-// =======================
-
-export type Step1Data = z.infer<typeof step1Schema>;
-
-// =======================
-// PASSWORD STRENGTH
-// =======================
 const getPasswordStrength = (password: string) => {
   let score = 0;
 
@@ -29,65 +18,50 @@ const getPasswordStrength = (password: string) => {
   return { label: "Silne", width: "100%", color: "bg-green-500" };
 };
 
-// =======================
-// PROPS
-// =======================
 type Props = {
-  defaultValues?: Step1Data;
-  onNext: (data: Step1Data) => void;
-  externalError?: string;
+  onNext: () => void | Promise<void>;
 };
 
-// =======================
-// COMPONENT
-// =======================
-export const Step1Form = ({ defaultValues, onNext, externalError }: Props) => {
+export const Step1Form = ({ onNext }: Props) => {
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
 
   const {
     register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
     watch,
-    setError,
-  } = useForm<Step1Data>({
-    resolver: zodResolver(step1Schema),
-    mode: "onBlur",
-    reValidateMode: "onChange",
-    defaultValues: defaultValues || {
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    },
-  });
-
-  // backend error (409)
-  React.useEffect(() => {
-    if (externalError) {
-      setError("email", { message: externalError });
-    }
-  }, [externalError, setError]);
+    clearErrors,
+    formState: { errors, isSubmitting },
+  } = useFormContext<FullFormData>();
 
   const passwordValue = watch("password") || "";
   const confirmPasswordValue = watch("confirmPassword") || "";
-
   const strength = getPasswordStrength(passwordValue);
-
   const passwordsMatch =
     passwordValue && confirmPasswordValue
       ? passwordValue === confirmPasswordValue
       : true;
-
-  const onSubmit = (data: Step1Data) => {
-    onNext(data);
-  };
+  const passwordDescribedBy = errors.password
+    ? "password-error"
+    : passwordValue
+      ? "password-hint"
+      : undefined;
+  const confirmPasswordDescribedBy =
+    [
+      !passwordsMatch ? "confirmPassword-error-2" : undefined,
+      errors.confirmPassword ? "confirmPassword-error" : undefined,
+    ]
+      .filter(Boolean)
+      .join(" ") || undefined;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-      {/* IMIĘ */}
+    <form
+      onSubmit={(event) => {
+        event.preventDefault();
+        void onNext();
+      }}
+      className="space-y-4"
+      noValidate
+    >
       <div>
         <label htmlFor="firstName" className="text-gray-700">
           Imię *
@@ -112,7 +86,6 @@ export const Step1Form = ({ defaultValues, onNext, externalError }: Props) => {
         )}
       </div>
 
-      {/* NAZWISKO */}
       <div>
         <label htmlFor="lastName" className="text-gray-700">
           Nazwisko *
@@ -127,17 +100,12 @@ export const Step1Form = ({ defaultValues, onNext, externalError }: Props) => {
           className="w-full border px-3 py-2 rounded focus:ring-2 focus:ring-blue-500"
         />
         {errors.lastName && (
-          <span
-            id="lastName-error"
-            role="alert"
-            className="text-red-600 text-sm"
-          >
+          <span id="lastName-error" role="alert" className="text-red-600 text-sm">
             {errors.lastName.message}
           </span>
         )}
       </div>
 
-      {/* EMAIL */}
       <div>
         <label htmlFor="email" className="text-gray-700">
           Email *
@@ -149,7 +117,9 @@ export const Step1Form = ({ defaultValues, onNext, externalError }: Props) => {
           aria-required="true"
           aria-invalid={!!errors.email}
           aria-describedby={errors.email ? "email-error" : undefined}
-          {...register("email")}
+          {...register("email", {
+            onChange: () => clearErrors("email"),
+          })}
           className="w-full border px-3 py-2 rounded focus:ring-2 focus:ring-blue-500"
         />
         {errors.email && (
@@ -159,7 +129,6 @@ export const Step1Form = ({ defaultValues, onNext, externalError }: Props) => {
         )}
       </div>
 
-      {/* HASŁO */}
       <div>
         <label htmlFor="password" className="text-gray-700">
           Hasło *
@@ -172,21 +141,19 @@ export const Step1Form = ({ defaultValues, onNext, externalError }: Props) => {
             required
             aria-required="true"
             aria-invalid={!!errors.password}
-            aria-describedby={
-              errors.password ? "password-error" : "password-hint"
-            }
+            aria-describedby={passwordDescribedBy}
             {...register("password")}
-            // Dodano [&::-ms-reveal]:hidden aby ukryć natywne oko przeglądarki
             className="w-full border px-3 py-2 rounded pr-10 focus:ring-2 focus:ring-blue-500 [&::-ms-reveal]:hidden"
           />
 
           <button
             type="button"
-            aria-label="Pokaż lub ukryj hasło"
+            aria-label={showPassword ? "Ukryj hasło" : "Pokaż hasło"}
+            aria-pressed={showPassword}
             onClick={() => setShowPassword((prev) => !prev)}
-            className="absolute right-2 top-2"
+            className="absolute inset-y-0 right-0 flex items-center pr-3 text-sm text-gray-600"
           >
-            {showPassword ? "🙈" : "👁"}
+            {showPassword ? "Ukryj" : "Pokaż"}
           </button>
         </div>
 
@@ -194,7 +161,7 @@ export const Step1Form = ({ defaultValues, onNext, externalError }: Props) => {
           <span
             id="password-hint"
             aria-live="polite"
-            className="text-gray-700 text-sm"
+            className="text-sm text-gray-700 dark:text-white"
           >
             Siła hasła: {strength.label}
           </span>
@@ -202,7 +169,7 @@ export const Step1Form = ({ defaultValues, onNext, externalError }: Props) => {
 
         {errors.password && (
           <span
-            id="password-error-1"
+            id="password-error"
             role="alert"
             className="text-red-600 text-sm"
           >
@@ -211,13 +178,11 @@ export const Step1Form = ({ defaultValues, onNext, externalError }: Props) => {
         )}
       </div>
 
-      {/* CONFIRM PASSWORD */}
       <div>
         <label htmlFor="confirmPassword" className="text-gray-700">
           Potwierdź hasło *
         </label>
 
-        {/* Dodano relative wrapper i przycisk oka dla drugiego hasła */}
         <div className="relative">
           <input
             id="confirmPassword"
@@ -225,23 +190,19 @@ export const Step1Form = ({ defaultValues, onNext, externalError }: Props) => {
             required
             aria-required="true"
             aria-invalid={!!errors.confirmPassword || !passwordsMatch}
-            aria-describedby={
-              errors.confirmPassword || !passwordsMatch
-                ? "confirmPassword-error"
-                : undefined
-            }
+            aria-describedby={confirmPasswordDescribedBy}
             {...register("confirmPassword")}
-            // Dodano [&::-ms-reveal]:hidden
             className="w-full border px-3 py-2 rounded pr-10 focus:ring-2 focus:ring-blue-500 [&::-ms-reveal]:hidden"
           />
 
           <button
             type="button"
-            aria-label="Pokaż lub ukryj hasło"
+            aria-label={showConfirmPassword ? "Ukryj hasło" : "Pokaż hasło"}
+            aria-pressed={showConfirmPassword}
             onClick={() => setShowConfirmPassword((prev) => !prev)}
-            className="absolute right-2 top-2"
+            className="absolute inset-y-0 right-0 flex items-center pr-3 text-sm text-gray-600"
           >
-            {showConfirmPassword ? "🙈" : "👁"}
+            {showConfirmPassword ? "Ukryj" : "Pokaż"}
           </button>
         </div>
 
@@ -266,14 +227,13 @@ export const Step1Form = ({ defaultValues, onNext, externalError }: Props) => {
         )}
       </div>
 
-      {/* BUTTON */}
       <button
         type="submit"
         disabled={isSubmitting}
         aria-busy={isSubmitting}
         className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
       >
-        {isSubmitting ? "Wysyłanie…" : "Dalej"}
+        {isSubmitting ? "Wysyłanie..." : "Dalej"}
       </button>
     </form>
   );
