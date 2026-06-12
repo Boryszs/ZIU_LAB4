@@ -1,4 +1,5 @@
-import { useEffect, useId, useState, type FormEvent } from "react";
+import { useEffect, useId, useRef, useState, type FormEvent } from "react";
+import { trackFormAbandonment, trackFormSubmit } from "../analytics";
 import { PriorityType, Todo } from "../types/todo.types";
 import { AddIcon, CancelIcon, SaveIcon } from "./icons";
 
@@ -13,20 +14,60 @@ export function AddTodoForm({ onSave, onCancel, initialData }: AddTodoFormProps)
   const [priority, setPriority] = useState<PriorityType>(
     initialData?.priority || "medium",
   );
+  const hasInteractedRef = useRef(false);
+  const submittedRef = useRef(false);
+  const abandonmentSentRef = useRef(false);
+  const isEditing = Boolean(initialData);
+  const formName = isEditing ? "todo_edit" : "todo_create";
+  const formNameRef = useRef(formName);
+
+  const emitAbandonment = () => {
+    if (
+      hasInteractedRef.current &&
+      !submittedRef.current &&
+      !abandonmentSentRef.current
+    ) {
+      trackFormAbandonment(formNameRef.current);
+      abandonmentSentRef.current = true;
+    }
+  };
 
   useEffect(() => {
     setInputValue(initialData?.title || "");
     setPriority(initialData?.priority || "medium");
   }, [initialData]);
 
+  useEffect(() => {
+    formNameRef.current = formName;
+  }, [formName]);
+
+  useEffect(() => {
+    return () => {
+      if (
+        hasInteractedRef.current &&
+        !submittedRef.current &&
+        !abandonmentSentRef.current
+      ) {
+        trackFormAbandonment(formNameRef.current);
+        abandonmentSentRef.current = true;
+      }
+    };
+  }, []);
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!inputValue.trim()) return;
+    submittedRef.current = true;
+    trackFormSubmit(formName, "success");
     onSave(inputValue.trim(), priority);
   };
 
+  const handleCancel = () => {
+    emitAbandonment();
+    onCancel();
+  };
+
   const headingId = useId();
-  const isEditing = Boolean(initialData);
 
   return (
     <section
@@ -50,7 +91,10 @@ export function AddTodoForm({ onSave, onCancel, initialData }: AddTodoFormProps)
             type="text"
             placeholder="Wpisz tresc zadania..."
             value={inputValue}
-            onChange={(event) => setInputValue(event.target.value)}
+            onChange={(event) => {
+              hasInteractedRef.current = true;
+              setInputValue(event.target.value);
+            }}
             className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-sky-500 focus:ring-4 focus:ring-sky-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-50"
           />
         </div>
@@ -65,7 +109,10 @@ export function AddTodoForm({ onSave, onCancel, initialData }: AddTodoFormProps)
           <select
             id="todo-priority"
             value={priority}
-            onChange={(event) => setPriority(event.target.value as PriorityType)}
+            onChange={(event) => {
+              hasInteractedRef.current = true;
+              setPriority(event.target.value as PriorityType);
+            }}
             className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-50"
           >
             <option value="low">Niski</option>
@@ -77,7 +124,7 @@ export function AddTodoForm({ onSave, onCancel, initialData }: AddTodoFormProps)
         <div className="flex flex-wrap justify-end gap-3 pt-2">
           <button
             type="button"
-            onClick={onCancel}
+            onClick={handleCancel}
             className="inline-flex min-h-[44px] items-center gap-2 rounded-lg border border-slate-300 bg-white px-5 py-2 font-semibold text-slate-700 transition hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
           >
             <CancelIcon />

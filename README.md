@@ -44,3 +44,44 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+## Prywatnosc i analityka GA4
+
+Aplikacja korzysta z Google Analytics 4 dopiero po akceptacji banera zgody.
+Identyfikator pomiaru nie jest zapisany w kodzie; lokalnie nalezy ustawic
+`REACT_APP_GA_MEASUREMENT_ID` w `.env.local`, a w GitHub Actions jako secret
+o tej samej nazwie.
+
+Zbierane sa tylko dane niezbedne do oceny uzytecznosci interfejsu:
+
+- `page_view` - sciezka strony, zeby mierzyc najczesciej odwiedzane widoki.
+- `cta_click` - nazwa CTA i lokalizacja przycisku, zeby sprawdzic, czy uzytkownicy znajduja kluczowe akcje.
+- `form_abandonment` - nazwa formularza i numer kroku, zeby wykryc miejsce porzucenia bez tresci wpisanych w pola.
+- `form_submit` - nazwa formularza i status, zeby mierzyc skutecznosc wysylki bez danych osobowych.
+
+Nie sa wysylane: imie, nazwisko, e-mail, haslo, tresc zadania, kategorie ani
+inne wartosci wpisywane w formularze. Adres IP jest anonimizowany przez
+`anonymize_ip: true`, sygnaly reklamowe GA sa wylaczone, a `app_session_id`
+jest losowym UUID trzymanym tylko w `sessionStorage` i nie jest powiazany z
+danymi osobowymi. Dane analityczne sluza tylko do statystyk UX, bez
+profilowania reklamowego.
+
+W panelu GA4 nalezy ustawic retencje danych na maksymalnie 14 miesiecy.
+
+### Checklist anonimizacji
+
+- IP anonimizowane na poziomie konfiguracji: `anonymize_ip: true`.
+- Session ID to losowy UUID w `sessionStorage`, bez powiazania z danymi osobowymi.
+- Brak zbierania tresci wpisanych w formularze: hasel, danych osobowych, tresci zadan i kategorii.
+- Czas przechowywania danych ograniczony w GA4 do maksymalnie 14 miesiecy.
+- Polityka prywatnosci/analityki zaktualizowana o zdarzenia: `page_view`, `cta_click`, `form_abandonment`, `form_submit`.
+- Cookie consent zaimplementowany przed inicjalizacja GA4.
+
+### Ocena etyczna / RODO
+
+| Aspekt | Status |
+| --- | --- |
+| Minimalizacja danych | Zintegrowany z implementacja: wysylane sa tylko metadane zdarzen. |
+| Ograniczenie celu | Zintegrowany z implementacja: analityka sluzy tylko do statystyk UX, bez profilowania reklamowego. |
+| Integralnosc i poufnosc | Zintegrowany z implementacja: anonimizacja IP, pseudonimowy UUID sesji, brak danych z pol formularzy. |
+| Rozliczalnosc | Zintegrowany z dokumentacja: lista zdarzen, cele zbierania i ograniczenia sa opisane w README oraz komentarzu kodu. |

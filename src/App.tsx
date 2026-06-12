@@ -1,11 +1,15 @@
+import { useEffect, type ReactNode } from "react";
 import {
   BrowserRouter,
   Navigate,
   Route,
   Routes,
+  useLocation,
   useOutletContext,
 } from "react-router-dom";
+import { trackPageView } from "./analytics";
 import { ThemeProvider } from "./context/TodoContext";
+import { AnalyticsConsent } from "./components/AnalyticsConsent";
 import DashboardLayout from "./components/dashboard/DashboardLayout";
 import StatsGrid from "./components/dashboard/StatsGrid";
 import MultiStepForm from "./components/MultiStepForm";
@@ -14,8 +18,20 @@ import SettingsPage from "./SettingsPage";
 
 // A wrapper to pass the TodoApp component via Outlet context
 const TasksPage = () => {
-  const { appTodo } = useOutletContext<{ appTodo: () => React.ReactNode }>();
+  const { appTodo } = useOutletContext<{ appTodo: () => ReactNode }>();
   return <>{appTodo()}</>;
+};
+
+const PageViewTracker = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname === "/") return;
+
+    trackPageView(`${location.pathname}${location.search}`);
+  }, [location.pathname, location.search]);
+
+  return null;
 };
 
 function App() {
@@ -27,6 +43,8 @@ function App() {
       <BrowserRouter
         future={{ v7_relativeSplatPath: true, v7_startTransition: true }}
       >
+        <PageViewTracker />
+        <AnalyticsConsent />
         <ThemeProvider>
           <Routes>
             <Route path="/" element={<DashboardLayout appTodo={TodoApp} />}>

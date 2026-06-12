@@ -5,10 +5,15 @@ import { Step2Form } from "./Step2Form";
 import { Step3Form } from "./Step3Form";
 import { FullFormData, fullSchema } from "../schemas/schemas";
 import { Step1Form } from "./Step1Form";
+import { trackFormAbandonment } from "../analytics";
 
 export default function MultiStepForm() {
   const [currentStep, setCurrentStep] = useState(0);
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const hasInteractedRef = useRef(false);
+  const submittedRef = useRef(false);
+  const abandonmentSentRef = useRef(false);
+  const currentStepRef = useRef(currentStep);
   const methods = useForm<FullFormData>({
     resolver: zodResolver(fullSchema),
     mode: "onBlur",
@@ -29,10 +34,34 @@ export default function MultiStepForm() {
       rodo: false,
     },
   });
+  const isDirty = methods.formState.isDirty;
 
   useEffect(() => {
     headingRef.current?.focus();
   }, [currentStep]);
+
+  useEffect(() => {
+    currentStepRef.current = currentStep;
+  }, [currentStep]);
+
+  useEffect(() => {
+    if (isDirty) {
+      hasInteractedRef.current = true;
+    }
+  }, [isDirty]);
+
+  useEffect(() => {
+    return () => {
+      if (
+        hasInteractedRef.current &&
+        !submittedRef.current &&
+        !abandonmentSentRef.current
+      ) {
+        trackFormAbandonment("registration", currentStepRef.current + 1);
+        abandonmentSentRef.current = true;
+      }
+    };
+  }, []);
 
   const handleStep1Complete = async () => {
     const isValid = await methods.trigger([
@@ -123,7 +152,13 @@ export default function MultiStepForm() {
         )}
 
         {currentStep === 2 && (
-          <Step3Form onBack={goToStep2} goToStep1={goToStep1} />
+          <Step3Form
+            onBack={goToStep2}
+            goToStep1={goToStep1}
+            onComplete={() => {
+              submittedRef.current = true;
+            }}
+          />
         )}
       </FormProvider>
     </section>
