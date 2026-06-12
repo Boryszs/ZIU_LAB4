@@ -6,6 +6,12 @@ const SESSION_STORAGE_KEY = "analytics_session_id";
 let isInitialized = false;
 let lastTrackedPage = "";
 
+const debugAnalytics = (message: string) => {
+  if (process.env.NODE_ENV === "development") {
+    console.info(`[analytics] ${message}`);
+  }
+};
+
 const createSessionId = () => {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
     return crypto.randomUUID();
@@ -35,7 +41,12 @@ const getAnalyticsSessionId = () => {
 };
 
 export const initAnalytics = () => {
-  if (isInitialized || !GA_MEASUREMENT_ID) return;
+  if (isInitialized) return;
+
+  if (!GA_MEASUREMENT_ID) {
+    debugAnalytics("GA4 disabled: missing REACT_APP_GA_MEASUREMENT_ID");
+    return;
+  }
 
   ReactGA.initialize(GA_MEASUREMENT_ID, {
     gaOptions: {
@@ -49,14 +60,18 @@ export const initAnalytics = () => {
   });
 
   isInitialized = true;
+  debugAnalytics("GA4 initialized after consent");
 };
 
 export const isAnalyticsInitialized = () => isInitialized;
+
+export const hasAnalyticsMeasurementId = () => Boolean(GA_MEASUREMENT_ID);
 
 export const trackPageView = (page: string) => {
   if (!isInitialized || page === lastTrackedPage) return;
 
   lastTrackedPage = page;
+  debugAnalytics(`page_view: ${page}`);
   ReactGA.send({
     hitType: "pageview",
     page,
@@ -97,6 +112,7 @@ export const trackPageView = (page: string) => {
 export const trackCtaClick = (ctaName: string, location: string) => {
   if (!isInitialized) return;
 
+  debugAnalytics(`cta_click: ${ctaName}`);
   ReactGA.event("cta_click", {
     cta_name: ctaName,
     location,
@@ -107,6 +123,7 @@ export const trackCtaClick = (ctaName: string, location: string) => {
 export const trackFormAbandonment = (formName: string, step?: number) => {
   if (!isInitialized) return;
 
+  debugAnalytics(`form_abandonment: ${formName}`);
   ReactGA.event("form_abandonment", {
     form_name: formName,
     step,
@@ -117,6 +134,7 @@ export const trackFormAbandonment = (formName: string, step?: number) => {
 export const trackFormSubmit = (formName: string, status: string) => {
   if (!isInitialized) return;
 
+  debugAnalytics(`form_submit: ${formName} (${status})`);
   ReactGA.event("form_submit", {
     form_name: formName,
     status,

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import {
+  hasAnalyticsMeasurementId,
   initAnalytics,
   isAnalyticsInitialized,
   trackPageView,
@@ -24,6 +25,10 @@ const saveConsent = (value: AnalyticsConsentValue) => {
   window.localStorage.setItem(CONSENT_STORAGE_KEY, value);
 };
 
+const clearConsent = () => {
+  window.localStorage.removeItem(CONSENT_STORAGE_KEY);
+};
+
 export function AnalyticsConsent() {
   const location = useLocation();
   const [consent, setConsent] = useState<AnalyticsConsentValue | null>(() =>
@@ -31,17 +36,42 @@ export function AnalyticsConsent() {
   );
 
   useEffect(() => {
-    if (consent !== "accepted" || isAnalyticsInitialized()) return;
+    if (consent !== "accepted") return;
 
-    initAnalytics();
+    if (!isAnalyticsInitialized()) {
+      initAnalytics();
+    }
+
+    if (!isAnalyticsInitialized()) return;
 
     if (location.pathname !== "/") {
       trackPageView(`${location.pathname}${location.search}`);
     }
   }, [consent, location.pathname, location.search]);
 
-  if (consent) {
+  if (consent === "accepted") {
     return null;
+  }
+
+  if (consent === "declined") {
+    return (
+      <aside
+        aria-label="Status analityki"
+        className="fixed bottom-4 left-4 z-[2000] rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 shadow-lg dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+      >
+        <span>Analityka wylaczona</span>
+        <button
+          type="button"
+          onClick={() => {
+            clearConsent();
+            setConsent(null);
+          }}
+          className="ml-3 font-semibold text-[#1565C0] underline-offset-4 hover:underline"
+        >
+          Zmien
+        </button>
+      </aside>
+    );
   }
 
   const acceptAnalytics = () => {
@@ -61,9 +91,9 @@ export function AnalyticsConsent() {
     >
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <p className="m-0 text-sm leading-6">
-          Uzywamy opcjonalnej analityki GA4 tylko do statystyk UX: pageviews,
-          klikniecia CTA oraz statusy formularzy. Nie wysylamy tresci pol ani
-          danych osobowych.
+          {hasAnalyticsMeasurementId()
+            ? "Uzywamy opcjonalnej analityki GA4 tylko do statystyk UX: pageviews, klikniecia CTA oraz statusy formularzy. Nie wysylamy tresci pol ani danych osobowych."
+            : "Analityka GA4 jest wylaczona, bo brakuje zmiennej REACT_APP_GA_MEASUREMENT_ID."}
         </p>
 
         <div className="flex shrink-0 flex-wrap gap-2">
@@ -77,6 +107,7 @@ export function AnalyticsConsent() {
           <button
             type="button"
             onClick={acceptAnalytics}
+            disabled={!hasAnalyticsMeasurementId()}
             className="min-h-[40px] rounded-lg bg-[#1565C0] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0D47A1] focus:outline-none focus:ring-4 focus:ring-blue-200"
           >
             Akceptuj
