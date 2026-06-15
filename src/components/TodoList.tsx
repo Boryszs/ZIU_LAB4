@@ -90,11 +90,12 @@ export function TodoList({
               component="li"
               key={todo.id}
               sx={{
-                display: { xs: "grid", sm: "flex" },
-                gridTemplateColumns: "auto minmax(0, 1fr)",
-                alignItems: { xs: "flex-start", sm: "center" },
-                gap: 1.5,
-                px: { xs: 2, sm: 2.5 },
+                display: "grid",
+                gridTemplateColumns: "auto minmax(0, 1fr) auto auto",
+                alignItems: "center",
+                columnGap: { xs: 0.75, sm: 1.5 },
+                rowGap: 1,
+                px: { xs: 1.5, sm: 2.5 },
                 py: 1.5,
                 borderBottom: 1,
                 borderColor: "divider",
@@ -142,9 +143,8 @@ export function TodoList({
                 size="small"
                 variant="outlined"
                 sx={{
-                  gridColumn: { xs: "2", sm: "auto" },
-                  justifySelf: { xs: "start", sm: "auto" },
-                  minWidth: 80,
+                  justifySelf: "end",
+                  minWidth: { xs: 72, sm: 80 },
                   fontWeight: 700,
                   ...colors,
                   opacity: todo.completed ? 0.72 : 1,
@@ -154,8 +154,8 @@ export function TodoList({
               <Stack
                 component="footer"
                 direction="row"
-                spacing={0.5}
-                sx={{ gridColumn: { xs: "2", sm: "auto" } }}
+                spacing={0.25}
+                sx={{ justifySelf: "end" }}
               >
                 <IconButton
                   type="button"
