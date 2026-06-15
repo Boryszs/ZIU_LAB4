@@ -1,19 +1,8 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 body {
   margin: 0;
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-  background: #f5f7fa;
-  color: #1e293b;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-.dark body {
-  background: #020617;
-  color: #f8fafc;
 }
 
 code {
@@ -33,7 +22,6 @@ code {
   border: 0;
 }
 
-/* focus border */
 :where(
     a,
     button,
@@ -45,79 +33,15 @@ code {
     [role="checkbox"],
     [tabindex]:not([tabindex="-1"])
   ):focus-visible {
-  outline: 3px solid #cbd5e1 !important;
+  outline: 3px solid #01579b !important;
   outline-offset: 3px;
-  box-shadow:
-    0 0 0 2px #ffffff,
-    0 0 0 6px rgba(203, 213, 225, 0.6) !important;
-}
-
-.dark
-  :where(
-    a,
-    button,
-    input,
-    select,
-    textarea,
-    summary,
-    [role="button"],
-    [role="checkbox"],
-    [tabindex]:not([tabindex="-1"])
-  ):focus-visible {
-  outline-color: #ffffff !important;
-  box-shadow:
-    0 0 0 2px #111827,
-    0 0 0 6px rgba(255, 255, 255, 0.72) !important;
-}
-
-/* POPRAWNIE - mobile-first */
-
-.task-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-}
-@media (min-width: 768px) {
-  .task-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-@media (min-width: 1024px) {
-  .task-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media print {
-  /* Ukryj elementy interfejsu */
-  .nav,
-  .btn-add-task,
-  .sidebar {
-    display: none !important;
-  }
-  body {
-    background: white;
-    color: black;
-    font-size: 12pt;
-  } /* Nie łam kart w środku strony */
-  .task-card {
-    break-inside: avoid;
-    border: 1px solid #ccc;
-    margin-bottom: 1rem;
-  } /* Klasy pomocnicze */
-  .no-print {
-    display: none;
-  }
-  .print-only {
-    display: block;
-  } /* domyślnie hidden */
 }
 
 .skip-link {
   position: absolute;
   top: -40px;
   left: 0;
-  background: #0043ff;
+  background: #01579b;
   color: white;
   padding: 8px 16px;
   z-index: 9999;

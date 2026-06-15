@@ -1,4 +1,7 @@
 import { useRef, useState } from "react";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 import { ModalDialog } from "./components/ModalDialog";
 
 export default function SettingsPage() {
@@ -6,33 +9,37 @@ export default function SettingsPage() {
   const openModalButtonRef = useRef<HTMLButtonElement>(null);
 
   return (
-    <section className="text-center">
-      <h2 className="mb-4 text-2xl font-bold">Ustawienia</h2>
-      <p className="mb-6">Strona ustawień jest w budowie.</p>
-      <button
+    <Box component="section" sx={{ textAlign: "center" }}>
+      <Typography component="h2" variant="h4" fontWeight={800} sx={{ mb: 2 }}>
+        Ustawienia
+      </Typography>
+      <Typography color="text.secondary" sx={{ mb: 3 }}>
+        Strona ustawień jest w budowie.
+      </Typography>
+      <Button
         ref={openModalButtonRef}
         type="button"
+        variant="contained"
         aria-controls="settings-modal"
         aria-expanded={isModalOpen}
         aria-haspopup="dialog"
         onClick={() => setIsModalOpen(true)}
-        className="rounded-md bg-slate-700 px-4 py-2 text-white hover:bg-slate-800 dark:bg-slate-600 dark:hover:bg-slate-500"
       >
         Otwórz okno modalne
-      </button>
+      </Button>
 
       <ModalDialog
         id="settings-modal"
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         triggerRef={openModalButtonRef}
-        title="Przykładowy Modal"
+        title="Przykładowy modal"
       >
-        <p>
-          To jest treść okna modalnego. Fokus jest uwięziony wewnątrz. Naciśnij
-          Escape lub przycisk Zamknij, aby wyjść.
-        </p>
+        <Typography>
+          To jest treść okna modalnego. Fokus jest obsługiwany przez komponent
+          Dialog z MUI. Naciśnij Escape lub przycisk Zamknij, aby wyjść.
+        </Typography>
       </ModalDialog>
-    </section>
+    </Box>
   );
 }

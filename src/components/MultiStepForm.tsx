@@ -1,11 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
+import Step from "@mui/material/Step";
+import StepLabel from "@mui/material/StepLabel";
+import Stepper from "@mui/material/Stepper";
+import Typography from "@mui/material/Typography";
 import { Step2Form } from "./Step2Form";
 import { Step3Form } from "./Step3Form";
 import { FullFormData, fullSchema } from "../schemas/schemas";
 import { Step1Form } from "./Step1Form";
 import { trackFormAbandonment } from "../analytics";
+
+const steps = ["Dane", "Preferencje", "Podsumowanie"];
 
 export default function MultiStepForm() {
   const [currentStep, setCurrentStep] = useState(0);
@@ -101,48 +109,34 @@ export default function MultiStepForm() {
   };
 
   return (
-    <section
+    <Paper
+      component="section"
       aria-label="Formularz rejestracji"
-      className="mx-auto w-full max-w-[540px] rounded-2xl border border-slate-300 bg-white p-5 shadow-sm transition-colors dark:border-slate-800 dark:bg-slate-900 dark:[&_input]:border-slate-700 dark:[&_input]:bg-slate-950 dark:[&_input]:text-slate-100 dark:[&_label]:text-slate-200 dark:[&_legend]:text-slate-200"
+      variant="outlined"
+      sx={{ mx: "auto", width: "100%", maxWidth: 560, p: { xs: 2.5, sm: 3 } }}
     >
-      <nav aria-label="Postęp rejestracji" className="mb-4">
-        <ol className="flex flex-wrap items-center justify-center gap-2 text-center text-sm text-slate-700 dark:text-slate-300">
-          <li
-            aria-current={currentStep === 0 ? "step" : undefined}
-            className={currentStep === 0 ? "font-semibold text-[#1565C0]" : ""}
-          >
-            Krok 1 z 3 – Dane
-          </li>
-          <li aria-hidden="true" className="text-slate-400">
-            →
-          </li>
-          <li
-            aria-current={currentStep === 1 ? "step" : undefined}
-            className={currentStep === 1 ? "font-semibold text-[#1565C0]" : ""}
-          >
-            Krok 2 z 3 – Preferencje
-          </li>
-          <li aria-hidden="true" className="text-slate-400">
-            →
-          </li>
-          <li
-            aria-current={currentStep === 2 ? "step" : undefined}
-            className={currentStep === 2 ? "font-semibold text-[#1565C0]" : ""}
-          >
-            3 z 3 Podsumowanie
-          </li>
-        </ol>
-      </nav>
+      <Box component="nav" aria-label="Postęp rejestracji" sx={{ mb: 3 }}>
+        <Stepper activeStep={currentStep} alternativeLabel>
+          {steps.map((label) => (
+            <Step key={label}>
+              <StepLabel>{label}</StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+      </Box>
 
-      <h2
+      <Typography
         ref={headingRef}
         tabIndex={-1}
-        className="mb-4 text-xl font-semibold text-slate-900 outline-none dark:text-slate-50"
+        component="h2"
+        variant="h5"
+        fontWeight={800}
+        sx={{ mb: 2, outline: "none" }}
       >
         {currentStep === 0 && "Dane osobowe"}
         {currentStep === 1 && "Preferencje"}
         {currentStep === 2 && "Podsumowanie"}
-      </h2>
+      </Typography>
 
       <FormProvider {...methods}>
         {currentStep === 0 && <Step1Form onNext={handleStep1Complete} />}
@@ -161,6 +155,6 @@ export default function MultiStepForm() {
           />
         )}
       </FormProvider>
-    </section>
+    </Paper>
   );
 }

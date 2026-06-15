@@ -1,9 +1,21 @@
-import { NavLink, useLocation } from "react-router-dom";
-import type { AppIcon } from "../icons";
+import type { ElementType } from "react";
+import { Link as RouterLink, useLocation } from "react-router-dom";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
+import Drawer from "@mui/material/Drawer";
+import List from "@mui/material/List";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { drawerWidth } from "./DashboardLayout";
 
 export interface NavItem {
   label: string;
-  icon: AppIcon;
+  icon: ElementType;
   path: string;
 }
 
@@ -15,77 +27,93 @@ export default function Sidebar({ navItems }: SidebarProps) {
   const location = useLocation();
 
   return (
-    <aside aria-label="Panel bocznej nawigacji" className="fixed left-0 top-0 hidden h-screen w-[264px] flex-col border-r border-slate-300 bg-white text-slate-900 shadow-[8px_0_24px_rgba(15,23,42,0.08)] transition-colors dark:border-slate-800 dark:bg-slate-950 dark:text-slate-50 md:flex">
-      <header className="flex h-20 items-center gap-3 px-5">
-        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#1565C0] text-lg font-bold text-white shadow-sm">
-          T
-        </div>
-        <div className="min-w-0">
-          <h1 className="truncate text-xl font-bold leading-tight">TodoApp</h1>
-          <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
-            Panel zadan
-          </p>
-        </div>
-      </header>
+    <Drawer
+      component="aside"
+      variant="permanent"
+      aria-label="Panel bocznej nawigacji"
+      sx={{
+        display: { xs: "none", md: "block" },
+        width: drawerWidth,
+        flexShrink: 0,
+        "& .MuiDrawer-paper": {
+          width: drawerWidth,
+          boxSizing: "border-box",
+          borderRight: 1,
+          borderColor: "divider",
+          bgcolor: "background.paper",
+        },
+      }}
+    >
+      <Stack component="header" direction="row" spacing={1.5} alignItems="center" sx={{ height: 80, px: 2.5 }}>
+        <Avatar sx={{ bgcolor: "primary.main", fontWeight: 800 }}>T</Avatar>
+        <Box sx={{ minWidth: 0 }}>
+          <Typography component="h1" variant="h6" noWrap fontWeight={800}>
+            {/* TodoApp */}
+          </Typography>
+          <Typography variant="caption" color="text.secondary" fontSize={24} fontWeight={700} noWrap>
+            Panel zadań
+          </Typography>
+        </Box>
+      </Stack>
 
-      <hr className="mx-5 border-t border-slate-300 dark:border-slate-800" />
+      <Divider sx={{ mx: 2.5 }} />
 
-      <nav className="px-3 py-4" aria-label="Główna nawigacja">
-        <ul className="grid gap-1">
+      <Box component="nav" aria-label="Główna nawigacja" sx={{ px: 1.5, py: 2 }}>
+        <List disablePadding>
           {navItems.map((item) => {
             const Icon = item.icon;
+            const isActive = location.pathname === item.path;
 
             return (
-              <li key={item.path}>
-                <NavLink
-                  to={item.path}
-                  aria-current={location.pathname === item.path ? "page" : undefined}
-                  className={({ isActive }) =>
-                    `group relative flex min-h-[48px] w-full items-center gap-3 rounded-xl px-3 text-left text-sm font-semibold transition ${
-                      isActive
-                      ? "bg-[#1565C0] text-white shadow-sm"
-                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-white"
-                    }`
-                  }
-                >
-                  {({ isActive }) => (
-                    <>
-                      <span
-                        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition ${
-                          isActive
-                            ? "bg-white/15"
-                            : "bg-slate-100 text-slate-500 group-hover:text-[#1565C0] dark:bg-slate-900 dark:text-slate-400"
-                        }`}
-                      >
-                        <Icon className="h-5 w-5" />
-                      </span>
-                      <span>{item.label}</span>
-                    </>
-                  )}
-                </NavLink>
-              </li>
+              <ListItemButton
+                key={item.path}
+                component={RouterLink}
+                to={item.path}
+                selected={isActive}
+                aria-current={isActive ? "page" : undefined}
+                sx={{
+                  minHeight: 48,
+                  borderRadius: 2,
+                  mb: 0.5,
+                  fontWeight: 700,
+                  "&.Mui-selected": {
+                    bgcolor: "primary.main",
+                    color: "primary.contrastText",
+                    "&:hover": { bgcolor: "primary.dark" },
+                    "& .MuiListItemIcon-root": {
+                      color: "primary.contrastText",
+                    },
+                  },
+                }}
+              >
+                <ListItemIcon sx={{ minWidth: 44 }}>
+                  <Icon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText
+                  primary={item.label}
+                  primaryTypographyProps={{ fontWeight: 700 }}
+                />
+              </ListItemButton>
             );
           })}
-        </ul>
-      </nav>
+        </List>
+      </Box>
 
-      <div className="flex-1" />
+      <Box sx={{ flex: 1 }} />
 
-      <footer className="m-4 rounded-2xl border border-slate-300 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-900">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1565C0] font-semibold text-white">
-            U
-          </div>
-          <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-slate-800 dark:text-slate-100">
-              Uzytkownik
-            </p>
-            <p className="truncate text-xs text-slate-500 dark:text-slate-400">
+      <Paper variant="outlined" sx={{ m: 2, p: 1.5, borderRadius: 2 }}>
+        <Stack direction="row" spacing={1.5} alignItems="center">
+          <Avatar sx={{ bgcolor: "primary.main", width: 40, height: 40 }}>U</Avatar>
+          <Box sx={{ minWidth: 0 }}>
+            <Typography variant="body2" noWrap fontWeight={700}>
+              Użytkownik
+            </Typography>
+            <Typography variant="caption" color="text.secondary" noWrap>
               Online
-            </p>
-          </div>
-        </div>
-      </footer>
-    </aside>
+            </Typography>
+          </Box>
+        </Stack>
+      </Paper>
+    </Drawer>
   );
 }
