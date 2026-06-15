@@ -1,4 +1,3 @@
-import { JSX } from "react";
 
 export interface Todo {
   id: string;
