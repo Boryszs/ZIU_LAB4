@@ -17,6 +17,7 @@ export function AddTodoForm({ onSave, onCancel, initialData }: AddTodoFormProps)
   const hasInteractedRef = useRef(false);
   const submittedRef = useRef(false);
   const abandonmentSentRef = useRef(false);
+  const [titleTouched, setTitleTouched] = useState(false);
   const isEditing = Boolean(initialData);
   const formName = isEditing ? "todo_edit" : "todo_create";
   const formNameRef = useRef(formName);
@@ -35,6 +36,7 @@ export function AddTodoForm({ onSave, onCancel, initialData }: AddTodoFormProps)
   useEffect(() => {
     setInputValue(initialData?.title || "");
     setPriority(initialData?.priority || "medium");
+    setTitleTouched(false);
   }, [initialData]);
 
   useEffect(() => {
@@ -56,7 +58,10 @@ export function AddTodoForm({ onSave, onCancel, initialData }: AddTodoFormProps)
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!inputValue.trim()) return;
+    if (!inputValue.trim()) {
+      setTitleTouched(true);
+      return;
+    }
     submittedRef.current = true;
     trackFormSubmit(formName, "success");
     onSave(inputValue.trim(), priority);
@@ -68,6 +73,10 @@ export function AddTodoForm({ onSave, onCancel, initialData }: AddTodoFormProps)
   };
 
   const headingId = useId();
+  const titleErrorId = `${headingId}-title-error`;
+  const titleError = titleTouched && !inputValue.trim()
+    ? "Treść zadania jest wymagana."
+    : "";
 
   return (
     <section
@@ -84,19 +93,30 @@ export function AddTodoForm({ onSave, onCancel, initialData }: AddTodoFormProps)
             htmlFor="todo-title"
             className="text-sm font-medium text-slate-700 dark:text-slate-200"
           >
-            Tresc zadania
+            Treść zadania
           </label>
           <input
             id="todo-title"
             type="text"
-            placeholder="Wpisz tresc zadania..."
+            required
+            aria-required="true"
+            aria-invalid={Boolean(titleError)}
+            aria-describedby={titleError ? titleErrorId : undefined}
+            placeholder="Wpisz treść zadania..."
             value={inputValue}
+            onBlur={() => setTitleTouched(true)}
             onChange={(event) => {
               hasInteractedRef.current = true;
+              setTitleTouched(true);
               setInputValue(event.target.value);
             }}
             className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-sky-500 focus:ring-4 focus:ring-sky-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-50"
           />
+          {titleError && (
+            <p id={titleErrorId} role="alert" className="text-sm text-red-700 dark:text-red-300">
+              {titleError}
+            </p>
+          )}
         </div>
 
         <div className="grid gap-1.5">

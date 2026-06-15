@@ -55,7 +55,7 @@ export const Step2Form = ({ onNext, onBack }: Step2Props) => {
                   type="button"
                   onClick={() => remove(index)}
                   aria-label={`Usuń kategorię ${index + 1}`}
-                  className="px-3 py-2 bg-red-600 text-white rounded"
+                  className="min-h-[44px] min-w-[44px] rounded bg-red-700 px-3 py-2 text-white transition hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-200"
                 >
                   X
                 </button>
@@ -77,7 +77,7 @@ export const Step2Form = ({ onNext, onBack }: Step2Props) => {
         <button
           type="button"
           onClick={() => append({ value: "" })}
-          className="text-blue-600 text-sm"
+          className="inline-flex min-h-[44px] items-center rounded px-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-100"
         >
           + Dodaj kategorię
         </button>
@@ -135,11 +135,11 @@ export const Step2Form = ({ onNext, onBack }: Step2Props) => {
         </label>
       </div>
 
-      <div className="flex gap-2">
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
         <button
           type="button"
           onClick={onBack}
-          className="w-1/2 border border-gray-300 py-2 rounded hover:bg-gray-100"
+          className="min-h-[44px] w-full rounded border border-gray-300 py-2 hover:bg-gray-100"
         >
           Wstecz
         </button>
@@ -148,7 +148,7 @@ export const Step2Form = ({ onNext, onBack }: Step2Props) => {
           type="submit"
           disabled={isSubmitting}
           aria-busy={isSubmitting}
-          className="w-1/2 bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+          className="min-h-[44px] w-full rounded bg-blue-600 py-2 text-white hover:bg-blue-700"
         >
           {isSubmitting ? "Zapisywanie..." : "Dalej"}
         </button>

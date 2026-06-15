@@ -59,7 +59,11 @@ export function TodoList({
 
   if (filteredTodos.length === 0) {
     return (
-      <p className="mx-auto mt-8 text-center text-slate-500 dark:text-slate-400">
+      <p
+        role="status"
+        aria-live="polite"
+        className="mx-auto mt-8 text-center text-slate-600 dark:text-slate-300"
+      >
         Brak zadan. Dodaj pierwsze!
       </p>
     );
@@ -71,7 +75,7 @@ export function TodoList({
         {filteredTodos.map((todo) => (
           <li
             key={todo.id}
-            className={`flex items-center gap-3 px-4 py-3 transition sm:px-5 ${
+            className={`grid grid-cols-[auto_minmax(0,1fr)] items-start gap-3 px-4 py-3 transition sm:flex sm:items-center sm:px-5 ${
               todo.completed
                 ? "bg-slate-50 dark:bg-slate-800/70"
                 : "bg-white hover:bg-slate-50/70 dark:bg-slate-900 dark:hover:bg-slate-800/70"
@@ -92,7 +96,7 @@ export function TodoList({
               {todo.completed ? <CheckBoxIcon /> : <CheckBoxBlankIcon />}
             </button>
 
-            <article className="min-w-0 flex-1 text-left">
+            <article className="min-w-0 text-left sm:flex-1">
                   <p
                     className={`truncate font-semibold ${
                       todo.completed
@@ -112,14 +116,14 @@ export function TodoList({
             </article>
 
             <span
-              className={`mr-2 w-20 rounded-full border px-3 py-1 text-center text-xs font-semibold ${
+              className={`col-start-2 w-fit min-w-20 rounded-full border px-3 py-1 text-center text-xs font-semibold sm:col-auto sm:mr-2 sm:w-20 ${
                 priorityClass[todo.priority]
               } ${todo.completed ? "bg-transparent opacity-70" : ""}`}
             >
               {priorityLabel[todo.priority]}
             </span>
 
-            <footer className="flex shrink-0 gap-1">
+            <footer className="col-start-2 flex shrink-0 gap-1 sm:col-auto">
               <button
                 type="button"
                 onClick={() => onStartEdit(todo.id)}

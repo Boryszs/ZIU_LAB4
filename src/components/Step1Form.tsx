@@ -231,7 +231,7 @@ export const Step1Form = ({ onNext }: Props) => {
         type="submit"
         disabled={isSubmitting}
         aria-busy={isSubmitting}
-        className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+        className="min-h-[44px] w-full rounded bg-blue-600 py-2 text-white hover:bg-blue-700"
       >
         {isSubmitting ? "Wysyłanie..." : "Dalej"}
       </button>

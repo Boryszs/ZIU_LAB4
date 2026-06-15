@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { trackFormSubmit } from "../analytics";
 import { FullFormData } from "../schemas/schemas";
@@ -26,17 +26,15 @@ export const Step3Form = ({ goToStep1, onBack, onComplete }: Step3Props) => {
     setError,
     clearErrors,
     control,
-    getValues,
     formState: { errors, isSubmitting },
   } = useFormContext<FullFormData>();
 
   const values = useWatch({ control });
+  const [successMessage, setSuccessMessage] = useState("");
 
   const onSubmit = async () => {
+    setSuccessMessage("");
     clearErrors("root.serverError");
-    const data = getValues();
-
-    console.log("WYSYLANE DANE FORMULARZA:", data);
 
     const response = await fakeRegister();
 
@@ -61,7 +59,12 @@ export const Step3Form = ({ goToStep1, onBack, onComplete }: Step3Props) => {
 
     trackFormSubmit("registration", "success");
     onComplete();
-    alert("Rejestracja zakonczona sukcesem");
+    setSuccessMessage("Rejestracja zakończona sukcesem.");
+  };
+
+  const handleBack = () => {
+    setSuccessMessage("");
+    onBack();
   };
 
   return (
@@ -121,11 +124,21 @@ export const Step3Form = ({ goToStep1, onBack, onComplete }: Step3Props) => {
         </div>
       )}
 
-      <div className="flex gap-2">
+      {successMessage && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="rounded border border-green-300 bg-green-50 px-3 py-2 text-sm font-medium text-green-800"
+        >
+          {successMessage}
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
         <button
           type="button"
-          onClick={onBack}
-          className="w-1/2 border border-gray-300 py-2 rounded hover:bg-gray-100"
+          onClick={handleBack}
+          className="min-h-[44px] w-full rounded border border-gray-300 py-2 hover:bg-gray-100"
         >
           Wstecz
         </button>
@@ -134,7 +147,7 @@ export const Step3Form = ({ goToStep1, onBack, onComplete }: Step3Props) => {
           type="submit"
           disabled={isSubmitting}
           aria-busy={isSubmitting}
-          className="w-1/2 bg-green-700 text-white py-2 rounded hover:bg-green-800"
+          className="min-h-[44px] w-full rounded bg-green-700 py-2 text-white hover:bg-green-800"
         >
           {isSubmitting ? "Rejestrowanie..." : "Zarejestruj sie"}
         </button>

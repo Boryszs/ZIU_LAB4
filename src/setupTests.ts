@@ -4,6 +4,15 @@
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom';
 
+jest.mock("react-ga4", () => ({
+  __esModule: true,
+  default: {
+    event: jest.fn(),
+    initialize: jest.fn(),
+    send: jest.fn(),
+  },
+}));
+
 Object.defineProperty(window, "matchMedia", {
   writable: true,
   value: (query: string) => ({
