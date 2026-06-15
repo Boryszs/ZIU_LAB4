@@ -77,17 +77,6 @@ export default function TodoApp() {
       </Box>
 
       <Box component="section" aria-labelledby="todo-view-heading">
-        <Fab
-          color="primary"
-          aria-label="Dodaj nowe zadanie"
-          onClick={() => {
-            trackCtaClick("add_todo", "tasks_floating_button");
-            navigate("/tasks/new");
-          }}
-          sx={{ position: "fixed", right: 24, bottom: 24, zIndex: 1000 }}
-        >
-          <AddIcon />
-        </Fab>
         <FilterBar activeFilter={filter} onFilterChange={setFilter} />
         <TodoList
           todos={filteredTodos}
@@ -96,6 +85,27 @@ export default function TodoApp() {
           onDelete={deleteTodo}
           onStartEdit={handleStartEdit}
         />
+        <Box
+          sx={{
+            mx: "auto",
+            mt: 2,
+            width: "100%",
+            maxWidth: 700,
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
+          <Fab
+            color="primary"
+            aria-label="Dodaj nowe zadanie"
+            onClick={() => {
+              trackCtaClick("add_todo", "tasks_floating_button");
+              navigate("/tasks/new");
+            }}
+          >
+            <AddIcon />
+          </Fab>
+        </Box>
       </Box>
     </Box>
   );

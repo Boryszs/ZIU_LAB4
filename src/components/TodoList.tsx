@@ -27,9 +27,9 @@ const priorityLabel = {
 } as const;
 
 const priorityColor = {
-  low: { color: "#334155", borderColor: "#94A3B8", bgcolor: "#F1F5F9" },
-  medium: { color: "#7A4A00", borderColor: "#F59E0B", bgcolor: "#FEF3C7" },
-  high: { color: "#991B1B", borderColor: "#FCA5A5", bgcolor: "#FEE2E2" },
+  low: { color: "#1E293B", borderColor: "#64748B", bgcolor: "#E2E8F0" },
+  medium: { color: "#6B3A00", borderColor: "#B45309", bgcolor: "#F6D7A8" },
+  high: { color: "#7F1D1D", borderColor: "#B91C1C", bgcolor: "#F4B4B4" },
 } as const;
 
 function formatTodoDate(value: string) {

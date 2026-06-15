@@ -25,22 +25,22 @@ export default function StatsGrid() {
         title="Wszystkie zadania"
         value={total}
         icon={FormatListBulletedIcon}
-        color="#1565C0"
-        bgColor="#E3F2FD"
+        color="#014F86"
+        bgColor="#C7E0F4"
       />
       <StatsCard
         title="Ukończone"
         value={completed}
         icon={CheckCircleIcon}
-        color="#2E7D32"
-        bgColor="#E8F5E9"
+        color="#005C4B"
+        bgColor="#BFE7D7"
       />
       <StatsCard
         title="Oczekujące"
         value={pending}
         icon={CircleOutlinedIcon}
-        color="#E65100"
-        bgColor="#FFF3E0"
+        color="#7A3E00"
+        bgColor="#F1CF9D"
       />
     </Box>
   );

@@ -27,6 +27,7 @@ export default function StatsCard({
       sx={{
         border: 1,
         borderColor: "divider",
+        bgcolor: "background.paper",
         transition: "box-shadow 160ms ease, transform 160ms ease",
         "&:hover": {
           boxShadow: 3,
@@ -44,7 +45,16 @@ export default function StatsCard({
               {value}
             </Typography>
           </div>
-          <Avatar sx={{ bgcolor: bgColor, color, width: 48, height: 48 }}>
+          <Avatar
+            sx={{
+              bgcolor: bgColor,
+              border: 1,
+              borderColor: color,
+              color,
+              width: 48,
+              height: 48,
+            }}
+          >
             <Icon />
           </Avatar>
         </Stack>

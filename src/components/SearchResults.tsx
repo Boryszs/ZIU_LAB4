@@ -81,7 +81,7 @@ export function SearchResults({
           size="small"
           fullWidth
         />
-        <Button type="submit" variant="contained" color="inherit" sx={{ minWidth: 112 }}>
+        <Button type="submit" variant="contained" color="primary" sx={{ minWidth: 112 }}>
           Szukaj
         </Button>
       </Stack>

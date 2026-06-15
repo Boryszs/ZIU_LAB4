@@ -44,31 +44,60 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   });
   const [todos, dispatch] = useReducer(todoReducer, initialTodos);
   const muiTheme = useMemo(
-    () =>
-      createTheme({
+    () => {
+      const isDarkMode = theme === 'dark';
+      const colors = {
+        primary: isDarkMode ? '#4EA3E8' : '#01579B',
+        primaryDark: isDarkMode ? '#B9DCF4' : '#003F73',
+        primaryLight: isDarkMode ? '#0B2A44' : '#B9DCF4',
+        background: isDarkMode ? '#020617' : '#EAF4FB',
+        surface: isDarkMode ? '#0B1220' : '#FFFFFF',
+        textPrimary: isDarkMode ? '#F8FAFC' : '#0F172A',
+        textSecondary: isDarkMode ? '#D7E3EF' : '#334155',
+        border: isDarkMode ? '#3E5870' : '#9AB6C9',
+        borderStrong: isDarkMode ? '#6E8AA3' : '#6F91A8',
+        error: isDarkMode ? '#F87171' : '#B42318',
+        success: isDarkMode ? '#5EEAD4' : '#00695C',
+        warning: isDarkMode ? '#FBBF24' : '#8A5A00',
+        hover: isDarkMode ? 'rgba(78, 163, 232, 0.16)' : 'rgba(1, 87, 155, 0.10)',
+        selected: isDarkMode ? 'rgba(78, 163, 232, 0.24)' : 'rgba(1, 87, 155, 0.16)',
+      };
+
+      return createTheme({
         palette: {
           mode: theme,
+          contrastThreshold: 4.5,
           primary: {
-            main: '#1565C0',
-            dark: '#0D47A1',
-            light: '#E3F2FD',
+            main: colors.primary,
+            dark: colors.primaryDark,
+            light: colors.primaryLight,
+            contrastText: '#FFFFFF',
           },
           background: {
-            default: theme === 'dark' ? '#020617' : '#F5F7FA',
-            paper: theme === 'dark' ? '#0F172A' : '#FFFFFF',
+            default: colors.background,
+            paper: colors.surface,
           },
           text: {
-            primary: theme === 'dark' ? '#F8FAFC' : '#0F172A',
-            secondary: theme === 'dark' ? '#CBD5E1' : '#475569',
+            primary: colors.textPrimary,
+            secondary: colors.textSecondary,
           },
+          divider: colors.border,
           error: {
-            main: '#C62828',
+            main: colors.error,
           },
           success: {
-            main: '#2E7D32',
+            main: colors.success,
           },
           warning: {
-            main: '#E65100',
+            main: colors.warning,
+          },
+          action: {
+            hover: colors.hover,
+            selected: colors.selected,
+            disabled: isDarkMode ? 'rgba(215, 227, 239, 0.42)' : 'rgba(51, 65, 85, 0.42)',
+            disabledBackground: isDarkMode
+              ? 'rgba(215, 227, 239, 0.14)'
+              : 'rgba(51, 65, 85, 0.14)',
           },
         },
         shape: {
@@ -78,12 +107,54 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
           fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
         },
         components: {
+          MuiPaper: {
+            styleOverrides: {
+              outlined: {
+                borderColor: colors.border,
+              },
+            },
+          },
+          MuiCard: {
+            styleOverrides: {
+              root: {
+                backgroundColor: colors.surface,
+                borderColor: colors.border,
+              },
+            },
+          },
           MuiButton: {
             styleOverrides: {
               root: {
                 minHeight: 44,
                 textTransform: 'none',
                 fontWeight: 700,
+              },
+            },
+          },
+          MuiOutlinedInput: {
+            styleOverrides: {
+              notchedOutline: {
+                borderColor: colors.borderStrong,
+              },
+              root: {
+                backgroundColor: colors.surface,
+                '&:hover .MuiOutlinedInput-notchedOutline': {
+                  borderColor: colors.primary,
+                },
+              },
+            },
+          },
+          MuiInputLabel: {
+            styleOverrides: {
+              root: {
+                color: colors.textSecondary,
+              },
+            },
+          },
+          MuiFormLabel: {
+            styleOverrides: {
+              root: {
+                color: colors.textSecondary,
               },
             },
           },
@@ -95,8 +166,24 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
               },
             },
           },
+          MuiToggleButton: {
+            styleOverrides: {
+              root: {
+                borderColor: colors.borderStrong,
+                color: colors.textPrimary,
+                '&.Mui-selected': {
+                  backgroundColor: colors.primary,
+                  color: '#FFFFFF',
+                  '&:hover': {
+                    backgroundColor: isDarkMode ? '#2F86CC' : '#003F73',
+                  },
+                },
+              },
+            },
+          },
         },
-      }),
+      });
+    },
     [theme],
   );
 

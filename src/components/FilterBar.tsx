@@ -54,7 +54,6 @@ export function FilterBar({ activeFilter, onFilterChange }: FilterBarProps) {
           onChange={(_, value: FilterType | null) => {
             if (value) {
               onFilterChange(value);
-              setShowFilters(false);
             }
           }}
           sx={{ flexWrap: "wrap", justifyContent: "center", gap: 1 }}

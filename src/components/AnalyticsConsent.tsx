@@ -63,7 +63,16 @@ export function AnalyticsConsent() {
         component="aside"
         aria-label="Status analityki"
         elevation={6}
-        sx={{ position: "fixed", bottom: 16, left: 16, zIndex: 2000, px: 1.5, py: 1 }}
+        sx={{
+          position: "fixed",
+          bottom: 16,
+          left: 16,
+          zIndex: 2000,
+          border: 1,
+          borderColor: "divider",
+          px: 1.5,
+          py: 1,
+        }}
       >
         <Stack direction="row" spacing={1.5} alignItems="center">
           <Typography variant="body2">Analityka wyłączona</Typography>
@@ -105,6 +114,7 @@ export function AnalyticsConsent() {
         zIndex: 2000,
         borderTop: 1,
         borderColor: "divider",
+        bgcolor: "background.paper",
         px: { xs: 2, sm: 3 },
         py: 2,
       }}

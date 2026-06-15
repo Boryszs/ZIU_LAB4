@@ -182,7 +182,19 @@ export default function AppHeader({ navItems }: AppHeaderProps) {
                   selected={isActive}
                   aria-current={isActive ? "page" : undefined}
                   onClick={() => setIsOpen(false)}
-                  sx={{ minHeight: 48, mx: 1, borderRadius: 2 }}
+                  sx={{
+                    minHeight: 48,
+                    mx: 1,
+                    borderRadius: 2,
+                    "&.Mui-selected": {
+                      bgcolor: "primary.main",
+                      color: "primary.contrastText",
+                      "&:hover": { bgcolor: "primary.dark" },
+                      "& .MuiListItemIcon-root": {
+                        color: "primary.contrastText",
+                      },
+                    },
+                  }}
                 >
                   <ListItemIcon sx={{ minWidth: 44 }}>
                     <Icon />
