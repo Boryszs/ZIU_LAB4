@@ -1,4 +1,14 @@
-import { createContext, useContext, useEffect, useReducer, useState, ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState,
+  ReactNode,
+} from 'react';
+import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider as MuiThemeProvider, createTheme } from '@mui/material/styles';
 import { todoReducer } from '../reducers/todoReducer';
 import { PriorityType, Todo } from '../types/todo.types';
 
@@ -33,6 +43,62 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       : 'light';
   });
   const [todos, dispatch] = useReducer(todoReducer, initialTodos);
+  const muiTheme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode: theme,
+          primary: {
+            main: '#1565C0',
+            dark: '#0D47A1',
+            light: '#E3F2FD',
+          },
+          background: {
+            default: theme === 'dark' ? '#020617' : '#F5F7FA',
+            paper: theme === 'dark' ? '#0F172A' : '#FFFFFF',
+          },
+          text: {
+            primary: theme === 'dark' ? '#F8FAFC' : '#0F172A',
+            secondary: theme === 'dark' ? '#CBD5E1' : '#475569',
+          },
+          error: {
+            main: '#C62828',
+          },
+          success: {
+            main: '#2E7D32',
+          },
+          warning: {
+            main: '#E65100',
+          },
+        },
+        shape: {
+          borderRadius: 12,
+        },
+        typography: {
+          fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+        },
+        components: {
+          MuiButton: {
+            styleOverrides: {
+              root: {
+                minHeight: 44,
+                textTransform: 'none',
+                fontWeight: 700,
+              },
+            },
+          },
+          MuiIconButton: {
+            styleOverrides: {
+              root: {
+                minHeight: 44,
+                minWidth: 44,
+              },
+            },
+          },
+        },
+      }),
+    [theme],
+  );
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
@@ -41,27 +107,30 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, [theme]);
 
   return (
-    <ThemeContext.Provider
-      value={{
-        theme,
-        setTheme,
-        todos,
-        addTodo: (title, priority) => {
-          dispatch({ type: 'ADD', payload: { title, priority } });
-        },
-        toggleTodo: (id) => {
-          dispatch({ type: 'TOGGLE', payload: id });
-        },
-        deleteTodo: (id) => {
-          dispatch({ type: 'DELETE', payload: id });
-        },
-        editTodo: (id, title, priority) => {
-          dispatch({ type: 'EDIT', payload: { id, title, priority } });
-        },
-      }}
-    >
-      {children}
-    </ThemeContext.Provider>
+    <MuiThemeProvider theme={muiTheme}>
+      <CssBaseline />
+      <ThemeContext.Provider
+        value={{
+          theme,
+          setTheme,
+          todos,
+          addTodo: (title, priority) => {
+            dispatch({ type: 'ADD', payload: { title, priority } });
+          },
+          toggleTodo: (id) => {
+            dispatch({ type: 'TOGGLE', payload: id });
+          },
+          deleteTodo: (id) => {
+            dispatch({ type: 'DELETE', payload: id });
+          },
+          editTodo: (id, title, priority) => {
+            dispatch({ type: 'EDIT', payload: { id, title, priority } });
+          },
+        }}
+      >
+        {children}
+      </ThemeContext.Provider>
+    </MuiThemeProvider>
   );
 }
 

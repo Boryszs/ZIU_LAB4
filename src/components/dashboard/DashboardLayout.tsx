@@ -1,28 +1,51 @@
 import { Outlet } from "react-router-dom";
+import Box from "@mui/material/Box";
+import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import SettingsIcon from "@mui/icons-material/Settings";
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import AppHeader from "./AppHeader";
 import Sidebar, { type NavItem } from "./Sidebar";
-import { DashboardIcon, RegisterIcon, SettingsIcon, TaskIcon } from "../icons";
 
 interface DashboardLayoutProps {
   appTodo?: () => React.ReactNode;
 }
 
+export const drawerWidth = 264;
+
 export default function DashboardLayout({ appTodo }: DashboardLayoutProps) {
   const navItems: NavItem[] = [
     { label: "Dashboard", icon: DashboardIcon, path: "/dashboard" },
-    { label: "Zadania", icon: TaskIcon, path: "/tasks" },
+    { label: "Zadania", icon: TaskAltIcon, path: "/tasks" },
     { label: "Ustawienia", icon: SettingsIcon, path: "/settings" },
-    { label: "Rejestracja", icon: RegisterIcon, path: "/register" },
+    { label: "Rejestracja", icon: AppRegistrationIcon, path: "/register" },
   ];
 
   return (
-    <section aria-label="Układ pulpitu" className="min-h-screen bg-[#F5F7FA] text-slate-900 transition-colors dark:bg-slate-950 dark:text-slate-100">
+    <Box
+      component="section"
+      aria-label="Układ pulpitu"
+      sx={{ minHeight: "100vh", bgcolor: "background.default" }}
+    >
       <Sidebar navItems={navItems} />
-      <main id="main-content" tabIndex={-1} role="main" aria-label="Główna zawartość aplikacji" className="min-h-screen w-full bg-[#F5F7FA] p-6 pt-0 transition-colors dark:bg-slate-950 md:ml-[264px] md:w-[calc(100%_-_264px)]">
+      <Box
+        id="main-content"
+        component="main"
+        tabIndex={-1}
+        aria-label="Główna zawartość aplikacji"
+        sx={{
+          minHeight: "100vh",
+          width: { xs: "100%", md: `calc(100% - ${drawerWidth}px)` },
+          ml: { xs: 0, md: `${drawerWidth}px` },
+          bgcolor: "background.default",
+          px: { xs: 2, sm: 3 },
+          pb: 4,
+        }}
+      >
         <AppHeader navItems={navItems} />
-        <div className="h-24" />
+        <Box sx={{ height: 96 }} />
         <Outlet context={{ appTodo }} />
-      </main>
-    </section>
+      </Box>
+    </Box>
   );
 }

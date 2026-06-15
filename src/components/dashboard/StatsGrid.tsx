@@ -1,6 +1,9 @@
-import StatsCard from "./StatsCard";
-import { CheckCircleIcon, CircleIcon, ListIcon } from "../icons";
+import Box from "@mui/material/Box";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CircleOutlinedIcon from "@mui/icons-material/CircleOutlined";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import { useTodoContext } from "../../context/TodoContext";
+import StatsCard from "./StatsCard";
 
 export default function StatsGrid() {
   const { todos } = useTodoContext();
@@ -9,31 +12,36 @@ export default function StatsGrid() {
   const pending = todos.filter((todo) => !todo.completed).length;
 
   return (
-    <section
+    <Box
+      component="section"
       aria-label="Statystyki zadań"
-      className="grid grid-cols-1 gap-6 sm:grid-cols-3"
+      sx={{
+        display: "grid",
+        gridTemplateColumns: { xs: "1fr", sm: "repeat(3, 1fr)" },
+        gap: { xs: 2, md: 3 },
+      }}
     >
       <StatsCard
         title="Wszystkie zadania"
         value={total}
-        icon={ListIcon}
+        icon={FormatListBulletedIcon}
         color="#1565C0"
         bgColor="#E3F2FD"
       />
       <StatsCard
-        title="Ukonczone"
+        title="Ukończone"
         value={completed}
         icon={CheckCircleIcon}
         color="#2E7D32"
         bgColor="#E8F5E9"
       />
       <StatsCard
-        title="Oczekujace"
+        title="Oczekujące"
         value={pending}
-        icon={CircleIcon}
+        icon={CircleOutlinedIcon}
         color="#E65100"
         bgColor="#FFF3E0"
       />
-    </section>
+    </Box>
   );
 }

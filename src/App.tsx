@@ -12,6 +12,7 @@ import DashboardLayout from "./components/dashboard/DashboardLayout";
 import StatsGrid from "./components/dashboard/StatsGrid";
 import MultiStepForm from "./components/MultiStepForm";
 import TodoApp from "./components/TodoApp";
+import TodoFormPage from "./components/TodoFormPage";
 import SettingsPage from "./SettingsPage";
 
 // A wrapper to pass the TodoApp component via Outlet context
@@ -36,6 +37,11 @@ function App() {
               <Route index element={<Navigate to="/dashboard" replace />} />
               <Route path="dashboard" element={<StatsGrid />} />
               <Route path="tasks" element={<TasksPage />} />
+              <Route path="tasks/new" element={<TodoFormPage mode="add" />} />
+              <Route
+                path="tasks/:todoId/edit"
+                element={<TodoFormPage mode="edit" />}
+              />
               <Route path="settings" element={<SettingsPage />} />
               <Route path="login" element={<MultiStepForm />} />
               <Route path="register" element={<MultiStepForm />} />

@@ -1,10 +1,15 @@
 import { useMemo } from "react";
-import {
-  CheckBoxBlankIcon,
-  CheckBoxIcon,
-  DeleteIcon,
-  EditIcon,
-} from "./icons";
+import Alert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
+import Checkbox from "@mui/material/Checkbox";
+import Chip from "@mui/material/Chip";
+import IconButton from "@mui/material/IconButton";
+import List from "@mui/material/List";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import { Filter, Todo } from "../types/todo.types";
 
 interface TodoListProps {
@@ -17,15 +22,14 @@ interface TodoListProps {
 
 const priorityLabel = {
   low: "Niski",
-  medium: "Sredni",
+  medium: "Średni",
   high: "Wysoki",
 } as const;
 
-const priorityClass = {
-  low: "border-slate-400 bg-slate-200 text-slate-800 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100",
-  medium:
-    "border-amber-400 bg-amber-300 text-amber-950 dark:border-amber-700 dark:bg-amber-800 dark:text-amber-50",
-  high: "border-red-300 bg-red-200 text-red-900 dark:border-red-700 dark:bg-red-900 dark:text-red-100",
+const priorityColor = {
+  low: { color: "#334155", borderColor: "#94A3B8", bgcolor: "#F1F5F9" },
+  medium: { color: "#7A4A00", borderColor: "#F59E0B", bgcolor: "#FEF3C7" },
+  high: { color: "#991B1B", borderColor: "#FCA5A5", bgcolor: "#FEE2E2" },
 } as const;
 
 function formatTodoDate(value: string) {
@@ -59,91 +63,121 @@ export function TodoList({
 
   if (filteredTodos.length === 0) {
     return (
-      <p
+      <Alert
+        severity="info"
         role="status"
         aria-live="polite"
-        className="mx-auto mt-8 text-center text-slate-600 dark:text-slate-300"
+        sx={{ mx: "auto", mt: 4, maxWidth: 700 }}
       >
-        Brak zadan. Dodaj pierwsze!
-      </p>
+        Brak zadań. Dodaj pierwsze!
+      </Alert>
     );
   }
 
   return (
-    <section aria-label="Lista zadań" className="mx-auto my-6 w-full max-w-[700px] overflow-hidden rounded-2xl border border-slate-300 bg-white shadow-[0_2px_12px_rgba(0,0,0,0.08)] dark:border-slate-800 dark:bg-slate-900">
-      <ul className="divide-y divide-slate-300 dark:divide-slate-700">
-        {filteredTodos.map((todo) => (
-          <li
-            key={todo.id}
-            className={`grid grid-cols-[auto_minmax(0,1fr)] items-start gap-3 px-4 py-3 transition sm:flex sm:items-center sm:px-5 ${
-              todo.completed
-                ? "bg-slate-50 dark:bg-slate-800/70"
-                : "bg-white hover:bg-slate-50/70 dark:bg-slate-900 dark:hover:bg-slate-800/70"
-            }`}
-          >
-            <button
-              type="button"
-              role="checkbox"
-              aria-checked={todo.completed}
-              aria-label={
-                todo.completed
-                  ? `Oznacz zadanie '${todo.title}' jako nieukończone`
-                  : `Oznacz zadanie '${todo.title}' jako ukończone`
-              }
-              onClick={() => onToggle(todo.id)}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[#1565C0] transition hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-100"
+    <Paper
+      component="section"
+      aria-label="Lista zadań"
+      variant="outlined"
+      sx={{ mx: "auto", my: 3, width: "100%", maxWidth: 700, overflow: "hidden" }}
+    >
+      <List disablePadding>
+        {filteredTodos.map((todo) => {
+          const colors = priorityColor[todo.priority];
+
+          return (
+            <Box
+              component="li"
+              key={todo.id}
+              sx={{
+                display: { xs: "grid", sm: "flex" },
+                gridTemplateColumns: "auto minmax(0, 1fr)",
+                alignItems: { xs: "flex-start", sm: "center" },
+                gap: 1.5,
+                px: { xs: 2, sm: 2.5 },
+                py: 1.5,
+                borderBottom: 1,
+                borderColor: "divider",
+                bgcolor: todo.completed ? "action.hover" : "background.paper",
+                transition: "background-color 160ms ease",
+                "&:last-child": { borderBottom: 0 },
+                "&:hover": { bgcolor: "action.hover" },
+              }}
             >
-              {todo.completed ? <CheckBoxIcon /> : <CheckBoxBlankIcon />}
-            </button>
+              <Checkbox
+                checked={todo.completed}
+                onChange={() => onToggle(todo.id)}
+                inputProps={{
+                  "aria-label": todo.completed
+                    ? `Oznacz zadanie '${todo.title}' jako nieukończone`
+                    : `Oznacz zadanie '${todo.title}' jako ukończone`,
+                }}
+                sx={{ p: 1 }}
+              />
 
-            <article className="min-w-0 text-left sm:flex-1">
-                  <p
-                    className={`truncate font-semibold ${
-                      todo.completed
-                        ? "text-slate-600 line-through dark:text-slate-300"
-                        : "text-slate-900 dark:text-slate-50"
-                    }`}
-                  >
-                {todo.title}
-              </p>
-              <p
-                className={`text-sm text-slate-500 ${
-                  todo.completed ? "line-through" : ""
-                }`}
-              >
-                {formatTodoDate(todo.date)}
-              </p>
-            </article>
+              <Box component="article" sx={{ minWidth: 0, flex: 1 }}>
+                <Typography
+                  component="p"
+                  fontWeight={700}
+                  noWrap
+                  sx={{
+                    textDecoration: todo.completed ? "line-through" : "none",
+                    color: todo.completed ? "text.secondary" : "text.primary",
+                  }}
+                >
+                  {todo.title}
+                </Typography>
+                <Typography
+                  component="p"
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ textDecoration: todo.completed ? "line-through" : "none" }}
+                >
+                  {formatTodoDate(todo.date)}
+                </Typography>
+              </Box>
 
-            <span
-              className={`col-start-2 w-fit min-w-20 rounded-full border px-3 py-1 text-center text-xs font-semibold sm:col-auto sm:mr-2 sm:w-20 ${
-                priorityClass[todo.priority]
-              } ${todo.completed ? "bg-transparent opacity-70" : ""}`}
-            >
-              {priorityLabel[todo.priority]}
-            </span>
+              <Chip
+                label={priorityLabel[todo.priority]}
+                size="small"
+                variant="outlined"
+                sx={{
+                  gridColumn: { xs: "2", sm: "auto" },
+                  justifySelf: { xs: "start", sm: "auto" },
+                  minWidth: 80,
+                  fontWeight: 700,
+                  ...colors,
+                  opacity: todo.completed ? 0.72 : 1,
+                }}
+              />
 
-            <footer className="col-start-2 flex shrink-0 gap-1 sm:col-auto">
-              <button
-                type="button"
-                onClick={() => onStartEdit(todo.id)}
-                aria-label={`Edytuj zadanie ${todo.title}`}
-                className="flex h-10 w-10 items-center justify-center rounded-full text-blue-700 transition hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-100"
+              <Stack
+                component="footer"
+                direction="row"
+                spacing={0.5}
+                sx={{ gridColumn: { xs: "2", sm: "auto" } }}
               >
-                <EditIcon />
-              </button>
-              <button
-                type="button"
-                onClick={() => onDelete(todo.id)}
-                aria-label={`Usuń zadanie ${todo.title}`}
-                className="flex h-10 w-10 items-center justify-center rounded-full text-red-700 transition hover:bg-red-50 focus:outline-none focus:ring-4 focus:ring-red-100"
-              >
-                <DeleteIcon />
-              </button>
-            </footer>
-          </li>
-        ))}
-      </ul>
-    </section>
+                <IconButton
+                  type="button"
+                  color="primary"
+                  onClick={() => onStartEdit(todo.id)}
+                  aria-label={`Edytuj zadanie ${todo.title}`}
+                >
+                  <EditIcon />
+                </IconButton>
+                <IconButton
+                  type="button"
+                  color="error"
+                  onClick={() => onDelete(todo.id)}
+                  aria-label={`Usuń zadanie ${todo.title}`}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </Stack>
+            </Box>
+          );
+        })}
+      </List>
+    </Paper>
   );
 }

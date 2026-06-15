@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import Button from "@mui/material/Button";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import {
   hasAnalyticsMeasurementId,
   initAnalytics,
@@ -55,22 +59,26 @@ export function AnalyticsConsent() {
 
   if (consent === "declined") {
     return (
-      <aside
+      <Paper
+        component="aside"
         aria-label="Status analityki"
-        className="fixed bottom-4 left-4 z-[2000] rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 shadow-lg dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+        elevation={6}
+        sx={{ position: "fixed", bottom: 16, left: 16, zIndex: 2000, px: 1.5, py: 1 }}
       >
-        <span>Analityka wylaczona</span>
-        <button
-          type="button"
-          onClick={() => {
-            clearConsent();
-            setConsent(null);
-          }}
-          className="ml-3 font-semibold text-[#1565C0] underline-offset-4 hover:underline"
-        >
-          Zmien
-        </button>
-      </aside>
+        <Stack direction="row" spacing={1.5} alignItems="center">
+          <Typography variant="body2">Analityka wyłączona</Typography>
+          <Button
+            type="button"
+            variant="text"
+            onClick={() => {
+              clearConsent();
+              setConsent(null);
+            }}
+          >
+            Zmień
+          </Button>
+        </Stack>
+      </Paper>
     );
   }
 
@@ -85,35 +93,49 @@ export function AnalyticsConsent() {
   };
 
   return (
-    <section
-      aria-label="Zgoda na analityke"
-      className="fixed inset-x-0 bottom-0 z-[2000] border-t border-slate-300 bg-white px-4 py-4 text-slate-900 shadow-[0_-8px_24px_rgba(15,23,42,0.14)] dark:border-slate-700 dark:bg-slate-950 dark:text-slate-50"
+    <Paper
+      component="section"
+      aria-label="Zgoda na analitykę"
+      elevation={8}
+      square
+      sx={{
+        position: "fixed",
+        insetInline: 0,
+        bottom: 0,
+        zIndex: 2000,
+        borderTop: 1,
+        borderColor: "divider",
+        px: { xs: 2, sm: 3 },
+        py: 2,
+      }}
     >
-      <div className="mx-auto flex w-full max-w-5xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <p className="m-0 text-sm leading-6">
+      <Stack
+        direction={{ xs: "column", sm: "row" }}
+        spacing={2}
+        alignItems={{ xs: "stretch", sm: "center" }}
+        justifyContent="space-between"
+        sx={{ mx: "auto", width: "100%", maxWidth: 1024 }}
+      >
+        <Typography variant="body2">
           {hasAnalyticsMeasurementId()
-            ? "Uzywamy opcjonalnej analityki GA4 tylko do statystyk UX: pageviews, klikniecia CTA oraz statusy formularzy. Nie wysylamy tresci pol ani danych osobowych."
-            : "Analityka GA4 jest wylaczona, bo brakuje zmiennej REACT_APP_GA_MEASUREMENT_ID."}
-        </p>
+            ? "Używamy opcjonalnej analityki GA4 tylko do statystyk UX: pageviews, kliknięcia CTA oraz statusy formularzy. Nie wysyłamy treści pól ani danych osobowych."
+            : "Analityka GA4 jest wyłączona, bo brakuje zmiennej REACT_APP_GA_MEASUREMENT_ID."}
+        </Typography>
 
-        <div className="flex shrink-0 flex-wrap gap-2">
-          <button
+        <Stack direction="row" spacing={1} flexWrap="wrap">
+          <Button type="button" variant="outlined" color="inherit" onClick={declineAnalytics}>
+            Odrzuć
+          </Button>
+          <Button
             type="button"
-            onClick={declineAnalytics}
-            className="min-h-[40px] rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
-          >
-            Odrzuc
-          </button>
-          <button
-            type="button"
+            variant="contained"
             onClick={acceptAnalytics}
             disabled={!hasAnalyticsMeasurementId()}
-            className="min-h-[40px] rounded-lg bg-[#1565C0] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0D47A1] focus:outline-none focus:ring-4 focus:ring-blue-200"
           >
             Akceptuj
-          </button>
-        </div>
-      </div>
-    </section>
+          </Button>
+        </Stack>
+      </Stack>
+    </Paper>
   );
 }

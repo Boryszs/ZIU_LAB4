@@ -1,9 +1,28 @@
-import { useMemo, useRef, useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
-import { BellIcon, MenuIcon, MoonIcon, SunIcon } from "../icons";
+import { useMemo, useState } from "react";
+import { Link as RouterLink, useLocation } from "react-router-dom";
+import AppBar from "@mui/material/AppBar";
+import Avatar from "@mui/material/Avatar";
+import Badge from "@mui/material/Badge";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import Drawer from "@mui/material/Drawer";
+import IconButton from "@mui/material/IconButton";
+import List from "@mui/material/List";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import MenuIcon from "@mui/icons-material/Menu";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 import { useTheme } from "../../context/TodoContext";
 import type { NavItem } from "./Sidebar";
-import { FocusTrap } from "../FocusTrap";
+import { drawerWidth } from "./DashboardLayout";
 
 interface AppHeaderProps {
   navItems: NavItem[];
@@ -12,111 +31,191 @@ interface AppHeaderProps {
 export default function AppHeader({ navItems }: AppHeaderProps) {
   const { theme, setTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
-  const menuButtonRef = useRef<HTMLButtonElement>(null);
   const location = useLocation();
 
   const title = useMemo(() => {
-    const currentItem = navItems.find(
-      (item) => item.path === location.pathname,
-    );
+    const currentItem = navItems.find((item) => item.path === location.pathname);
     return currentItem?.label || "Dashboard";
   }, [location.pathname, navItems]);
 
-  const handleLinkClick = () => {
-    setIsOpen(false);
-  };
-
   return (
     <>
-      <header className="fixed left-0 right-0 top-0 z-[1100] border-b border-slate-300 bg-white/95 text-slate-900 shadow-sm backdrop-blur transition-colors dark:border-slate-800 dark:bg-slate-950/95 dark:text-slate-50 md:left-[264px]">
-        <div className="flex h-16 items-center justify-between gap-3 px-4 sm:px-6">
-          <div className="flex min-w-0 items-center gap-2">
-            <button
-              ref={menuButtonRef}
-              type="button"
-              onClick={() => setIsOpen((prev) => !prev)}
-              className="flex h-10 w-10 items-center justify-center rounded-full transition hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-slate-200 dark:hover:bg-slate-800 md:hidden"
-              aria-controls="mobile-menu"
-              aria-label={isOpen ? "Zamknij menu" : "Otwórz menu"}
-              aria-expanded={isOpen}
-            >
-              <MenuIcon />
-            </button>
-
-            <div className="min-w-0">
-              <p className="text-xs font-semibold uppercase tracking-wide text-[#1565C0]">
-                TodoApp
-              </p>
-              <h2 className="truncate text-2xl font-bold leading-tight">
-                {title}
-              </h2>
-            </div>
-          </div>
-
-          <div className="flex shrink-0 items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-              className="flex h-10 min-w-[132px] items-center justify-center gap-2 rounded-full border border-slate-300 bg-transparent px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-slate-200 dark:border-slate-700 dark:text-slate-100 dark:hover:bg-slate-800 dark:focus:ring-slate-700"
-              aria-label={
-                theme === "light" ? "Wlacz tryb ciemny" : "Wlacz tryb jasny"
-              }
-              aria-pressed={theme === "dark"}
-            >
-              {theme === "light" ? <MoonIcon /> : <SunIcon />}
-              <span>{theme === "light" ? "Tryb ciemny" : "Tryb jasny"}</span>
-            </button>
-
-            <button
-              type="button"
-              className="relative hidden h-10 w-10 items-center justify-center rounded-full transition hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-slate-200 dark:hover:bg-slate-800 sm:flex"
-              aria-label="Powiadomienia"
-            >
-              <BellIcon />
-              <span
-                aria-hidden="true"
-                className="absolute right-2.5 top-2.5 h-2.5 w-2.5 rounded-full bg-red-600 ring-2 ring-white dark:ring-slate-900"
-              />
-            </button>
-          </div>
-        </div>
-      </header>
-
-      {isOpen && (
-        <FocusTrap onEscape={() => setIsOpen(false)} triggerRef={menuButtonRef}>
-          <nav
-            id="mobile-menu"
-            className="fixed left-0 top-16 z-[1200] w-full bg-white shadow-lg dark:bg-slate-900 md:hidden"
-            aria-label="Menu mobilne"
+      <AppBar
+        position="fixed"
+        color="inherit"
+        elevation={1}
+        sx={{
+          borderBottom: 1,
+          borderColor: "divider",
+          left: { md: drawerWidth },
+          width: { xs: "100%", md: `calc(100% - ${drawerWidth}px)` },
+          bgcolor: "background.paper",
+        }}
+      >
+        <Toolbar sx={{ gap: 2, px: { xs: 2, sm: 3 } }}>
+          <IconButton
+            type="button"
+            edge="start"
+            color="inherit"
+            onClick={() => setIsOpen(true)}
+            aria-controls="mobile-menu"
+            aria-label="Otwórz menu"
+            aria-expanded={isOpen}
+            sx={{ display: { xs: "inline-flex", md: "none" } }}
           >
-            <ul className="py-2">
-              {navItems.map((item) => {
-                const Icon = item.icon;
+            <MenuIcon />
+          </IconButton>
 
-                return (
-                  <li key={item.path}>
-                    <NavLink
-                      to={item.path}
-                      aria-current={location.pathname === item.path ? "page" : undefined}
-                      onClick={handleLinkClick}
-                      className={({ isActive }) =>
-                        `flex min-h-[48px] w-full items-center gap-4 px-4 text-left transition ${
-                          isActive
-                            ? "bg-blue-50 text-[#1565C0] dark:bg-blue-950 dark:text-blue-200"
-                            : "text-slate-700 hover:bg-slate-50 dark:text-slate-100 dark:hover:bg-slate-800"
-                        }`
-                      }
-                    >
-                      <Icon className="h-6 w-6 shrink-0" />
-                      <span>{item.label}</span>
-                    </NavLink>
-                  </li>
-                );
-              })}
-            </ul>
-          </nav>
-         </FocusTrap> 
-      )}
+          <Box sx={{ minWidth: 0, flex: 1 }}>
+            <Typography
+              component="p"
+              variant="caption"
+              sx={{
+                color: "primary.main",
+                fontWeight: 700,
+                letterSpacing: 0,
+                textTransform: "uppercase",
+              }}
+            >
+              {/* TodoApp */}
+            </Typography>
+            <Typography component="h2" variant="h5" noWrap fontWeight={800}>
+              {title}
+            </Typography>
+          </Box>
+
+          <Button
+            type="button"
+            variant="outlined"
+            color="inherit"
+            startIcon={theme === "light" ? <DarkModeIcon /> : <LightModeIcon />}
+            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+            aria-label={
+              theme === "light" ? "Włącz tryb ciemny" : "Włącz tryb jasny"
+            }
+            aria-pressed={theme === "dark"}
+            sx={{
+              display: { xs: "none", sm: "inline-flex" },
+              minWidth: 132,
+              borderRadius: 999,
+            }}
+          >
+            {theme === "light" ? "Tryb ciemny" : "Tryb jasny"}
+          </Button>
+
+          <IconButton
+            type="button"
+            color="inherit"
+            aria-label="Powiadomienia"
+            sx={{ display: { xs: "none", sm: "inline-flex" } }}
+          >
+            <Badge variant="dot" color="error">
+              <NotificationsIcon />
+            </Badge>
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+
+      <Drawer
+        id="mobile-menu"
+        variant="temporary"
+        open={isOpen}
+        onClose={() => setIsOpen(false)}
+        ModalProps={{ keepMounted: true }}
+        sx={{ display: { xs: "block", md: "none" } }}
+        PaperProps={{
+          sx: {
+            width: "min(88vw, 320px)",
+            pt: 2,
+            display: "flex",
+            flexDirection: "column",
+          },
+        }}
+      >
+        <Stack
+          component="header"
+          direction="row"
+          spacing={1.5}
+          alignItems="center"
+          sx={{ height: 80, px: 2.5 }}
+        >
+          <IconButton
+            type="button"
+            edge="start"
+            color="inherit"
+            onClick={() => setIsOpen(false)}
+            aria-controls="mobile-menu"
+            aria-label="Zamknij menu"
+            aria-expanded={isOpen}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Avatar sx={{ bgcolor: "primary.main", fontWeight: 800 }}>T</Avatar>
+          <Box sx={{ minWidth: 0 }}>
+            <Typography component="p" variant="h6" noWrap fontWeight={800}>
+              {/* TodoApp */}
+            </Typography>
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              fontSize={24}
+              fontWeight={700}
+              noWrap
+            >
+              Panel zadań
+            </Typography>
+          </Box>
+        </Stack>
+        <Divider sx={{ mx: 2 }} />
+
+        <Box component="nav" aria-label="Menu mobilne">
+          <List>
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = location.pathname === item.path;
+
+              return (
+                <ListItemButton
+                  key={item.path}
+                  component={RouterLink}
+                  to={item.path}
+                  selected={isActive}
+                  aria-current={isActive ? "page" : undefined}
+                  onClick={() => setIsOpen(false)}
+                  sx={{ minHeight: 48, mx: 1, borderRadius: 2 }}
+                >
+                  <ListItemIcon sx={{ minWidth: 44 }}>
+                    <Icon />
+                  </ListItemIcon>
+                  <ListItemText primary={item.label} />
+                </ListItemButton>
+              );
+            })}
+          </List>
+        </Box>
+
+        <Box sx={{ flex: 1 }} />
+        <Divider sx={{ mx: 2 }} />
+        <Paper
+          component="footer"
+          variant="outlined"
+          sx={{ m: 2, p: 1.5, borderRadius: 2 }}
+        >
+          <Stack direction="row" spacing={1.5} alignItems="center">
+            <Avatar sx={{ bgcolor: "primary.main", width: 40, height: 40 }}>
+              U
+            </Avatar>
+            <Box sx={{ minWidth: 0 }}>
+              <Typography variant="body2" noWrap fontWeight={700}>
+                Użytkownik
+              </Typography>
+              <Typography variant="caption" color="text.secondary" noWrap>
+                Online
+              </Typography>
+            </Box>
+          </Stack>
+        </Paper>
+      </Drawer>
     </>
   );
 }

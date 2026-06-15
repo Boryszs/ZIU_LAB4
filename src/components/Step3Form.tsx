@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { useFormContext, useWatch } from "react-hook-form";
+import { Controller, useFormContext, useWatch } from "react-hook-form";
+import Alert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Checkbox from "@mui/material/Checkbox";
+import Divider from "@mui/material/Divider";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormHelperText from "@mui/material/FormHelperText";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import { trackFormSubmit } from "../analytics";
 import { FullFormData } from "../schemas/schemas";
 
@@ -21,11 +30,10 @@ const fakeRegister = async () => {
 
 export const Step3Form = ({ goToStep1, onBack, onComplete }: Step3Props) => {
   const {
-    register,
+    control,
     handleSubmit,
     setError,
     clearErrors,
-    control,
     formState: { errors, isSubmitting },
   } = useFormContext<FullFormData>();
 
@@ -42,7 +50,7 @@ export const Step3Form = ({ goToStep1, onBack, onComplete }: Step3Props) => {
       trackFormSubmit("registration", "email_conflict");
       setError("email", {
         type: "server",
-        message: "Ten adres e-mail jest juz zarejestrowany",
+        message: "Ten adres e-mail jest już zarejestrowany",
       });
       goToStep1();
       return;
@@ -52,7 +60,7 @@ export const Step3Form = ({ goToStep1, onBack, onComplete }: Step3Props) => {
       trackFormSubmit("registration", "server_error");
       setError("root.serverError", {
         type: "server",
-        message: "Blad serwera, sproboj ponownie",
+        message: "Błąd serwera, spróbuj ponownie",
       });
       return;
     }
@@ -68,90 +76,96 @@ export const Step3Form = ({ goToStep1, onBack, onComplete }: Step3Props) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
-      <section aria-label="Podsumowanie danych" className="text-sm space-y-2">
-        <p>
-          <strong>Imie:</strong> {values.firstName}
-        </p>
-        <p>
-          <strong>Nazwisko:</strong> {values.lastName}
-        </p>
-        <p>
-          <strong>Email:</strong> {values.email}
-        </p>
-        <p>
-          <strong>Kategorie:</strong>{" "}
-          {values.categories?.map((category) => category.value).join(", ")}
-        </p>
-        <p>
-          <strong>Powiadomienia:</strong>{" "}
-          {[
-            values.notifications?.email && "Email",
-            values.notifications?.push && "Push",
-          ]
-            .filter(Boolean)
-            .join(", ") || "Brak"}
-        </p>
-        <p>
-          <strong>Newsletter:</strong> {values.newsletter ? "Tak" : "Nie"}
-        </p>
-      </section>
+    <Stack component="form" onSubmit={handleSubmit(onSubmit)} spacing={3} noValidate>
+      <Box component="section" aria-label="Podsumowanie danych">
+        <Stack spacing={1.25} divider={<Divider flexItem />}>
+          <Typography variant="body2">
+            <strong>Imię:</strong> {values.firstName}
+          </Typography>
+          <Typography variant="body2">
+            <strong>Nazwisko:</strong> {values.lastName}
+          </Typography>
+          <Typography variant="body2">
+            <strong>Email:</strong> {values.email}
+          </Typography>
+          <Typography variant="body2">
+            <strong>Kategorie:</strong>{" "}
+            {values.categories?.map((category) => category.value).join(", ")}
+          </Typography>
+          <Typography variant="body2">
+            <strong>Powiadomienia:</strong>{" "}
+            {[
+              values.notifications?.email && "Email",
+              values.notifications?.push && "Push",
+            ]
+              .filter(Boolean)
+              .join(", ") || "Brak"}
+          </Typography>
+          <Typography variant="body2">
+            <strong>Newsletter:</strong> {values.newsletter ? "Tak" : "Nie"}
+          </Typography>
+        </Stack>
+      </Box>
 
-      <div>
-        <label htmlFor="rodo" className="flex items-center gap-2">
-          <input
-            id="rodo"
-            type="checkbox"
-            required
-            aria-required="true"
-            aria-invalid={!!errors.rodo}
-            aria-describedby={errors.rodo ? "rodo-error" : undefined}
-            {...register("rodo")}
-          />
-          Akceptuje regulamin i polityke prywatnosci *
-        </label>
+      <Box>
+        <Controller
+          name="rodo"
+          control={control}
+          render={({ field }) => (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  id="rodo"
+                  required
+                  checked={Boolean(field.value)}
+                  onChange={(event) => field.onChange(event.target.checked)}
+                  inputProps={{
+                    "aria-required": "true",
+                    "aria-invalid": Boolean(errors.rodo),
+                    "aria-describedby": errors.rodo ? "rodo-error" : undefined,
+                  }}
+                />
+              }
+              label="Akceptuję regulamin i politykę prywatności *"
+            />
+          )}
+        />
 
         {errors.rodo && (
-          <span id="rodo-error" role="alert" className="text-red-600 text-sm">
+          <FormHelperText id="rodo-error" error role="alert">
             {errors.rodo.message}
-          </span>
+          </FormHelperText>
         )}
-      </div>
+      </Box>
 
       {errors.root?.serverError && (
-        <div role="alert" aria-live="assertive" className="text-red-600 text-sm">
+        <Alert role="alert" severity="error">
           {errors.root.serverError.message}
-        </div>
+        </Alert>
       )}
 
       {successMessage && (
-        <div
-          role="status"
-          aria-live="polite"
-          className="rounded border border-green-300 bg-green-50 px-3 py-2 text-sm font-medium text-green-800"
-        >
+        <Alert role="status" aria-live="polite" severity="success">
           {successMessage}
-        </div>
+        </Alert>
       )}
 
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-        <button
-          type="button"
-          onClick={handleBack}
-          className="min-h-[44px] w-full rounded border border-gray-300 py-2 hover:bg-gray-100"
-        >
+      <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5}>
+        <Button type="button" variant="outlined" color="inherit" onClick={handleBack} fullWidth>
           Wstecz
-        </button>
+        </Button>
 
-        <button
+        <Button
           type="submit"
+          variant="contained"
+          color="success"
           disabled={isSubmitting}
           aria-busy={isSubmitting}
-          className="min-h-[44px] w-full rounded bg-green-700 py-2 text-white hover:bg-green-800"
+          fullWidth
         >
-          {isSubmitting ? "Rejestrowanie..." : "Zarejestruj sie"}
-        </button>
-      </div>
-    </form>
+          {isSubmitting ? "Rejestrowanie..." : "Zarejestruj się"}
+        </Button>
+      </Stack>
+    </Stack>
   );
 };

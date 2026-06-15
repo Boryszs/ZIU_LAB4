@@ -1,9 +1,14 @@
-import type { AppIcon } from "../icons";
+import type { ElementType } from "react";
+import Avatar from "@mui/material/Avatar";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 
 interface StatsCardProps {
   title: string;
   value: number;
-  icon: AppIcon;
+  icon: ElementType;
   color: string;
   bgColor: string;
 }
@@ -16,23 +21,34 @@ export default function StatsCard({
   bgColor,
 }: StatsCardProps) {
   return (
-    <article className="rounded-xl bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.08)] transition-colors dark:bg-slate-900">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="mb-1 text-sm text-slate-500 dark:text-slate-400">
-            {title}
-          </p>
-          <p className="text-4xl font-bold text-slate-900 dark:text-slate-50">
-            {value}
-          </p>
-        </div>
-        <div
-          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full"
-          style={{ backgroundColor: bgColor, color }}
-        >
-          <Icon className="h-6 w-6" />
-        </div>
-      </div>
-    </article>
+    <Card
+      component="article"
+      elevation={0}
+      sx={{
+        border: 1,
+        borderColor: "divider",
+        transition: "box-shadow 160ms ease, transform 160ms ease",
+        "&:hover": {
+          boxShadow: 3,
+          transform: "translateY(-2px)",
+        },
+      }}
+    >
+      <CardContent>
+        <Stack direction="row" alignItems="flex-start" justifyContent="space-between" spacing={2}>
+          <div>
+            <Typography variant="body2" color="text.secondary" gutterBottom>
+              {title}
+            </Typography>
+            <Typography variant="h3" component="p" fontWeight={800}>
+              {value}
+            </Typography>
+          </div>
+          <Avatar sx={{ bgcolor: bgColor, color, width: 48, height: 48 }}>
+            <Icon />
+          </Avatar>
+        </Stack>
+      </CardContent>
+    </Card>
   );
 }

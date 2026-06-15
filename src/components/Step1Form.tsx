@@ -1,5 +1,12 @@
 import React from "react";
 import { useFormContext } from "react-hook-form";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import InputAdornment from "@mui/material/InputAdornment";
+import LinearProgress from "@mui/material/LinearProgress";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import { FullFormData } from "../schemas/schemas";
 
 const getPasswordStrength = (password: string) => {
@@ -12,10 +19,9 @@ const getPasswordStrength = (password: string) => {
   if (/[0-9]/.test(password)) score++;
   if (/[^A-Za-z0-9]/.test(password)) score++;
 
-  if (score <= 2) return { label: "Słabe", width: "25%", color: "bg-red-500" };
-  if (score <= 4)
-    return { label: "Średnie", width: "66%", color: "bg-yellow-500" };
-  return { label: "Silne", width: "100%", color: "bg-green-500" };
+  if (score <= 2) return { label: "Słabe", value: 25, color: "#C62828" };
+  if (score <= 4) return { label: "Średnie", value: 66, color: "#8A5A00" };
+  return { label: "Silne", value: 100, color: "#2E7D32" };
 };
 
 type Props = {
@@ -54,187 +60,164 @@ export const Step1Form = ({ onNext }: Props) => {
       .join(" ") || undefined;
 
   return (
-    <form
+    <Stack
+      component="form"
       onSubmit={(event) => {
         event.preventDefault();
         void onNext();
       }}
-      className="space-y-4"
+      spacing={2}
       noValidate
     >
-      <div>
-        <label htmlFor="firstName" className="text-gray-700">
-          Imię *
-        </label>
-        <input
-          id="firstName"
+      <TextField
+        id="firstName"
+        label="Imię"
+        required
+        error={!!errors.firstName}
+        helperText={errors.firstName?.message || " "}
+        FormHelperTextProps={errors.firstName ? { id: "firstName-error", role: "alert" } : undefined}
+        inputProps={{
+          "aria-required": "true",
+          "aria-describedby": errors.firstName ? "firstName-error" : undefined,
+        }}
+        fullWidth
+        {...register("firstName")}
+      />
+
+      <TextField
+        id="lastName"
+        label="Nazwisko"
+        required
+        error={!!errors.lastName}
+        helperText={errors.lastName?.message || " "}
+        FormHelperTextProps={errors.lastName ? { id: "lastName-error", role: "alert" } : undefined}
+        inputProps={{
+          "aria-required": "true",
+          "aria-describedby": errors.lastName ? "lastName-error" : undefined,
+        }}
+        fullWidth
+        {...register("lastName")}
+      />
+
+      <TextField
+        id="email"
+        type="email"
+        label="Email"
+        required
+        error={!!errors.email}
+        helperText={errors.email?.message || " "}
+        FormHelperTextProps={errors.email ? { id: "email-error", role: "alert" } : undefined}
+        inputProps={{
+          "aria-required": "true",
+          "aria-describedby": errors.email ? "email-error" : undefined,
+        }}
+        fullWidth
+        {...register("email", {
+          onChange: () => clearErrors("email"),
+        })}
+      />
+
+      <Box>
+        <TextField
+          id="password"
+          type={showPassword ? "text" : "password"}
+          label="Hasło"
           required
-          aria-required="true"
-          aria-invalid={!!errors.firstName}
-          aria-describedby={errors.firstName ? "firstName-error" : undefined}
-          {...register("firstName")}
-          className="w-full border px-3 py-2 rounded focus:ring-2 focus:ring-blue-500"
+          error={!!errors.password}
+          helperText={errors.password?.message || " "}
+          FormHelperTextProps={errors.password ? { id: "password-error", role: "alert" } : undefined}
+          inputProps={{
+            "aria-required": "true",
+            "aria-describedby": passwordDescribedBy,
+          }}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <Button
+                  type="button"
+                  size="small"
+                  variant="text"
+                  aria-label={showPassword ? "Ukryj hasło" : "Pokaż hasło"}
+                  aria-pressed={showPassword}
+                  onClick={() => setShowPassword((prev) => !prev)}
+                >
+                  {showPassword ? "Ukryj" : "Pokaż"}
+                </Button>
+              </InputAdornment>
+            ),
+          }}
+          fullWidth
+          {...register("password")}
         />
-        {errors.firstName && (
-          <span
-            id="firstName-error"
-            role="alert"
-            className="text-red-600 text-sm"
-          >
-            {errors.firstName.message}
-          </span>
-        )}
-      </div>
-
-      <div>
-        <label htmlFor="lastName" className="text-gray-700">
-          Nazwisko *
-        </label>
-        <input
-          id="lastName"
-          required
-          aria-required="true"
-          aria-invalid={!!errors.lastName}
-          aria-describedby={errors.lastName ? "lastName-error" : undefined}
-          {...register("lastName")}
-          className="w-full border px-3 py-2 rounded focus:ring-2 focus:ring-blue-500"
-        />
-        {errors.lastName && (
-          <span id="lastName-error" role="alert" className="text-red-600 text-sm">
-            {errors.lastName.message}
-          </span>
-        )}
-      </div>
-
-      <div>
-        <label htmlFor="email" className="text-gray-700">
-          Email *
-        </label>
-        <input
-          id="email"
-          type="email"
-          required
-          aria-required="true"
-          aria-invalid={!!errors.email}
-          aria-describedby={errors.email ? "email-error" : undefined}
-          {...register("email", {
-            onChange: () => clearErrors("email"),
-          })}
-          className="w-full border px-3 py-2 rounded focus:ring-2 focus:ring-blue-500"
-        />
-        {errors.email && (
-          <span id="email-error" role="alert" className="text-red-600 text-sm">
-            {errors.email.message}
-          </span>
-        )}
-      </div>
-
-      <div>
-        <label htmlFor="password" className="text-gray-700">
-          Hasło *
-        </label>
-
-        <div className="relative">
-          <input
-            id="password"
-            type={showPassword ? "text" : "password"}
-            required
-            aria-required="true"
-            aria-invalid={!!errors.password}
-            aria-describedby={passwordDescribedBy}
-            {...register("password")}
-            className="w-full border px-3 py-2 rounded pr-10 focus:ring-2 focus:ring-blue-500 [&::-ms-reveal]:hidden"
-          />
-
-          <button
-            type="button"
-            aria-label={showPassword ? "Ukryj hasło" : "Pokaż hasło"}
-            aria-pressed={showPassword}
-            onClick={() => setShowPassword((prev) => !prev)}
-            className="absolute inset-y-0 right-0 flex items-center pr-3 text-sm text-gray-600"
-          >
-            {showPassword ? "Ukryj" : "Pokaż"}
-          </button>
-        </div>
 
         {!errors.password && passwordValue && (
-          <span
-            id="password-hint"
-            aria-live="polite"
-            className="text-sm text-gray-700 dark:text-white"
-          >
-            Siła hasła: {strength.label}
-          </span>
+          <Box id="password-hint" aria-live="polite" sx={{ mt: 1 }}>
+            <Typography variant="body2" color="text.secondary">
+              Siła hasła: {strength.label}
+            </Typography>
+            <LinearProgress
+              variant="determinate"
+              value={strength.value}
+              sx={{
+                mt: 0.75,
+                height: 8,
+                borderRadius: 999,
+                bgcolor: "action.hover",
+                "& .MuiLinearProgress-bar": { bgcolor: strength.color },
+              }}
+            />
+          </Box>
         )}
+      </Box>
 
-        {errors.password && (
-          <span
-            id="password-error"
-            role="alert"
-            className="text-red-600 text-sm"
-          >
-            {errors.password.message}
-          </span>
-        )}
-      </div>
+      <TextField
+        id="confirmPassword"
+        type={showConfirmPassword ? "text" : "password"}
+        label="Potwierdź hasło"
+        required
+        error={!!errors.confirmPassword || !passwordsMatch}
+        helperText={
+          !passwordsMatch
+            ? "Hasła nie są zgodne"
+            : errors.confirmPassword?.message || " "
+        }
+        FormHelperTextProps={
+          !passwordsMatch || errors.confirmPassword
+            ? {
+                id: !passwordsMatch
+                  ? "confirmPassword-error-2"
+                  : "confirmPassword-error",
+                role: "alert",
+              }
+            : undefined
+        }
+        inputProps={{
+          "aria-required": "true",
+          "aria-describedby": confirmPasswordDescribedBy,
+        }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <Button
+                type="button"
+                size="small"
+                variant="text"
+                aria-label={showConfirmPassword ? "Ukryj hasło" : "Pokaż hasło"}
+                aria-pressed={showConfirmPassword}
+                onClick={() => setShowConfirmPassword((prev) => !prev)}
+              >
+                {showConfirmPassword ? "Ukryj" : "Pokaż"}
+              </Button>
+            </InputAdornment>
+          ),
+        }}
+        fullWidth
+        {...register("confirmPassword")}
+      />
 
-      <div>
-        <label htmlFor="confirmPassword" className="text-gray-700">
-          Potwierdź hasło *
-        </label>
-
-        <div className="relative">
-          <input
-            id="confirmPassword"
-            type={showConfirmPassword ? "text" : "password"}
-            required
-            aria-required="true"
-            aria-invalid={!!errors.confirmPassword || !passwordsMatch}
-            aria-describedby={confirmPasswordDescribedBy}
-            {...register("confirmPassword")}
-            className="w-full border px-3 py-2 rounded pr-10 focus:ring-2 focus:ring-blue-500 [&::-ms-reveal]:hidden"
-          />
-
-          <button
-            type="button"
-            aria-label={showConfirmPassword ? "Ukryj hasło" : "Pokaż hasło"}
-            aria-pressed={showConfirmPassword}
-            onClick={() => setShowConfirmPassword((prev) => !prev)}
-            className="absolute inset-y-0 right-0 flex items-center pr-3 text-sm text-gray-600"
-          >
-            {showConfirmPassword ? "Ukryj" : "Pokaż"}
-          </button>
-        </div>
-
-        {!passwordsMatch && (
-          <span
-            id="confirmPassword-error-2"
-            role="alert"
-            className="text-red-600 text-sm"
-          >
-            Hasła nie są zgodne
-          </span>
-        )}
-
-        {errors.confirmPassword && (
-          <span
-            id="confirmPassword-error"
-            role="alert"
-            className="text-red-600 text-sm"
-          >
-            {errors.confirmPassword.message}
-          </span>
-        )}
-      </div>
-
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        aria-busy={isSubmitting}
-        className="min-h-[44px] w-full rounded bg-blue-600 py-2 text-white hover:bg-blue-700"
-      >
+      <Button type="submit" variant="contained" disabled={isSubmitting} aria-busy={isSubmitting}>
         {isSubmitting ? "Wysyłanie..." : "Dalej"}
-      </button>
-    </form>
+      </Button>
+    </Stack>
   );
 };

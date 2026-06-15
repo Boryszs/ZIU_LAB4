@@ -1,5 +1,18 @@
 import React from "react";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Checkbox from "@mui/material/Checkbox";
+import FormControl from "@mui/material/FormControl";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormGroup from "@mui/material/FormGroup";
+import FormHelperText from "@mui/material/FormHelperText";
+import FormLabel from "@mui/material/FormLabel";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
 import { FullFormData } from "../schemas/schemas";
 
 type Step2Props = {
@@ -19,140 +32,151 @@ export const Step2Form = ({ onNext, onBack }: Step2Props) => {
     name: "categories",
   });
 
+  const categoriesMessage =
+    !Array.isArray(errors.categories) && errors.categories?.message
+      ? errors.categories.message
+      : "";
+
   return (
-    <form
+    <Stack
+      component="form"
       onSubmit={(event) => {
         event.preventDefault();
         void onNext();
       }}
-      className="space-y-6"
+      spacing={3}
       noValidate
     >
-      <fieldset className="space-y-2">
-        <legend className="text-sm font-medium text-gray-700 mb-2">
-          Kategorie *
-        </legend>
+      <FormControl component="fieldset" error={Boolean(categoriesMessage)}>
+        <FormLabel component="legend">Kategorie *</FormLabel>
 
-        {fields.map((field, index) => {
-          const error = errors.categories?.[index]?.value;
+        <Stack spacing={1.5} sx={{ mt: 1 }}>
+          {fields.map((field, index) => {
+            const error = errors.categories?.[index]?.value;
 
-          return (
-            <div key={field.id} className="mb-2">
-              <div className="flex gap-2">
-                <input
-                  id={`category-${index}`}
-                  aria-label={`Kategoria ${index + 1}`}
-                  required
-                  aria-required="true"
-                  aria-invalid={!!error}
-                  aria-describedby={error ? `category-${index}-error` : undefined}
-                  {...register(`categories.${index}.value`)}
-                  className="flex-1 px-3 py-2 border rounded focus:ring-2 focus:ring-blue-500"
-                  placeholder="Np. sport"
-                />
+            return (
+              <Box key={field.id}>
+                <Stack direction="row" spacing={1} alignItems="flex-start">
+                  <TextField
+                    id={`category-${index}`}
+                    label={`Kategoria ${index + 1}`}
+                    placeholder="Np. sport"
+                    required
+                    error={!!error}
+                    helperText={error?.message || " "}
+                    FormHelperTextProps={
+                      error
+                        ? { id: `category-${index}-error`, role: "alert" }
+                        : undefined
+                    }
+                    inputProps={{
+                      "aria-required": "true",
+                      "aria-describedby": error
+                        ? `category-${index}-error`
+                        : undefined,
+                    }}
+                    fullWidth
+                    {...register(`categories.${index}.value`)}
+                  />
 
-                <button
-                  type="button"
-                  onClick={() => remove(index)}
-                  aria-label={`Usuń kategorię ${index + 1}`}
-                  className="min-h-[44px] min-w-[44px] rounded bg-red-700 px-3 py-2 text-white transition hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-200"
-                >
-                  X
-                </button>
-              </div>
+                  <IconButton
+                    type="button"
+                    color="error"
+                    onClick={() => remove(index)}
+                    aria-label={`Usuń kategorię ${index + 1}`}
+                    sx={{ mt: 0.5 }}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </Stack>
+              </Box>
+            );
+          })}
+        </Stack>
 
-              {error && (
-                <span
-                  id={`category-${index}-error`}
-                  role="alert"
-                  className="text-red-600 text-sm block"
-                >
-                  {error.message}
-                </span>
-              )}
-            </div>
-          );
-        })}
-
-        <button
+        <Button
           type="button"
+          variant="text"
+          startIcon={<AddIcon />}
           onClick={() => append({ value: "" })}
-          className="inline-flex min-h-[44px] items-center rounded px-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-100"
+          sx={{ alignSelf: "flex-start", mt: 1 }}
         >
-          + Dodaj kategorię
-        </button>
+          Dodaj kategorię
+        </Button>
 
-        {!Array.isArray(errors.categories) && errors.categories?.message && (
-          <span role="alert" className="text-red-600 text-sm block mt-1">
-            {errors.categories.message}
-          </span>
+        {categoriesMessage && (
+          <FormHelperText role="alert">{categoriesMessage}</FormHelperText>
         )}
-      </fieldset>
+      </FormControl>
 
-      <fieldset>
-        <legend className="text-sm font-medium text-gray-700">
-          Powiadomienia
-        </legend>
-
-        <Controller
-          name="notifications.email"
-          control={control}
-          render={({ field }) => (
-            <label className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={field.value}
-                onChange={field.onChange}
+      <FormControl component="fieldset">
+        <FormLabel component="legend">Powiadomienia</FormLabel>
+        <FormGroup>
+          <Controller
+            name="notifications.email"
+            control={control}
+            render={({ field }) => (
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={field.value}
+                    onChange={(event) => field.onChange(event.target.checked)}
+                  />
+                }
+                label="E-mail"
               />
-              E-mail
-            </label>
-          )}
-        />
-
-        <Controller
-          name="notifications.push"
-          control={control}
-          render={({ field }) => (
-            <label className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={field.value}
-                onChange={field.onChange}
-              />
-              Push
-            </label>
-          )}
-        />
-      </fieldset>
-
-      <div>
-        <label className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            {...register("newsletter")}
+            )}
           />
-          Newsletter (opcjonalne)
-        </label>
-      </div>
 
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-        <button
-          type="button"
-          onClick={onBack}
-          className="min-h-[44px] w-full rounded border border-gray-300 py-2 hover:bg-gray-100"
-        >
+          <Controller
+            name="notifications.push"
+            control={control}
+            render={({ field }) => (
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={field.value}
+                    onChange={(event) => field.onChange(event.target.checked)}
+                  />
+                }
+                label="Push"
+              />
+            )}
+          />
+        </FormGroup>
+      </FormControl>
+
+      <Controller
+        name="newsletter"
+        control={control}
+        render={({ field }) => (
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={Boolean(field.value)}
+                onChange={(event) => field.onChange(event.target.checked)}
+              />
+            }
+            label="Newsletter (opcjonalne)"
+          />
+        )}
+      />
+
+      <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5}>
+        <Button type="button" variant="outlined" color="inherit" onClick={onBack} fullWidth>
           Wstecz
-        </button>
+        </Button>
 
-        <button
+        <Button
           type="submit"
+          variant="contained"
           disabled={isSubmitting}
           aria-busy={isSubmitting}
-          className="min-h-[44px] w-full rounded bg-blue-600 py-2 text-white hover:bg-blue-700"
+          fullWidth
         >
           {isSubmitting ? "Zapisywanie..." : "Dalej"}
-        </button>
-      </div>
-    </form>
+        </Button>
+      </Stack>
+    </Stack>
   );
 };
