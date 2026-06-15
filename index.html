@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <title>Analiza sesji — Lab 12</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1000px;
+      margin: 40px auto;
+      line-height: 1.5;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-bottom: 30px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px 10px;
+      text-align: left;
+    }
+
+    th {
+      background: #f2f2f2;
+    }
+
+    .bar-row {
+      margin: 12px 0;
+    }
+
+    .bar-label {
+      margin-bottom: 4px;
+      font-weight: bold;
+    }
+
+    .bar {
+      height: 28px;
+      background: #4e79a7;
+      color: white;
+      padding-left: 8px;
+      line-height: 28px;
+      min-width: 40px;
+      box-sizing: border-box;
+    }
+
+    .comment {
+      background: #f8f8f8;
+      border-left: 4px solid #999;
+      padding: 12px;
+      margin-bottom: 24px;
+    }
+
+    .file-box {
+      margin-bottom: 30px;
+      padding: 16px;
+      background: #f8f8f8;
+      border: 1px solid #ddd;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Analiza sesji aplikacji webowej</h1>
+
+<div class="file-box">
+  <label for="csvFile"><strong>Wybierz plik CSV:</strong></label>
+  <input type="file" id="csvFile" accept=".csv" />
+  <p id="status">Nie wybrano jeszcze pliku.</p>
+</div>
+
+<h2>1. Bounce rate per strona</h2>
+<div id="bounceTable"></div>
+<div id="bounceComment" class="comment"></div>
+
+<h2>2. Drop-off formularza krok po kroku</h2>
+<div id="dropoffChart"></div>
+<div id="dropoffComment" class="comment"></div>
+
+<h2>3. Ranking 5 najczęściej klikanych elementów</h2>
+<div id="clicksTable"></div>
+<div id="clicksComment" class="comment"></div>
+
+<script>
+function loadCSVFromFile(file) {
+  return new Promise((resolve, reject) => {
+    Papa.parse(file, {
+      header: true,
+      dynamicTyping: true,
+      skipEmptyLines: true,
+      complete: results => resolve(results.data),
+      error: error => reject(error)
+    });
+  });
+}
+
+function bounceRateByPage(data) {
+  const stats = {};
+
+  for (const row of data) {
+    if (!row.page) continue;
+
+    if (!stats[row.page]) {
+      stats[row.page] = { total: 0, bounced: 0 };
+    }
+
+    stats[row.page].total++;
+
+    if (row.bounce === true || row.bounce === "true") {
+      stats[row.page].bounced++;
+    }
+  }
+
+  return Object.entries(stats)
+    .map(([page, s]) => ({
+      page,
+      sessions: s.total,
+      bounced: s.bounced,
+      bounceRateValue: s.bounced / s.total * 100,
+      bounceRate: (s.bounced / s.total * 100).toFixed(1) + "%"
+    }))
+    .sort((a, b) => b.bounceRateValue - a.bounceRateValue);
+}
+
+function formDropOff(data) {
+  const formRows = data.filter(r => r.page === "form");
+  const total = formRows.length;
+
+  const result = [];
+
+  for (let step = 1; step <= 4; step++) {
+    const reached = formRows.filter(r => Number(r.form_step_reached) >= step).length;
+
+    const previousReached = step === 1
+      ? total
+      : formRows.filter(r => Number(r.form_step_reached) >= step - 1).length;
+
+    const droppedFromPrevious = previousReached - reached;
+
+    result.push({
+      step: `Krok ${step}`,
+      reached,
+      total,
+      reachedPercentValue: total === 0 ? 0 : reached / total * 100,
+      reachedPercent: total === 0 ? "0.0%" : (reached / total * 100).toFixed(1) + "%",
+      droppedFromPrevious,
+      dropOffFromPrevious: previousReached === 0
+        ? "0.0%"
+        : (droppedFromPrevious / previousReached * 100).toFixed(1) + "%"
+    });
+  }
+
+  return result;
+}
+
+function topClicks(data, n = 5) {
+  const freq = {};
+
+  for (const row of data) {
+    if (row.element_clicked) {
+      freq[row.element_clicked] = (freq[row.element_clicked] || 0) + 1;
+    }
+  }
+
+  return Object.entries(freq)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, n)
+    .map(([element, count], index) => ({
+      rank: index + 1,
+      element,
+      count
+    }));
+}
+
+function renderTable(containerId, rows) {
+  const container = document.getElementById(containerId);
+
+  if (!rows.length) {
+    container.innerHTML = "<p>Brak danych.</p>";
+    return;
+  }
+
+  const columns = Object.keys(rows[0]).filter(c => !c.endsWith("Value"));
+
+  let html = "<table><thead><tr>";
+
+  for (const col of columns) {
+    html += `<th>${col}</th>`;
+  }
+
+  html += "</tr></thead><tbody>";
+
+  for (const row of rows) {
+    html += "<tr>";
+
+    for (const col of columns) {
+      html += `<td>${row[col]}</td>`;
+    }
+
+    html += "</tr>";
+  }
+
+  html += "</tbody></table>";
+
+  container.innerHTML = html;
+}
+
+function renderDropoffChart(rows) {
+  const container = document.getElementById("dropoffChart");
+
+  if (!rows.length) {
+    container.innerHTML = "<p>Brak danych formularza.</p>";
+    return;
+  }
+
+  container.innerHTML = rows.map(row => `
+    <div class="bar-row">
+      <div class="bar-label">
+        ${row.step}: ${row.reachedPercent} (${row.reached}/${row.total})
+      </div>
+
+      <div class="bar" style="width: ${Math.max(row.reachedPercentValue, 5)}%;">
+        ${row.reachedPercent}
+      </div>
+
+      <small>
+        Spadek względem poprzedniego kroku: ${row.dropOffFromPrevious}
+        (${row.droppedFromPrevious} sesji)
+      </small>
+    </div>
+  `).join("");
+}
+
+function generateBounceComment(bounceRows) {
+  if (!bounceRows.length) {
+    return "Brak danych do obliczenia bounce rate.";
+  }
+
+  const worst = bounceRows[0];
+
+  return `
+    Najwyższy bounce rate ma ekran <strong>${worst.page}</strong>:
+    <strong>${worst.bounceRate}</strong>.
+    Oznacza to, że relatywnie duża część użytkowników kończy sesję po wejściu na tę stronę.
+    Wstępna hipoteza: ekran może nie spełniać oczekiwań użytkownika, mieć zbyt mało jasne CTA,
+    ładować się zbyt wolno albo nie prowadzić naturalnie do kolejnego kroku.
+  `;
+}
+
+function generateDropoffComment(dropoffRows) {
+  if (!dropoffRows.length || dropoffRows[0].total === 0) {
+    return "Brak danych formularza do analizy drop-off.";
+  }
+
+  let biggestDrop = null;
+
+  for (let i = 1; i < dropoffRows.length; i++) {
+    if (!biggestDrop || dropoffRows[i].droppedFromPrevious > biggestDrop.droppedFromPrevious) {
+      biggestDrop = dropoffRows[i];
+    }
+  }
+
+  return `
+    Największy spadek w formularzu występuje przed etapem:
+    <strong>${biggestDrop.step}</strong>.
+    Spadek względem poprzedniego kroku wynosi:
+    <strong>${biggestDrop.dropOffFromPrevious}</strong>
+    (${biggestDrop.droppedFromPrevious} sesji).
+    Wstępna hipoteza: ten krok formularza może być zbyt długi, niejasny,
+    wymagać zbyt wielu danych albo zawierać pole, które budzi niepewność użytkownika.
+  `;
+}
+
+function generateClicksComment(clickRows) {
+  if (!clickRows.length) {
+    return "Brak danych o klikanych elementach.";
+  }
+
+  const top = clickRows[0];
+
+  return `
+    Najczęściej klikanym elementem jest <strong>${top.element}</strong>
+    z liczbą kliknięć: <strong>${top.count}</strong>.
+    Wstępna hipoteza: ten element jest głównym punktem zainteresowania użytkowników.
+    Jeśli jest to przycisk CTA, może dobrze prowadzić użytkownika.
+    Jeśli jest to element pomocniczy, np. link pomocy, menu albo cofnięcie,
+    może wskazywać na problem ze zrozumiałością interfejsu.
+  `;
+}
+
+document.getElementById("csvFile").addEventListener("change", async event => {
+  const file = event.target.files[0];
+
+  if (!file) {
+    return;
+  }
+
+  document.getElementById("status").textContent = `Wczytano plik: ${file.name}`;
+
+  const data = await loadCSVFromFile(file);
+
+  const bounceRows = bounceRateByPage(data);
+  const dropoffRows = formDropOff(data);
+  const clickRows = topClicks(data, 5);
+
+  console.table(bounceRows);
+  console.table(dropoffRows);
+  console.table(clickRows);
+
+  renderTable("bounceTable", bounceRows);
+  renderDropoffChart(dropoffRows);
+  renderTable("clicksTable", clickRows);
+
+  document.getElementById("bounceComment").innerHTML = generateBounceComment(bounceRows);
+  document.getElementById("dropoffComment").innerHTML = generateDropoffComment(dropoffRows);
+  document.getElementById("clicksComment").innerHTML = generateClicksComment(clickRows);
+});
+</script>
+
+</body>
+</html>

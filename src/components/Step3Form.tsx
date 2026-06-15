@@ -1,10 +1,12 @@
 import React from "react";
 import { useFormContext, useWatch } from "react-hook-form";
+import { trackFormSubmit } from "../analytics";
 import { FullFormData } from "../schemas/schemas";
 
 type Step3Props = {
   goToStep1: () => void;
   onBack: () => void;
+  onComplete: () => void;
 };
 
 const fakeRegister = async () => {
@@ -17,7 +19,7 @@ const fakeRegister = async () => {
   return { status: 200 };
 };
 
-export const Step3Form = ({ goToStep1, onBack }: Step3Props) => {
+export const Step3Form = ({ goToStep1, onBack, onComplete }: Step3Props) => {
   const {
     register,
     handleSubmit,
@@ -39,6 +41,7 @@ export const Step3Form = ({ goToStep1, onBack }: Step3Props) => {
     const response = await fakeRegister();
 
     if (response.status === 409) {
+      trackFormSubmit("registration", "email_conflict");
       setError("email", {
         type: "server",
         message: "Ten adres e-mail jest juz zarejestrowany",
@@ -48,6 +51,7 @@ export const Step3Form = ({ goToStep1, onBack }: Step3Props) => {
     }
 
     if (response.status === 500) {
+      trackFormSubmit("registration", "server_error");
       setError("root.serverError", {
         type: "server",
         message: "Blad serwera, sproboj ponownie",
@@ -55,6 +59,8 @@ export const Step3Form = ({ goToStep1, onBack }: Step3Props) => {
       return;
     }
 
+    trackFormSubmit("registration", "success");
+    onComplete();
     alert("Rejestracja zakonczona sukcesem");
   };
 

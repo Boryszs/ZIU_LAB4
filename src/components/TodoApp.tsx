@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { trackCtaClick } from "../analytics";
 import { useTodoContext } from "../context/TodoContext";
 import { Filter as FilterType, PriorityType } from "../types/todo.types";
 import { AddTodoForm } from "./AddTodoForm";
@@ -80,7 +81,10 @@ export default function TodoApp() {
               <button
                 type="button"
                 aria-label="Dodaj nowe zadanie"
-                onClick={() => setView("add")}
+                onClick={() => {
+                  trackCtaClick("add_todo", "tasks_floating_button");
+                  setView("add");
+                }}
                 className="fixed bottom-5 right-5 z-[1000] flex h-[60px] w-[60px] items-center justify-center rounded-full bg-[#007bff] text-4xl leading-none text-white shadow-[0_4px_8px_rgba(0,0,0,0.2)] transition hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-200"
               >
                 <span aria-hidden="true">+</span>

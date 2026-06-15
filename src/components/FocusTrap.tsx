@@ -7,7 +7,7 @@ interface FocusTrapProps {
 }
 
 function isDisabledControl(element: HTMLElement) {
-  return (
+  return  (
     "disabled" in element &&
     Boolean((element as HTMLButtonElement | HTMLInputElement).disabled)
   );
