@@ -2,7 +2,7 @@
   "name": "todo-app",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://<TWÓJ_LOGIN>.github.io/<NAZWA_REPOZYTORIUM>",
+  "homepage": "https://twoj-uzytkownik-github.github.io/nazwa-twojego-repozytorium",
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
