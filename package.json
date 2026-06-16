@@ -2,7 +2,7 @@
   "name": "todo-app",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://<TWÓJ-LOGIN>.github.io/<NAZWA-REPO>",
+  "homepage": "https://Boryszs.github.io/ZIU_LAB4",
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
