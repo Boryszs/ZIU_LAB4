@@ -70,6 +70,12 @@ W panelu GA4 nalezy ustawic retencje danych na maksymalnie 14 miesiecy.
 
 ### Checklist anonimizacji
 
+- **Deployment na GitHub Pages**:
+  1. Dodaj `REACT_APP_GA_MEASUREMENT_ID` do *Settings -> Secrets and variables -> Actions* w repozytorium GitHub.
+  2. Upewnij się, że w `package.json` pole `homepage` wskazuje na poprawny URL.
+  3. Przy korzystaniu z `react-router-dom`, użyj `HashRouter` zamiast `BrowserRouter`, aby uniknąć problemów z odświeżaniem stron na serwerze statycznym.
+  4. Uruchom `npm run deploy` lub skonfiguruj workflow w `.github/workflows/deploy.yml`.
+
 - IP anonimizowane na poziomie konfiguracji: `anonymize_ip: true`.
 - Session ID to losowy UUID w `sessionStorage`, bez powiazania z danymi osobowymi.
 - Brak zbierania tresci wpisanych w formularze: hasel, danych osobowych, tresci zadan i kategorii.
