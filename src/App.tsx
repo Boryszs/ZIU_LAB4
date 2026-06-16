@@ -1,6 +1,6 @@
 import { Suspense, lazy, type ReactNode } from "react";
 import {
-  BrowserRouter,
+  HashRouter as Router,
   Navigate,
   Route,
   Routes,
@@ -36,9 +36,7 @@ function App() {
       <a href="#main-content" className="skip-link">
         Przejdź do treści głównej
       </a>
-      <BrowserRouter
-        future={{ v7_relativeSplatPath: true, v7_startTransition: true }}
-      >
+      <Router>
         <ThemeProvider>
           <Suspense fallback={null}>
             <AnalyticsConsent />
@@ -61,7 +59,7 @@ function App() {
             </Routes>
           </Suspense>
         </ThemeProvider>
-      </BrowserRouter>
+      </Router>
     </>
   );
 }
