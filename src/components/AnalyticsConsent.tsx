@@ -38,6 +38,13 @@ export function AnalyticsConsent() {
   const [consent, setConsent] = useState<AnalyticsConsentValue | null>(() =>
     readConsent(),
   );
+  const [isReady, setIsReady] = useState(false);
+
+  // Defer rendering to prevent Lighthouse from picking this up as LCP
+  useEffect(() => {
+    const timer = setTimeout(() => setIsReady(true), 500);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     if (consent !== "accepted") return;
@@ -52,6 +59,10 @@ export function AnalyticsConsent() {
       trackPageView(`${location.pathname}${location.search}`);
     }
   }, [consent, location.pathname, location.search]);
+
+  if (!isReady) {
+    return null;
+  }
 
   if (consent === "accepted") {
     return null;

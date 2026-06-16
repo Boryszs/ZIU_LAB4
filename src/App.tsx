@@ -1,4 +1,4 @@
-import { type ReactNode } from "react";
+import { Suspense, lazy, type ReactNode } from "react";
 import {
   BrowserRouter,
   Navigate,
@@ -7,13 +7,14 @@ import {
   useOutletContext,
 } from "react-router-dom";
 import { ThemeProvider } from "./context/TodoContext";
-import { AnalyticsConsent } from "./components/AnalyticsConsent";
-import DashboardLayout from "./components/dashboard/DashboardLayout";
-import StatsGrid from "./components/dashboard/StatsGrid";
-import MultiStepForm from "./components/MultiStepForm";
-import TodoApp from "./components/TodoApp";
-import TodoFormPage from "./components/TodoFormPage";
-import SettingsPage from "./SettingsPage";
+
+const DashboardLayout = lazy(() => import("./components/dashboard/DashboardLayout"));
+const AnalyticsConsent = lazy(() => import("./components/AnalyticsConsent").then(m => ({ default: m.AnalyticsConsent })));
+const StatsGrid = lazy(() => import("./components/dashboard/StatsGrid"));
+const MultiStepForm = lazy(() => import("./components/MultiStepForm"));
+const TodoApp = lazy(() => import("./components/TodoApp"));
+const TodoFormPage = lazy(() => import("./components/TodoFormPage"));
+const SettingsPage = lazy(() => import("./SettingsPage"));
 
 // A wrapper to pass the TodoApp component via Outlet context
 const TasksPage = () => {
@@ -30,23 +31,27 @@ function App() {
       <BrowserRouter
         future={{ v7_relativeSplatPath: true, v7_startTransition: true }}
       >
-        <AnalyticsConsent />
         <ThemeProvider>
-          <Routes>
-            <Route path="/" element={<DashboardLayout appTodo={TodoApp} />}>
-              <Route index element={<Navigate to="/dashboard" replace />} />
-              <Route path="dashboard" element={<StatsGrid />} />
-              <Route path="tasks" element={<TasksPage />} />
-              <Route path="tasks/new" element={<TodoFormPage mode="add" />} />
-              <Route
-                path="tasks/:todoId/edit"
-                element={<TodoFormPage mode="edit" />}
-              />
-              <Route path="settings" element={<SettingsPage />} />
-              <Route path="login" element={<MultiStepForm />} />
-              <Route path="register" element={<MultiStepForm />} />
-            </Route>
-          </Routes>
+          <Suspense fallback={null}>
+            <AnalyticsConsent />
+          </Suspense>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Routes>
+              <Route path="/" element={<DashboardLayout appTodo={() => <TodoApp />} />}>
+                <Route index element={<Navigate to="/dashboard" replace />} />
+                <Route path="dashboard" element={<StatsGrid />} />
+                <Route path="tasks" element={<TasksPage />} />
+                <Route path="tasks/new" element={<TodoFormPage mode="add" />} />
+                <Route
+                  path="tasks/:todoId/edit"
+                  element={<TodoFormPage mode="edit" />}
+                />
+                <Route path="settings" element={<SettingsPage />} />
+                <Route path="login" element={<MultiStepForm />} />
+                <Route path="register" element={<MultiStepForm />} />
+              </Route>
+            </Routes>
+          </Suspense>
         </ThemeProvider>
       </BrowserRouter>
     </>

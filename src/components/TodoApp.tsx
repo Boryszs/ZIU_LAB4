@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import Box from "@mui/material/Box";
@@ -33,10 +33,15 @@ export default function TodoApp() {
     navigate(`/tasks/${id}/edit`);
   };
 
-  const filteredTodos = todos.filter((todo) =>
-    todo.title.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
-  const activeCount = todos.filter((todo) => !todo.completed).length;
+  const filteredTodos = useMemo(() => {
+    return todos.filter((todo) =>
+      todo.title.toLowerCase().includes(searchTerm.toLowerCase()),
+    );
+  }, [todos, searchTerm]);
+
+  const activeCount = useMemo(() => {
+    return todos.filter((todo) => !todo.completed).length;
+  }, [todos]);
 
   return (
     <Box
