@@ -25,12 +25,12 @@ export default function TodoFormPage({ mode }: TodoFormPageProps) {
     navigate("/tasks");
   };
 
-  const handleSave = (title: string, priority: PriorityType) => {
+  const handleSave = async (title: string, priority: PriorityType) => {
     if (isEditing) {
       if (!todoId) return;
-      editTodo(todoId, title, priority);
+      await editTodo(todoId, title, priority);
     } else {
-      addTodo(title, priority);
+      await addTodo(title, priority);
     }
 
     goBackToTasks();

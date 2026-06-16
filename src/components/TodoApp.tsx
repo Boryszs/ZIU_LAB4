@@ -4,6 +4,7 @@ import AddIcon from "@mui/icons-material/Add";
 import Box from "@mui/material/Box";
 import Fab from "@mui/material/Fab";
 import Typography from "@mui/material/Typography";
+import CircularProgress from "@mui/material/CircularProgress";
 import { trackCtaClick } from "../analytics";
 import { useTodoContext } from "../context/TodoContext";
 import { Filter as FilterType } from "../types/todo.types";
@@ -27,7 +28,7 @@ export default function TodoApp() {
   const [filter, setFilter] = useState<FilterType>("all");
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
-  const { todos, toggleTodo, deleteTodo } = useTodoContext();
+  const { todos, toggleTodo, deleteTodo, isFetching } = useTodoContext();
 
   const handleStartEdit = (id: string) => {
     navigate(`/tasks/${id}/edit`);
@@ -83,13 +84,21 @@ export default function TodoApp() {
 
       <Box component="section" aria-labelledby="todo-view-heading">
         <FilterBar activeFilter={filter} onFilterChange={setFilter} />
-        <TodoList
-          todos={filteredTodos}
-          filter={filter}
-          onToggle={toggleTodo}
-          onDelete={deleteTodo}
-          onStartEdit={handleStartEdit}
-        />
+        
+        {isFetching ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', my: 8 }}>
+            <CircularProgress aria-label="Ładowanie zadań..." />
+          </Box>
+        ) : (
+          <TodoList
+            todos={filteredTodos}
+            filter={filter}
+            onToggle={toggleTodo}
+            onDelete={deleteTodo}
+            onStartEdit={handleStartEdit}
+          />
+        )}
+
         <Box
           sx={{
             mx: "auto",

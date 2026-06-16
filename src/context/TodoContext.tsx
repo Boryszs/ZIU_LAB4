@@ -8,6 +8,8 @@ import {
   ReactNode,
 } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@mui/material/styles';
 import { todoReducer } from '../reducers/todoReducer';
 import { PriorityType, Todo } from '../types/todo.types';
@@ -16,10 +18,11 @@ interface ThemeContextType {
   theme: 'light' | 'dark';
   setTheme: (t: 'light' | 'dark') => void;
   todos: Todo[];
-  addTodo: (title: string, priority: PriorityType) => void;
-  toggleTodo: (id: string) => void;
-  deleteTodo: (id: string) => void;
-  editTodo: (id: string, title: string, priority: PriorityType) => void;
+  isFetching: boolean;
+  addTodo: (title: string, priority: PriorityType) => Promise<void>;
+  toggleTodo: (id: string) => Promise<void>;
+  deleteTodo: (id: string) => Promise<void>;
+  editTodo: (id: string, title: string, priority: PriorityType) => Promise<void>;
 }
 
 const initialTodos: Todo[] = [
@@ -42,7 +45,34 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       ? 'dark'
       : 'light';
   });
+  
+  const [feedback, setFeedback] = useState<{ type: 'success' | 'error', message: string } | null>(null);
   const [todos, dispatch] = useReducer(todoReducer, initialTodos);
+  const [isFetching, setIsFetching] = useState(true);
+
+  // Simulate initial network fetch
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsFetching(false);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const simulateNetworkDelay = (shouldFail: boolean = false) => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (shouldFail) reject(new Error('Network Error'));
+        else resolve(true);
+      }, 600);
+    });
+  };
+
+  const showFeedback = (type: 'success' | 'error', message: string) => {
+    setFeedback({ type, message });
+  };
+
+  const handleCloseFeedback = () => setFeedback(null);
+
   const muiTheme = useMemo(
     () => {
       const isDarkMode = theme === 'dark';
@@ -193,30 +223,74 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     window.localStorage.setItem('theme', theme);
   }, [theme]);
 
+  const value = useMemo<ThemeContextType>(() => ({
+    theme,
+    setTheme,
+    todos,
+    isFetching,
+    addTodo: async (title, priority) => {
+      try {
+        const isError = title.toLowerCase().includes('error');
+        await simulateNetworkDelay(isError);
+        dispatch({ type: 'ADD', payload: { title, priority } });
+        showFeedback('success', 'Zadanie dodane pomyślnie!');
+      } catch (err) {
+        showFeedback('error', 'Wystąpił błąd podczas dodawania zadania.');
+        throw err;
+      }
+    },
+    toggleTodo: async (id) => {
+      try {
+        await simulateNetworkDelay();
+        dispatch({ type: 'TOGGLE', payload: id });
+      } catch (err) {
+        showFeedback('error', 'Nie udało się zaktualizować statusu.');
+      }
+    },
+    deleteTodo: async (id) => {
+      try {
+        await simulateNetworkDelay();
+        dispatch({ type: 'DELETE', payload: id });
+        showFeedback('success', 'Zadanie zostało usunięte.');
+      } catch (err) {
+        showFeedback('error', 'Nie udało się usunąć zadania.');
+      }
+    },
+    editTodo: async (id, title, priority) => {
+      try {
+        const isError = title.toLowerCase().includes('error');
+        await simulateNetworkDelay(isError);
+        dispatch({ type: 'EDIT', payload: { id, title, priority } });
+        showFeedback('success', 'Zadanie zapisane pomyślnie!');
+      } catch (err) {
+        showFeedback('error', 'Wystąpił błąd podczas zapisywania zadania.');
+        throw err;
+      }
+    },
+  }), [theme, todos, isFetching]);
+
   return (
     <MuiThemeProvider theme={muiTheme}>
       <CssBaseline />
-      <ThemeContext.Provider
-        value={{
-          theme,
-          setTheme,
-          todos,
-          addTodo: (title, priority) => {
-            dispatch({ type: 'ADD', payload: { title, priority } });
-          },
-          toggleTodo: (id) => {
-            dispatch({ type: 'TOGGLE', payload: id });
-          },
-          deleteTodo: (id) => {
-            dispatch({ type: 'DELETE', payload: id });
-          },
-          editTodo: (id, title, priority) => {
-            dispatch({ type: 'EDIT', payload: { id, title, priority } });
-          },
-        }}
-      >
+      <ThemeContext.Provider value={value}>
         {children}
       </ThemeContext.Provider>
+      <Snackbar
+        open={Boolean(feedback)}
+        autoHideDuration={4000}
+        onClose={handleCloseFeedback}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert
+          onClose={handleCloseFeedback}
+          severity={feedback?.type || 'info'}
+          variant="filled"
+          sx={{ width: '100%', fontWeight: 700 }}
+          aria-live="polite"
+        >
+          {feedback?.message}
+        </Alert>
+      </Snackbar>
     </MuiThemeProvider>
   );
 }

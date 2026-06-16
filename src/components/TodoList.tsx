@@ -4,13 +4,14 @@ import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
 import Chip from "@mui/material/Chip";
 import IconButton from "@mui/material/IconButton";
-import List from "@mui/material/List";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import { motion, useReducedMotion } from "framer-motion";
 import { Filter, Todo } from "../types/todo.types";
+import { listVariants, itemVariants, reducedItemVariants } from "../shared/animations/variants";
 
 interface TodoListProps {
   todos: Todo[];
@@ -55,6 +56,9 @@ export function TodoList({
   onDelete,
   onStartEdit,
 }: TodoListProps) {
+  const shouldReduceMotion = useReducedMotion();
+  const currentItemVariants = shouldReduceMotion ? reducedItemVariants : itemVariants;
+
   const filteredTodos = useMemo(() => {
     if (filter === "active") return todos.filter((todo) => !todo.completed);
     if (filter === "completed") return todos.filter((todo) => todo.completed);
@@ -79,15 +83,22 @@ export function TodoList({
       component="section"
       aria-label="Lista zadań"
       variant="outlined"
-      sx={{ mx: "auto", my: 3, width: "100%", maxWidth: 700, overflow: "hidden" }}
+      sx={{ mx: "auto", my: 3, width: "100%", maxWidth: 700, overflow: "visible", border: 'none', bgcolor: 'transparent' }}
     >
-      <List disablePadding>
+      <Box
+        component={motion.ul}
+        variants={listVariants}
+        initial="initial"
+        animate="in"
+        sx={{ p: 0, m: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 1 }}
+      >
         {filteredTodos.map((todo) => {
           const colors = priorityColor[todo.priority];
 
           return (
             <Box
-              component="li"
+              component={motion.li}
+              variants={currentItemVariants}
               key={todo.id}
               sx={{
                 display: "grid",
@@ -97,12 +108,24 @@ export function TodoList({
                 rowGap: 1,
                 px: { xs: 1.5, sm: 2.5 },
                 py: 1.5,
-                borderBottom: 1,
+                borderRadius: 2,
+                border: 1,
                 borderColor: "divider",
                 bgcolor: todo.completed ? "action.hover" : "background.paper",
-                transition: "background-color 160ms ease",
-                "&:last-child": { borderBottom: 0 },
-                "&:hover": { bgcolor: "action.hover" },
+                "@media (prefers-reduced-motion: no-preference)": {
+                  transition: "transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease",
+                  "&:hover": { 
+                    transform: "translateY(-2px)",
+                    boxShadow: 3,
+                    bgcolor: "action.hover"
+                  },
+                },
+                "@media (prefers-reduced-motion: reduce)": {
+                  transition: "background-color 160ms ease",
+                  "&:hover": { 
+                    bgcolor: "action.hover"
+                  },
+                }
               }}
             >
               <Checkbox
@@ -177,7 +200,7 @@ export function TodoList({
             </Box>
           );
         })}
-      </List>
+      </Box>
     </Paper>
   );
 }

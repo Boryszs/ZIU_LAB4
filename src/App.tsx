@@ -6,6 +6,8 @@ import {
   Routes,
   useOutletContext,
 } from "react-router-dom";
+import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
 import { ThemeProvider } from "./context/TodoContext";
 
 const DashboardLayout = lazy(() => import("./components/dashboard/DashboardLayout"));
@@ -22,6 +24,12 @@ const TasksPage = () => {
   return <>{appTodo()}</>;
 };
 
+const LoadingFallback = () => (
+  <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+    <CircularProgress aria-label="Wczytywanie..." />
+  </Box>
+);
+
 function App() {
   return (
     <>
@@ -35,7 +43,7 @@ function App() {
           <Suspense fallback={null}>
             <AnalyticsConsent />
           </Suspense>
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<LoadingFallback />}>
             <Routes>
               <Route path="/" element={<DashboardLayout appTodo={() => <TodoApp />} />}>
                 <Route index element={<Navigate to="/dashboard" replace />} />
