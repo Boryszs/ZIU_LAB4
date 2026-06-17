@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useLocation, useOutlet } from "react-router-dom";
 import Box from "@mui/material/Box";
 import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
@@ -11,13 +12,23 @@ import { pageVariants, reducedPageVariants } from "../../shared/animations/varia
 
 interface DashboardLayoutProps {
   appTodo?: () => React.ReactNode;
+  title?: string;
+}
+
+export interface DashboardOutletContext {
+  appTodo?: () => React.ReactNode;
+  setPageTitle: (title: string) => void;
 }
 
 export const drawerWidth = 264;
 
-export default function DashboardLayout({ appTodo }: DashboardLayoutProps) {
+export default function DashboardLayout({
+  appTodo,
+  title = "Dashboard",
+}: DashboardLayoutProps) {
   const location = useLocation();
-  const outlet = useOutlet({ appTodo });
+  const [pageTitle, setPageTitle] = useState(title);
+  const outlet = useOutlet({ appTodo, setPageTitle });
   const shouldReduceMotion = useReducedMotion();
   const variants = shouldReduceMotion ? reducedPageVariants : pageVariants;
 
@@ -50,7 +61,7 @@ export default function DashboardLayout({ appTodo }: DashboardLayoutProps) {
           overflow: "hidden", // prevents scrollbars during animations
         }}
       >
-        <AppHeader navItems={navItems} />
+        <AppHeader navItems={navItems} title={pageTitle} />
         <Box sx={{ height: 96 }} />
         <AnimatePresence mode="wait" initial={false}>
           <motion.div

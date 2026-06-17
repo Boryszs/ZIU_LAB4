@@ -9,6 +9,12 @@ export interface Todo {
 
 export type Filter = 'all' | 'active' | 'completed';
 export type PriorityType = 'low' | 'medium' | 'high';
+export type AppStatusType = 'idle' | 'loading' | 'success' | 'error';
+
+export interface AppStatus {
+  type: AppStatusType;
+  message: string;
+}
 
 export type TodoAction =
   | { type: 'ADD'; payload: { title: string; priority: PriorityType } }

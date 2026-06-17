@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
@@ -26,17 +26,13 @@ import { drawerWidth } from "./DashboardLayout";
 
 interface AppHeaderProps {
   navItems: NavItem[];
+  title: string;
 }
 
-export default function AppHeader({ navItems }: AppHeaderProps) {
+export default function AppHeader({ navItems, title }: AppHeaderProps) {
   const { theme, setTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
-
-  const title = useMemo(() => {
-    const currentItem = navItems.find((item) => item.path === location.pathname);
-    return currentItem?.label || "Dashboard";
-  }, [location.pathname, navItems]);
 
   return (
     <>
@@ -123,12 +119,14 @@ export default function AppHeader({ navItems }: AppHeaderProps) {
         onClose={() => setIsOpen(false)}
         ModalProps={{ keepMounted: true }}
         sx={{ display: { xs: "block", md: "none" } }}
-        PaperProps={{
-          sx: {
-            width: "min(88vw, 320px)",
-            pt: 2,
-            display: "flex",
-            flexDirection: "column",
+        slotProps={{
+          paper: {
+            sx: {
+              width: "min(88vw, 320px)",
+              pt: 2,
+              display: "flex",
+              flexDirection: "column",
+            },
           },
         }}
       >

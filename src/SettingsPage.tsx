@@ -3,15 +3,22 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { ModalDialog } from "./components/ModalDialog";
+import { usePageTitle } from "./hooks/usePageTitle";
 
-export default function SettingsPage() {
+interface SettingsPageProps {
+  title: string;
+}
+
+export default function SettingsPage({ title }: SettingsPageProps) {
+  usePageTitle(title);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModalButtonRef = useRef<HTMLButtonElement>(null);
 
   return (
     <Box component="section" sx={{ textAlign: "center" }}>
       <Typography component="h2" variant="h4" fontWeight={800} sx={{ mb: 2 }}>
-        Ustawienia
+        {title}
       </Typography>
       <Typography color="text.secondary" sx={{ mb: 3 }}>
         Strona ustawień jest w budowie.

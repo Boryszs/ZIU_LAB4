@@ -1,5 +1,6 @@
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -8,17 +9,19 @@ import {
   ReactNode,
 } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
+import CircularProgress from '@mui/material/CircularProgress';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@mui/material/styles';
 import { todoReducer } from '../reducers/todoReducer';
-import { PriorityType, Todo } from '../types/todo.types';
+import { AppStatus, PriorityType, Todo } from '../types/todo.types';
 
 interface ThemeContextType {
   theme: 'light' | 'dark';
   setTheme: (t: 'light' | 'dark') => void;
   todos: Todo[];
   isFetching: boolean;
+  appStatus: AppStatus;
   addTodo: (title: string, priority: PriorityType) => Promise<void>;
   toggleTodo: (id: string) => Promise<void>;
   deleteTodo: (id: string) => Promise<void>;
@@ -30,6 +33,9 @@ const initialTodos: Todo[] = [
   { id: '2', title: 'Zrobic zakupy', completed: true, priority: 'low', date: '11-12-2026' },
   { id: '3', title: 'Napisac raport', completed: false, priority: 'high', date: '10-12-2026' },
 ];
+
+const idleStatus: AppStatus = { type: 'idle', message: '' };
+const initialLoadingMessage = 'Ładowanie zadań...';
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
@@ -46,32 +52,53 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       : 'light';
   });
   
-  const [feedback, setFeedback] = useState<{ type: 'success' | 'error', message: string } | null>(null);
   const [todos, dispatch] = useReducer(todoReducer, initialTodos);
   const [isFetching, setIsFetching] = useState(true);
+  const [appStatus, setAppStatus] = useState<AppStatus>({
+    type: 'loading',
+    message: initialLoadingMessage,
+  });
 
   // Simulate initial network fetch
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsFetching(false);
+      setAppStatus((currentStatus) =>
+        currentStatus.type === 'loading' &&
+        currentStatus.message === initialLoadingMessage
+          ? idleStatus
+          : currentStatus,
+      );
     }, 800);
     return () => clearTimeout(timer);
   }, []);
 
-  const simulateNetworkDelay = (shouldFail: boolean = false) => {
-    return new Promise((resolve, reject) => {
+  const simulateNetworkDelay = useCallback((shouldFail: boolean = false) => {
+    return new Promise<void>((resolve, reject) => {
       setTimeout(() => {
         if (shouldFail) reject(new Error('Network Error'));
-        else resolve(true);
+        else resolve();
       }, 600);
     });
-  };
+  }, []);
 
-  const showFeedback = (type: 'success' | 'error', message: string) => {
-    setFeedback({ type, message });
-  };
+  const setLoadingStatus = useCallback((message: string) => {
+    setAppStatus({ type: 'loading', message });
+  }, []);
 
-  const handleCloseFeedback = () => setFeedback(null);
+  const setSuccessStatus = useCallback((message: string) => {
+    setAppStatus({ type: 'success', message });
+  }, []);
+
+  const setErrorStatus = useCallback((message: string) => {
+    setAppStatus({ type: 'error', message });
+  }, []);
+
+  const handleCloseStatus = useCallback(() => {
+    setAppStatus((currentStatus) =>
+      currentStatus.type === 'loading' ? currentStatus : idleStatus,
+    );
+  }, []);
 
   const muiTheme = useMemo(
     () => {
@@ -228,46 +255,73 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     setTheme,
     todos,
     isFetching,
+    appStatus,
     addTodo: async (title, priority) => {
+      setLoadingStatus('Dodawanie zadania...');
+
       try {
         const isError = title.toLowerCase().includes('error');
         await simulateNetworkDelay(isError);
         dispatch({ type: 'ADD', payload: { title, priority } });
-        showFeedback('success', 'Zadanie dodane pomyślnie!');
+        setSuccessStatus('Zadanie dodane pomyślnie!');
       } catch (err) {
-        showFeedback('error', 'Wystąpił błąd podczas dodawania zadania.');
+        setErrorStatus('Wystąpił błąd podczas dodawania zadania.');
         throw err;
       }
     },
     toggleTodo: async (id) => {
+      setLoadingStatus('Aktualizowanie statusu zadania...');
+
       try {
         await simulateNetworkDelay();
         dispatch({ type: 'TOGGLE', payload: id });
+        setSuccessStatus('Status zadania został zaktualizowany.');
       } catch (err) {
-        showFeedback('error', 'Nie udało się zaktualizować statusu.');
+        setErrorStatus('Nie udało się zaktualizować statusu.');
       }
     },
     deleteTodo: async (id) => {
+      setLoadingStatus('Usuwanie zadania...');
+
       try {
         await simulateNetworkDelay();
         dispatch({ type: 'DELETE', payload: id });
-        showFeedback('success', 'Zadanie zostało usunięte.');
+        setSuccessStatus('Zadanie zostało usunięte.');
       } catch (err) {
-        showFeedback('error', 'Nie udało się usunąć zadania.');
+        setErrorStatus('Nie udało się usunąć zadania.');
       }
     },
     editTodo: async (id, title, priority) => {
+      setLoadingStatus('Zapisywanie zmian...');
+
       try {
         const isError = title.toLowerCase().includes('error');
         await simulateNetworkDelay(isError);
         dispatch({ type: 'EDIT', payload: { id, title, priority } });
-        showFeedback('success', 'Zadanie zapisane pomyślnie!');
+        setSuccessStatus('Zadanie zapisane pomyślnie!');
       } catch (err) {
-        showFeedback('error', 'Wystąpił błąd podczas zapisywania zadania.');
+        setErrorStatus('Wystąpił błąd podczas zapisywania zadania.');
         throw err;
       }
     },
-  }), [theme, todos, isFetching]);
+  }), [
+    appStatus,
+    isFetching,
+    setErrorStatus,
+    setLoadingStatus,
+    setSuccessStatus,
+    simulateNetworkDelay,
+    theme,
+    todos,
+  ]);
+
+  const isStatusOpen = appStatus.type !== 'idle' && Boolean(appStatus.message);
+  const statusSeverity =
+    appStatus.type === 'error'
+      ? 'error'
+      : appStatus.type === 'success'
+        ? 'success'
+        : 'info';
 
   return (
     <MuiThemeProvider theme={muiTheme}>
@@ -276,19 +330,25 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         {children}
       </ThemeContext.Provider>
       <Snackbar
-        open={Boolean(feedback)}
-        autoHideDuration={4000}
-        onClose={handleCloseFeedback}
+        open={isStatusOpen}
+        autoHideDuration={appStatus.type === 'loading' ? null : 4000}
+        onClose={handleCloseStatus}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
         <Alert
-          onClose={handleCloseFeedback}
-          severity={feedback?.type || 'info'}
+          onClose={appStatus.type === 'loading' ? undefined : handleCloseStatus}
+          severity={statusSeverity}
+          icon={
+            appStatus.type === 'loading' ? (
+              <CircularProgress size={18} color="inherit" />
+            ) : undefined
+          }
           variant="filled"
+          role={appStatus.type === 'error' ? 'alert' : 'status'}
           sx={{ width: '100%', fontWeight: 700 }}
-          aria-live="polite"
+          aria-live={appStatus.type === 'error' ? 'assertive' : 'polite'}
         >
-          {feedback?.message}
+          {appStatus.message}
         </Alert>
       </Snackbar>
     </MuiThemeProvider>

@@ -5,16 +5,20 @@ import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { useTodoContext } from "../context/TodoContext";
+import { usePageTitle } from "../hooks/usePageTitle";
 import { PriorityType } from "../types/todo.types";
 import { AddTodoForm } from "./AddTodoForm";
 
 interface TodoFormPageProps {
   mode: "add" | "edit";
+  title: string;
 }
 
 const headingId = "todo-form-page-title";
 
-export default function TodoFormPage({ mode }: TodoFormPageProps) {
+export default function TodoFormPage({ mode, title }: TodoFormPageProps) {
+  usePageTitle(title);
+
   const navigate = useNavigate();
   const { todoId } = useParams<{ todoId: string }>();
   const { todos, addTodo, editTodo } = useTodoContext();
@@ -85,7 +89,7 @@ export default function TodoFormPage({ mode }: TodoFormPageProps) {
         fontWeight={800}
         sx={{ mb: 2 }}
       >
-        {isEditing ? "Edytuj zadanie" : "Dodaj nowe zadanie"}
+        {title}
       </Typography>
       <Paper
         variant="outlined"

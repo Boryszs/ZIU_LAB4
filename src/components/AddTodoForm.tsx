@@ -137,7 +137,7 @@ export function AddTodoForm({
               variant="h5"
               fontWeight={800}
             >
-              {isEditing ? "Edytuj zadanie" : "Dodaj nowe zadanie"}
+              {isEditing ? "Edytuj zadanie" : "Dodaj zadanie"}
             </Typography>
           )}
 

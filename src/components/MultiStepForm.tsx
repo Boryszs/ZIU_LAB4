@@ -12,10 +12,17 @@ import { Step3Form } from "./Step3Form";
 import { FullFormData, fullSchema } from "../schemas/schemas";
 import { Step1Form } from "./Step1Form";
 import { trackFormAbandonment } from "../analytics";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 const steps = ["Dane", "Preferencje", "Podsumowanie"];
 
-export default function MultiStepForm() {
+interface MultiStepFormProps {
+  title: string;
+}
+
+export default function MultiStepForm({ title }: MultiStepFormProps) {
+  usePageTitle(title);
+
   const [currentStep, setCurrentStep] = useState(0);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const hasInteractedRef = useRef(false);

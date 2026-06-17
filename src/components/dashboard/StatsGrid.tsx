@@ -3,9 +3,16 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CircleOutlinedIcon from "@mui/icons-material/CircleOutlined";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import { useTodoContext } from "../../context/TodoContext";
+import { usePageTitle } from "../../hooks/usePageTitle";
 import StatsCard from "./StatsCard";
 
-export default function StatsGrid() {
+interface StatsGridProps {
+  title: string;
+}
+
+export default function StatsGrid({ title }: StatsGridProps) {
+  usePageTitle(title);
+
   const { todos } = useTodoContext();
   const total = todos.length;
   const completed = todos.filter((todo) => todo.completed).length;

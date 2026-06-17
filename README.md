@@ -1,93 +1,118 @@
-# Getting Started with Create React App
+# Todo App - ZIU LAB4
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Responsywna aplikacja do zarządzania zadaniami przygotowana w ramach laboratorium ZIU. Projekt zawiera dashboard ze statystykami, listę zadań, formularze dodawania i edycji, globalne stany aplikacji oraz podstawowe rozwiązania dostępnościowe.
 
-## Available Scripts
+## Demo
 
-In the project directory, you can run:
+Aplikacja jest dostępna pod adresem:
 
-### `npm start`
+[https://boryszs.github.io/ZIU_LAB4/#/dashboard](https://boryszs.github.io/ZIU_LAB4/#/dashboard)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Co potrafi aplikacja
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- wyświetla dashboard ze statystykami zadań
+- pozwala dodawać, edytować i usuwać zadania
+- umożliwia oznaczanie zadań jako ukończone
+- obsługuje priorytety zadań
+- pozwala filtrować i wyszukiwać zadania
+- pokazuje globalne stany `loading`, `success` i `error`
+- wspiera tryb jasny i ciemny
+- zawiera elementy dostępności: skip link, widoczny fokus, semantyczne elementy HTML i komunikaty ARIA
+- wykorzystuje animacje z uwzględnieniem preferencji ograniczonego ruchu
 
-### `npm test`
+## Uruchomienie lokalne
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Wymagania:
 
-### `npm run build`
+- Node.js
+- npm
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Instalacja zależności:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+npm install
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Uruchomienie aplikacji:
 
-### `npm run eject`
+```bash
+npm start
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Po uruchomieniu aplikacja będzie dostępna lokalnie pod adresem:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```txt
+http://localhost:3000
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Budowanie
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Aby przygotować produkcyjną wersję aplikacji, uruchom:
 
-## Learn More
+```bash
+npm run build
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Gotowe pliki statyczne zostaną zapisane w katalogu:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```txt
+build/
+```
 
-## Prywatnosc i analityka GA4
+Ten katalog jest używany przy wdrożeniu aplikacji na GitHub Pages.
 
-Aplikacja korzysta z Google Analytics 4 dopiero po akceptacji banera zgody.
-Identyfikator pomiaru nie jest zapisany w kodzie; lokalnie nalezy ustawic
-`REACT_APP_GA_MEASUREMENT_ID` w `.env.local`, a w GitHub Actions jako secret
-o tej samej nazwie.
+Podgląd produkcyjnego buildu lokalnie:
 
-Zbierane sa tylko dane niezbedne do oceny uzytecznosci interfejsu:
+```bash
+npx serve -s build
+```
 
-- `page_view` - sciezka strony, zeby mierzyc najczesciej odwiedzane widoki.
-- `cta_click` - nazwa CTA i lokalizacja przycisku, zeby sprawdzic, czy uzytkownicy znajduja kluczowe akcje.
-- `form_abandonment` - nazwa formularza i numer kroku, zeby wykryc miejsce porzucenia bez tresci wpisanych w pola.
-- `form_submit` - nazwa formularza i status, zeby mierzyc skutecznosc wysylki bez danych osobowych.
+## Przydatne komendy
 
-Nie sa wysylane: imie, nazwisko, e-mail, haslo, tresc zadania, kategorie ani
-inne wartosci wpisywane w formularze. Adres IP jest anonimizowany przez
-`anonymize_ip: true`, sygnaly reklamowe GA sa wylaczone, a `app_session_id`
-jest losowym UUID trzymanym tylko w `sessionStorage` i nie jest powiazany z
-danymi osobowymi. Dane analityczne sluza tylko do statystyk UX, bez
-profilowania reklamowego.
-
-W panelu GA4 nalezy ustawic retencje danych na maksymalnie 14 miesiecy.
-
-### Checklist anonimizacji
-
-- **Deployment na GitHub Pages**:
-  1. Dodaj `REACT_APP_GA_MEASUREMENT_ID` do *Settings -> Secrets and variables -> Actions* w repozytorium GitHub.
-  2. Upewnij się, że w `package.json` pole `homepage` wskazuje na poprawny URL.
-  3. Przy korzystaniu z `react-router-dom`, użyj `HashRouter` zamiast `BrowserRouter`, aby uniknąć problemów z odświeżaniem stron na serwerze statycznym.
-  4. Uruchom `npm run deploy` lub skonfiguruj workflow w `.github/workflows/deploy.yml`.
-
-- IP anonimizowane na poziomie konfiguracji: `anonymize_ip: true`.
-- Session ID to losowy UUID w `sessionStorage`, bez powiazania z danymi osobowymi.
-- Brak zbierania tresci wpisanych w formularze: hasel, danych osobowych, tresci zadan i kategorii.
-- Czas przechowywania danych ograniczony w GA4 do maksymalnie 14 miesiecy.
-- Polityka prywatnosci/analityki zaktualizowana o zdarzenia: `page_view`, `cta_click`, `form_abandonment`, `form_submit`.
-- Cookie consent zaimplementowany przed inicjalizacja GA4.
-
-### Ocena etyczna / RODO
-
-| Aspekt | Status |
+| Komenda | Opis |
 | --- | --- |
-| Minimalizacja danych | Zintegrowany z implementacja: wysylane sa tylko metadane zdarzen. |
-| Ograniczenie celu | Zintegrowany z implementacja: analityka sluzy tylko do statystyk UX, bez profilowania reklamowego. |
-| Integralnosc i poufnosc | Zintegrowany z implementacja: anonimizacja IP, pseudonimowy UUID sesji, brak danych z pol formularzy. |
-| Rozliczalnosc | Zintegrowany z dokumentacja: lista zdarzen, cele zbierania i ograniczenia sa opisane w README oraz komentarzu kodu. |
+| `npm install` | instaluje zależności projektu |
+| `npm start` | uruchamia aplikację lokalnie |
+| `npm test -- --watchAll=false` | uruchamia testy jednorazowo |
+| `npm run build` | tworzy produkcyjny build w katalogu `build/` |
+| `npm run deploy` | wdraża aplikację na GitHub Pages |
+
+## Użyte technologie
+
+- React 19
+- TypeScript
+- Create React App / react-scripts
+- React Router DOM z `HashRouter`
+- Context API i `useReducer`
+- Material UI
+- Emotion
+- React Hook Form
+- Zod
+- Framer Motion
+- React GA4
+- Web Vitals
+- Lighthouse CI
+- GitHub Pages
+
+## Struktura aplikacji
+
+Najważniejsze elementy projektu:
+
+- `src/App.tsx` - konfiguracja tras aplikacji
+- `src/context/TodoContext.tsx` - globalny stan aplikacji i obsługa akcji zadań
+- `src/components/TodoApp.tsx` - główny widok listy zadań
+- `src/components/TodoFormPage.tsx` - widok dodawania i edycji zadania
+- `src/components/dashboard/` - layout, header, sidebar i statystyki
+- `src/hooks/usePageTitle.ts` - ustawianie tytułu aktualnej strony w headerze
+
+## Analityka i prywatność
+
+Aplikacja może korzystać z Google Analytics 4 dopiero po zaakceptowaniu zgody przez użytkownika. Identyfikator pomiaru należy ustawić w zmiennej środowiskowej:
+
+```txt
+REACT_APP_GA_MEASUREMENT_ID
+```
+
+Lokalnie można dodać ją w pliku `.env.local`.
+
+Do GA4 wysyłane są wyłącznie metadane zdarzeń. Aplikacja nie wysyła treści wpisywanych w formularze, danych osobowych, haseł ani treści zadań.
