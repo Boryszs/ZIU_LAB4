@@ -1,29 +1,32 @@
 {
   "files": {
-    "main.js": "/ZIU_LAB4/static/js/main.cc980f79.js",
+    "main.js": "/ZIU_LAB4/static/js/main.a94062fd.js",
     "static/js/228.d82b731e.chunk.js": "/ZIU_LAB4/static/js/228.d82b731e.chunk.js",
+    "static/js/591.f27ced4c.chunk.js": "/ZIU_LAB4/static/js/591.f27ced4c.chunk.js",
     "static/js/220.5d658356.chunk.js": "/ZIU_LAB4/static/js/220.5d658356.chunk.js",
-    "static/js/685.0b5d28c6.chunk.js": "/ZIU_LAB4/static/js/685.0b5d28c6.chunk.js",
-    "static/js/57.c26e135a.chunk.js": "/ZIU_LAB4/static/js/57.c26e135a.chunk.js",
-    "static/js/361.108bf3f5.chunk.js": "/ZIU_LAB4/static/js/361.108bf3f5.chunk.js",
+    "static/js/685.a5d5e06f.chunk.js": "/ZIU_LAB4/static/js/685.a5d5e06f.chunk.js",
+    "static/js/57.f9d3fea8.chunk.js": "/ZIU_LAB4/static/js/57.f9d3fea8.chunk.js",
+    "static/js/361.0e4d8337.chunk.js": "/ZIU_LAB4/static/js/361.0e4d8337.chunk.js",
     "static/js/951.82b0d680.chunk.js": "/ZIU_LAB4/static/js/951.82b0d680.chunk.js",
     "static/js/350.dba6221b.chunk.js": "/ZIU_LAB4/static/js/350.dba6221b.chunk.js",
     "static/js/206.91346dc7.chunk.js": "/ZIU_LAB4/static/js/206.91346dc7.chunk.js",
     "static/js/82.ea8d52a9.chunk.js": "/ZIU_LAB4/static/js/82.ea8d52a9.chunk.js",
     "static/js/972.484238b5.chunk.js": "/ZIU_LAB4/static/js/972.484238b5.chunk.js",
-    "static/js/37.137632e1.chunk.js": "/ZIU_LAB4/static/js/37.137632e1.chunk.js",
-    "static/js/562.708a1b40.chunk.js": "/ZIU_LAB4/static/js/562.708a1b40.chunk.js",
-    "static/js/924.fa1e8635.chunk.js": "/ZIU_LAB4/static/js/924.fa1e8635.chunk.js",
+    "static/js/39.1d3c5645.chunk.js": "/ZIU_LAB4/static/js/39.1d3c5645.chunk.js",
+    "static/js/174.4cb94bad.chunk.js": "/ZIU_LAB4/static/js/174.4cb94bad.chunk.js",
+    "static/js/760.f646703e.chunk.js": "/ZIU_LAB4/static/js/760.f646703e.chunk.js",
+    "static/js/355.e178aafb.chunk.js": "/ZIU_LAB4/static/js/355.e178aafb.chunk.js",
+    "static/js/49.82be246c.chunk.js": "/ZIU_LAB4/static/js/49.82be246c.chunk.js",
     "static/js/763.3427a367.chunk.js": "/ZIU_LAB4/static/js/763.3427a367.chunk.js",
     "static/js/620.3da6cd26.chunk.js": "/ZIU_LAB4/static/js/620.3da6cd26.chunk.js",
     "static/js/761.66703b39.chunk.js": "/ZIU_LAB4/static/js/761.66703b39.chunk.js",
     "static/js/467.095d7f52.chunk.js": "/ZIU_LAB4/static/js/467.095d7f52.chunk.js",
     "static/js/574.dd0059bc.chunk.js": "/ZIU_LAB4/static/js/574.dd0059bc.chunk.js",
     "static/js/376.dfdc26e7.chunk.js": "/ZIU_LAB4/static/js/376.dfdc26e7.chunk.js",
-    "static/js/940.e3bc09f4.chunk.js": "/ZIU_LAB4/static/js/940.e3bc09f4.chunk.js",
+    "static/js/940.3cc84443.chunk.js": "/ZIU_LAB4/static/js/940.3cc84443.chunk.js",
     "index.html": "/ZIU_LAB4/index.html"
   },
   "entrypoints": [
-    "static/js/main.cc980f79.js"
+    "static/js/main.a94062fd.js"
   ]
 }
