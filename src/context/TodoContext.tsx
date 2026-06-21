@@ -1,5 +1,7 @@
 import {
   createContext,
+  lazy,
+  Suspense,
   useCallback,
   useContext,
   useEffect,
@@ -9,12 +11,11 @@ import {
   ReactNode,
 } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
-import CircularProgress from '@mui/material/CircularProgress';
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@mui/material/styles';
 import { todoReducer } from '../reducers/todoReducer';
 import { AppStatus, PriorityType, Todo } from '../types/todo.types';
+
+const AppStatusSnackbar = lazy(() => import('../components/AppStatusSnackbar'));
 
 interface ThemeContextType {
   theme: 'light' | 'dark';
@@ -35,7 +36,6 @@ const initialTodos: Todo[] = [
 ];
 
 const idleStatus: AppStatus = { type: 'idle', message: '' };
-const initialLoadingMessage = 'Ładowanie zadań...';
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
@@ -54,22 +54,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   
   const [todos, dispatch] = useReducer(todoReducer, initialTodos);
   const [isFetching, setIsFetching] = useState(true);
-  const [appStatus, setAppStatus] = useState<AppStatus>({
-    type: 'loading',
-    message: initialLoadingMessage,
-  });
+  const [appStatus, setAppStatus] = useState<AppStatus>(idleStatus);
 
   // Simulate initial network fetch
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsFetching(false);
-      setAppStatus((currentStatus) =>
-        currentStatus.type === 'loading' &&
-        currentStatus.message === initialLoadingMessage
-          ? idleStatus
-          : currentStatus,
-      );
-    }, 800);
+    }, 100);
     return () => clearTimeout(timer);
   }, []);
 
@@ -78,7 +69,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       setTimeout(() => {
         if (shouldFail) reject(new Error('Network Error'));
         else resolve();
-      }, 600);
+      }, 50);
     });
   }, []);
 
@@ -316,41 +307,20 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   ]);
 
   const isStatusOpen = appStatus.type !== 'idle' && Boolean(appStatus.message);
-  const statusSeverity =
-    appStatus.type === 'error'
-      ? 'error'
-      : appStatus.type === 'success'
-        ? 'success'
-        : 'info';
-
   return (
     <MuiThemeProvider theme={muiTheme}>
       <CssBaseline />
       <ThemeContext.Provider value={value}>
         {children}
       </ThemeContext.Provider>
-      <Snackbar
-        open={isStatusOpen}
-        autoHideDuration={appStatus.type === 'loading' ? null : 4000}
-        onClose={handleCloseStatus}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <Alert
-          onClose={appStatus.type === 'loading' ? undefined : handleCloseStatus}
-          severity={statusSeverity}
-          icon={
-            appStatus.type === 'loading' ? (
-              <CircularProgress size={18} color="inherit" />
-            ) : undefined
-          }
-          variant="filled"
-          role={appStatus.type === 'error' ? 'alert' : 'status'}
-          sx={{ width: '100%', fontWeight: 700 }}
-          aria-live={appStatus.type === 'error' ? 'assertive' : 'polite'}
-        >
-          {appStatus.message}
-        </Alert>
-      </Snackbar>
+      {isStatusOpen && (
+        <Suspense fallback={null}>
+          <AppStatusSnackbar
+            status={appStatus}
+            onClose={handleCloseStatus}
+          />
+        </Suspense>
+      )}
     </MuiThemeProvider>
   );
 }

@@ -8,6 +8,7 @@ import { useTodoContext } from "../context/TodoContext";
 import { usePageTitle } from "../hooks/usePageTitle";
 import { PriorityType } from "../types/todo.types";
 import { AddTodoForm } from "./AddTodoForm";
+import { FormPageSkeleton } from "./loading/LoadingSkeletons";
 
 interface TodoFormPageProps {
   mode: "add" | "edit";
@@ -21,7 +22,7 @@ export default function TodoFormPage({ mode, title }: TodoFormPageProps) {
 
   const navigate = useNavigate();
   const { todoId } = useParams<{ todoId: string }>();
-  const { todos, addTodo, editTodo } = useTodoContext();
+  const { todos, addTodo, editTodo, isFetching } = useTodoContext();
   const isEditing = mode === "edit";
   const todo = isEditing ? todos.find((item) => item.id === todoId) : undefined;
 
@@ -39,6 +40,35 @@ export default function TodoFormPage({ mode, title }: TodoFormPageProps) {
 
     goBackToTasks();
   };
+
+  if (isEditing && isFetching) {
+    return (
+      <Box
+        component="section"
+        aria-labelledby={headingId}
+        sx={{
+          mx: "auto",
+          width: "100%",
+          maxWidth: 560,
+          py: { xs: 2, md: 3 },
+        }}
+      >
+        <Typography
+          id={headingId}
+          component="h1"
+          variant="h4"
+          fontWeight={800}
+          sx={{ mb: 2 }}
+        >
+          {title}
+        </Typography>
+        <FormPageSkeleton
+          label="Ładowanie zadania do edycji"
+          showHeading={false}
+        />
+      </Box>
+    );
+  }
 
   if (isEditing && !todo) {
     return (

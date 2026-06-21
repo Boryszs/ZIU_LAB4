@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { useLocation, useOutlet } from "react-router-dom";
 import Box from "@mui/material/Box";
 import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
@@ -7,28 +7,28 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import AppHeader from "./AppHeader";
-import Sidebar, { type NavItem } from "./Sidebar";
+import type { NavItem } from "./Sidebar";
 import { pageVariants, reducedPageVariants } from "../../shared/animations/variants";
+import { PageSkeleton } from "../loading/LoadingSkeletons";
+
+const Sidebar = lazy(() => import("./Sidebar"));
 
 interface DashboardLayoutProps {
-  appTodo?: () => React.ReactNode;
   title?: string;
 }
 
 export interface DashboardOutletContext {
-  appTodo?: () => React.ReactNode;
   setPageTitle: (title: string) => void;
 }
 
 export const drawerWidth = 264;
 
 export default function DashboardLayout({
-  appTodo,
   title = "Dashboard",
 }: DashboardLayoutProps) {
   const location = useLocation();
   const [pageTitle, setPageTitle] = useState(title);
-  const outlet = useOutlet({ appTodo, setPageTitle });
+  const outlet = useOutlet({ setPageTitle });
   const shouldReduceMotion = useReducedMotion();
   const variants = shouldReduceMotion ? reducedPageVariants : pageVariants;
 
@@ -45,7 +45,9 @@ export default function DashboardLayout({
       aria-label="Układ pulpitu"
       sx={{ minHeight: "100vh", bgcolor: "background.default" }}
     >
-      <Sidebar navItems={navItems} />
+      <Suspense fallback={null}>
+        <Sidebar navItems={navItems} />
+      </Suspense>
       <Box
         id="main-content"
         component="main"
@@ -71,7 +73,7 @@ export default function DashboardLayout({
             exit="out"
             variants={variants}
           >
-            {outlet}
+            <Suspense fallback={<PageSkeleton />}>{outlet}</Suspense>
           </motion.div>
         </AnimatePresence>
       </Box>

@@ -1,9 +1,14 @@
-import { useRef, useState } from "react";
+import { lazy, Suspense, useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { ModalDialog } from "./components/ModalDialog";
 import { usePageTitle } from "./hooks/usePageTitle";
+
+const ModalDialog = lazy(() =>
+  import("./components/ModalDialog").then((module) => ({
+    default: module.ModalDialog,
+  })),
+);
 
 interface SettingsPageProps {
   title: string;
@@ -35,18 +40,23 @@ export default function SettingsPage({ title }: SettingsPageProps) {
         Otwórz okno modalne
       </Button>
 
-      <ModalDialog
-        id="settings-modal"
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        triggerRef={openModalButtonRef}
-        title="Przykładowy modal"
-      >
-        <Typography>
-          To jest treść okna modalnego. Fokus jest obsługiwany przez komponent
-          Dialog z MUI. Naciśnij Escape lub przycisk Zamknij, aby wyjść.
-        </Typography>
-      </ModalDialog>
+      {isModalOpen && (
+        <Suspense fallback={null}>
+          <ModalDialog
+            id="settings-modal"
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            triggerRef={openModalButtonRef}
+            title="Przykładowy modal"
+          >
+            <Typography>
+              To jest treść okna modalnego. Fokus jest obsługiwany przez
+              komponent Dialog z MUI. Naciśnij Escape lub przycisk Zamknij, aby
+              wyjść.
+            </Typography>
+          </ModalDialog>
+        </Suspense>
+      )}
     </Box>
   );
 }

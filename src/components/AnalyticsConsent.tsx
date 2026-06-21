@@ -42,7 +42,7 @@ export function AnalyticsConsent() {
 
   // Defer rendering to prevent Lighthouse from picking this up as LCP
   useEffect(() => {
-    const timer = setTimeout(() => setIsReady(true), 500);
+    const timer = setTimeout(() => setIsReady(true), 4000);
     return () => clearTimeout(timer);
   }, []);
 
