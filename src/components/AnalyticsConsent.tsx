@@ -42,7 +42,7 @@ export function AnalyticsConsent() {
 
   // Defer rendering to prevent Lighthouse from picking this up as LCP
   useEffect(() => {
-    const timer = setTimeout(() => setIsReady(true), 4000);
+    const timer = setTimeout(() => setIsReady(true), 500);
     return () => clearTimeout(timer);
   }, []);
 
@@ -143,8 +143,21 @@ export function AnalyticsConsent() {
             : "Analityka GA4 jest wyłączona, bo brakuje zmiennej REACT_APP_GA_MEASUREMENT_ID."}
         </Typography>
 
-        <Stack direction="row" spacing={1} flexWrap="wrap">
-          <Button type="button" variant="outlined" color="inherit" onClick={declineAnalytics}>
+        <Stack
+          direction="row"
+          spacing={1}
+          sx={{
+            flexShrink: 0,
+            width: { xs: "100%", sm: "auto" },
+          }}
+        >
+          <Button
+            type="button"
+            variant="outlined"
+            color="inherit"
+            onClick={declineAnalytics}
+            sx={{ flex: { xs: 1, sm: "0 0 auto" } }}
+          >
             Odrzuć
           </Button>
           <Button
@@ -152,6 +165,7 @@ export function AnalyticsConsent() {
             variant="contained"
             onClick={acceptAnalytics}
             disabled={!hasAnalyticsMeasurementId()}
+            sx={{ flex: { xs: 1, sm: "0 0 auto" } }}
           >
             Akceptuj
           </Button>

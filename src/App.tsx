@@ -16,6 +16,11 @@ const TasksPage = lazy(() => import("./pages/TasksPage"));
 const TodoFormPage = lazy(() => import("./components/TodoFormPage"));
 const SettingsPage = lazy(() => import("./SettingsPage"));
 
+const routerFuture = {
+  v7_startTransition: true,
+  v7_relativeSplatPath: true,
+};
+
 function App() {
   const handleSkipToMain = (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
@@ -34,7 +39,7 @@ function App() {
       >
         Przejdź do treści głównej
       </a>
-      <Router>
+      <Router future={routerFuture}>
         <ThemeProvider>
           <Suspense fallback={null}>
             <AnalyticsConsent />
