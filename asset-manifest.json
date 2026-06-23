@@ -1,9 +1,9 @@
 {
   "files": {
     "main.css": "/ZIU_LAB4/static/css/main.34579030.css",
-    "main.js": "/ZIU_LAB4/static/js/main.ec9487ce.js",
+    "main.js": "/ZIU_LAB4/static/js/main.0c872a97.js",
     "static/js/238.9dc7e16c.chunk.js": "/ZIU_LAB4/static/js/238.9dc7e16c.chunk.js",
-    "static/js/655.0963d183.chunk.js": "/ZIU_LAB4/static/js/655.0963d183.chunk.js",
+    "static/js/655.8958017b.chunk.js": "/ZIU_LAB4/static/js/655.8958017b.chunk.js",
     "static/js/811.d1453136.chunk.js": "/ZIU_LAB4/static/js/811.d1453136.chunk.js",
     "static/js/144.adda79d0.chunk.js": "/ZIU_LAB4/static/js/144.adda79d0.chunk.js",
     "static/js/169.abf1ccfe.chunk.js": "/ZIU_LAB4/static/js/169.abf1ccfe.chunk.js",
@@ -100,9 +100,9 @@
     "static/media/roboto-greek-ext-300-normal.woff": "/ZIU_LAB4/static/media/roboto-greek-ext-300-normal.7e59ad18b38575208130.woff",
     "index.html": "/ZIU_LAB4/index.html",
     "main.34579030.css.map": "/ZIU_LAB4/static/css/main.34579030.css.map",
-    "main.ec9487ce.js.map": "/ZIU_LAB4/static/js/main.ec9487ce.js.map",
+    "main.0c872a97.js.map": "/ZIU_LAB4/static/js/main.0c872a97.js.map",
     "238.9dc7e16c.chunk.js.map": "/ZIU_LAB4/static/js/238.9dc7e16c.chunk.js.map",
-    "655.0963d183.chunk.js.map": "/ZIU_LAB4/static/js/655.0963d183.chunk.js.map",
+    "655.8958017b.chunk.js.map": "/ZIU_LAB4/static/js/655.8958017b.chunk.js.map",
     "811.d1453136.chunk.js.map": "/ZIU_LAB4/static/js/811.d1453136.chunk.js.map",
     "144.adda79d0.chunk.js.map": "/ZIU_LAB4/static/js/144.adda79d0.chunk.js.map",
     "169.abf1ccfe.chunk.js.map": "/ZIU_LAB4/static/js/169.abf1ccfe.chunk.js.map",
@@ -128,6 +128,6 @@
   },
   "entrypoints": [
     "static/css/main.34579030.css",
-    "static/js/main.ec9487ce.js"
+    "static/js/main.0c872a97.js"
   ]
 }
