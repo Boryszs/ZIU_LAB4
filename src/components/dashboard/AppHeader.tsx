@@ -26,6 +26,9 @@ interface AppHeaderProps {
 export default function AppHeader({ navItems, title }: AppHeaderProps) {
   const { theme, setTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
+  const themeButtonLabel =
+    theme === "light" ? "Włącz tryb ciemny" : "Włącz tryb jasny";
+  const toggleTheme = () => setTheme(theme === "light" ? "dark" : "light");
 
   return (
     <>
@@ -78,10 +81,8 @@ export default function AppHeader({ navItems, title }: AppHeaderProps) {
             variant="outlined"
             color="inherit"
             startIcon={theme === "light" ? <DarkModeIcon /> : <LightModeIcon />}
-            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-            aria-label={
-              theme === "light" ? "Włącz tryb ciemny" : "Włącz tryb jasny"
-            }
+            onClick={toggleTheme}
+            aria-label={themeButtonLabel}
             aria-pressed={theme === "dark"}
             sx={{
               display: { xs: "none", sm: "inline-flex" },
@@ -91,6 +92,21 @@ export default function AppHeader({ navItems, title }: AppHeaderProps) {
           >
             {theme === "light" ? "Tryb ciemny" : "Tryb jasny"}
           </Button>
+
+          <IconButton
+            type="button"
+            color="inherit"
+            onClick={toggleTheme}
+            aria-label={themeButtonLabel}
+            aria-pressed={theme === "dark"}
+            sx={{
+              display: { xs: "inline-flex", sm: "none" },
+              border: 1,
+              borderColor: "divider",
+            }}
+          >
+            {theme === "light" ? <DarkModeIcon /> : <LightModeIcon />}
+          </IconButton>
 
           <IconButton
             type="button"

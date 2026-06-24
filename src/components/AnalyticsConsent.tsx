@@ -1,9 +1,5 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import Button from "@mui/material/Button";
-import Paper from "@mui/material/Paper";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
 import {
   hasAnalyticsMeasurementId,
   initAnalytics,
@@ -38,13 +34,6 @@ export function AnalyticsConsent() {
   const [consent, setConsent] = useState<AnalyticsConsentValue | null>(() =>
     readConsent(),
   );
-  const [isReady, setIsReady] = useState(false);
-
-  // Defer rendering to prevent Lighthouse from picking this up as LCP
-  useEffect(() => {
-    const timer = setTimeout(() => setIsReady(true), 500);
-    return () => clearTimeout(timer);
-  }, []);
 
   useEffect(() => {
     if (consent !== "accepted") return;
@@ -60,45 +49,28 @@ export function AnalyticsConsent() {
     }
   }, [consent, location.pathname, location.search]);
 
-  if (!isReady) {
-    return null;
-  }
-
   if (consent === "accepted") {
     return null;
   }
 
   if (consent === "declined") {
     return (
-      <Paper
-        component="aside"
+      <aside
         aria-label="Status analityki"
-        elevation={6}
-        sx={{
-          position: "fixed",
-          bottom: 16,
-          left: 16,
-          zIndex: 2000,
-          border: 1,
-          borderColor: "divider",
-          px: 1.5,
-          py: 1,
-        }}
+        className="fixed bottom-4 left-4 z-[2000] rounded-lg border border-app-border bg-app-surface px-3 py-2 text-sm text-app-text-secondary shadow-lg dark:border-appDark-border dark:bg-appDark-surface dark:text-appDark-text-primary"
       >
-        <Stack direction="row" spacing={1.5} alignItems="center">
-          <Typography variant="body2">Analityka wyłączona</Typography>
-          <Button
-            type="button"
-            variant="text"
-            onClick={() => {
-              clearConsent();
-              setConsent(null);
-            }}
-          >
-            Zmień
-          </Button>
-        </Stack>
-      </Paper>
+        <span>Analityka wylaczona</span>
+        <button
+          type="button"
+          onClick={() => {
+            clearConsent();
+            setConsent(null);
+          }}
+          className="ml-3 font-semibold text-link underline-offset-4 hover:underline"
+        >
+          Zmien
+        </button>
+      </aside>
     );
   }
 
@@ -113,64 +85,35 @@ export function AnalyticsConsent() {
   };
 
   return (
-    <Paper
-      component="section"
-      aria-label="Zgoda na analitykę"
-      elevation={8}
-      square
-      sx={{
-        position: "fixed",
-        insetInline: 0,
-        bottom: 0,
-        zIndex: 2000,
-        borderTop: 1,
-        borderColor: "divider",
-        bgcolor: "background.paper",
-        px: { xs: 2, sm: 3 },
-        py: 2,
-      }}
+    <section
+      aria-label="Zgoda na analityke"
+      className="fixed inset-x-0 bottom-0 z-[2000] border-t border-app-border bg-app-surface px-4 py-4 text-app-text-primary shadow-consent dark:border-appDark-border dark:bg-appDark-surface dark:text-appDark-text-primary"
     >
-      <Stack
-        direction={{ xs: "column", sm: "row" }}
-        spacing={2}
-        alignItems={{ xs: "stretch", sm: "center" }}
-        justifyContent="space-between"
-        sx={{ mx: "auto", width: "100%", maxWidth: 1024 }}
-      >
-        <Typography variant="body2">
+      <div className="mx-auto flex w-full max-w-5xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <p className="m-0 text-sm leading-6">
           {hasAnalyticsMeasurementId()
-            ? "Używamy opcjonalnej analityki GA4 tylko do statystyk UX: pageviews, kliknięcia CTA oraz statusy formularzy. Nie wysyłamy treści pól ani danych osobowych."
-            : "Analityka GA4 jest wyłączona, bo brakuje zmiennej REACT_APP_GA_MEASUREMENT_ID."}
-        </Typography>
+            ? "Uzywamy opcjonalnej analityki GA4 tylko do statystyk UX: pageviews, klikniecia CTA oraz statusy formularzy. Nie wysylamy tresci pol ani danych osobowych."
+            : "Analityka GA4 jest wylaczona, bo brakuje zmiennej REACT_APP_GA_MEASUREMENT_ID."}
+        </p>
 
-        <Stack
-          direction="row"
-          spacing={1}
-          sx={{
-            flexShrink: 0,
-            width: { xs: "100%", sm: "auto" },
-          }}
-        >
-          <Button
+        <div className="flex shrink-0 flex-wrap gap-2">
+          <button
             type="button"
-            variant="outlined"
-            color="inherit"
             onClick={declineAnalytics}
-            sx={{ flex: { xs: 1, sm: "0 0 auto" } }}
+            className="min-h-[40px] rounded-lg border border-app-border bg-app-surface px-4 py-2 text-sm font-semibold text-app-text-secondary transition hover:bg-app-hover focus:outline-none focus:ring-4 focus:ring-app-primaryLight dark:border-appDark-border dark:bg-appDark-surface dark:text-appDark-text-primary dark:hover:bg-appDark-hover"
           >
-            Odrzuć
-          </Button>
-          <Button
+            Odrzuc
+          </button>
+          <button
             type="button"
-            variant="contained"
             onClick={acceptAnalytics}
             disabled={!hasAnalyticsMeasurementId()}
-            sx={{ flex: { xs: 1, sm: "0 0 auto" } }}
+            className="min-h-[40px] rounded-lg bg-link px-4 py-2 text-sm font-semibold text-common-white transition hover:bg-link-hover focus:outline-none focus:ring-4 focus:ring-app-primaryLight"
           >
             Akceptuj
-          </Button>
-        </Stack>
-      </Stack>
-    </Paper>
+          </button>
+        </div>
+      </div>
+    </section>
   );
 }

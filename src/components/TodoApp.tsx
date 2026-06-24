@@ -6,7 +6,10 @@ import Fab from "@mui/material/Fab";
 import Typography from "@mui/material/Typography";
 import { trackCtaClick } from "../analytics";
 import { useTodoContext } from "../context/TodoContext";
-import { Filter as FilterType } from "../types/todo.types";
+import {
+  Filter as FilterType,
+  PriorityFilter,
+} from "../types/todo.types";
 import { FilterBar } from "./FilterBar";
 import { SearchResults } from "./SearchResults";
 import { TodoList } from "./TodoList";
@@ -25,6 +28,8 @@ const visuallyHidden = {
 
 export default function TodoApp() {
   const [filter, setFilter] = useState<FilterType>("all");
+  const [priorityFilter, setPriorityFilter] =
+    useState<PriorityFilter>("all");
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   const { todos, toggleTodo, deleteTodo } = useTodoContext();
@@ -34,10 +39,18 @@ export default function TodoApp() {
   };
 
   const filteredTodos = useMemo(() => {
-    return todos.filter((todo) =>
-      todo.title.toLowerCase().includes(searchTerm.toLowerCase()),
-    );
-  }, [todos, searchTerm]);
+    const normalizedSearchTerm = searchTerm.trim().toLowerCase();
+
+    return todos.filter((todo) => {
+      const matchesSearch = todo.title
+        .toLowerCase()
+        .includes(normalizedSearchTerm);
+      const matchesPriority =
+        priorityFilter === "all" || todo.priority === priorityFilter;
+
+      return matchesSearch && matchesPriority;
+    });
+  }, [todos, searchTerm, priorityFilter]);
 
   const activeCount = useMemo(() => {
     return todos.filter((todo) => !todo.completed).length;
@@ -82,7 +95,12 @@ export default function TodoApp() {
       </Box>
 
       <Box component="section" aria-labelledby="todo-view-heading">
-        <FilterBar activeFilter={filter} onFilterChange={setFilter} />
+        <FilterBar
+          activeFilter={filter}
+          onFilterChange={setFilter}
+          priorityFilter={priorityFilter}
+          onPriorityFilterChange={setPriorityFilter}
+        />
         
         <TodoList
           todos={filteredTodos}

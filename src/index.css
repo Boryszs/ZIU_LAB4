@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
   margin: 0;
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
@@ -33,7 +37,7 @@ code {
     [role="checkbox"],
     [tabindex]:not([tabindex="-1"])
   ):focus-visible {
-  outline: 3px solid #01579b !important;
+  outline: 3px solid theme("colors.app.primary") !important;
   outline-offset: 3px;
 }
 
@@ -41,8 +45,8 @@ code {
   position: absolute;
   top: -40px;
   left: 0;
-  background: #01579b;
-  color: white;
+  background: theme("colors.app.primary");
+  color: theme("colors.common.white");
   padding: 8px 16px;
   z-index: 9999;
   font-weight: bold;

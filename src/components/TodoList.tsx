@@ -12,6 +12,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { motion, useReducedMotion } from "framer-motion";
 import { Filter, Todo } from "../types/todo.types";
 import { listVariants, itemVariants, reducedItemVariants } from "../shared/animations/variants";
+import { appColors } from "../theme/colors";
 
 interface TodoListProps {
   todos: Todo[];
@@ -27,11 +28,7 @@ const priorityLabel = {
   high: "Wysoki",
 } as const;
 
-const priorityColor = {
-  low: { color: "#1E293B", borderColor: "#64748B", bgcolor: "#E2E8F0" },
-  medium: { color: "#6B3A00", borderColor: "#B45309", bgcolor: "#F6D7A8" },
-  high: { color: "#7F1D1D", borderColor: "#B91C1C", bgcolor: "#F4B4B4" },
-} as const;
+const priorityColor = appColors.priority;
 
 function formatTodoDate(value: string) {
   const timestamp = Number(value);
@@ -58,6 +55,7 @@ export function TodoList({
 }: TodoListProps) {
   const shouldReduceMotion = useReducedMotion();
   const currentItemVariants = shouldReduceMotion ? reducedItemVariants : itemVariants;
+  const infoAlert = appColors.alert.info;
 
   const filteredTodos = useMemo(() => {
     if (filter === "active") return todos.filter((todo) => !todo.completed);
@@ -71,9 +69,34 @@ export function TodoList({
         severity="info"
         role="status"
         aria-live="polite"
-        sx={{ mx: "auto", mt: 4, maxWidth: 700 }}
+        sx={(theme) => ({
+          mx: "auto",
+          mt: 4,
+          width: "100%",
+          maxWidth: 700,
+          alignItems: "center",
+          fontSize: 12,
+          border: "1px solid",
+          borderColor: infoAlert[theme.palette.mode].border,
+          borderRadius: 1,
+          bgcolor: infoAlert[theme.palette.mode].background,
+          color: infoAlert[theme.palette.mode].text,
+          boxShadow:
+            theme.palette.mode === "dark"
+              ? appColors.shadow.todoInfoDark
+              : appColors.shadow.todoInfoLight,
+          px: { xs: 2, sm: 3 },
+          "& .MuiAlert-icon": {
+            color: infoAlert[theme.palette.mode].icon,
+          },
+          "& .MuiAlert-message": {
+            width: "100%",
+          },
+        })}
       >
-        Brak zadań. Dodaj pierwsze!
+        <Typography component="p" fontWeight={700}>
+          Brak zadań
+        </Typography>
       </Alert>
     );
   }

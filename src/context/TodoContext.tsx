@@ -13,6 +13,7 @@ import {
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@mui/material/styles';
 import { todoReducer } from '../reducers/todoReducer';
+import { appColors, getModeColors } from '../theme/colors';
 import { AppStatus, PriorityType, Todo } from '../types/todo.types';
 
 const AppStatusSnackbar = lazy(() => import('../components/AppStatusSnackbar'));
@@ -93,23 +94,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   const muiTheme = useMemo(
     () => {
-      const isDarkMode = theme === 'dark';
-      const colors = {
-        primary: isDarkMode ? '#4EA3E8' : '#01579B',
-        primaryDark: isDarkMode ? '#B9DCF4' : '#003F73',
-        primaryLight: isDarkMode ? '#0B2A44' : '#B9DCF4',
-        background: isDarkMode ? '#020617' : '#EAF4FB',
-        surface: isDarkMode ? '#0B1220' : '#FFFFFF',
-        textPrimary: isDarkMode ? '#F8FAFC' : '#0F172A',
-        textSecondary: isDarkMode ? '#D7E3EF' : '#334155',
-        border: isDarkMode ? '#3E5870' : '#9AB6C9',
-        borderStrong: isDarkMode ? '#6E8AA3' : '#6F91A8',
-        error: isDarkMode ? '#F87171' : '#B42318',
-        success: isDarkMode ? '#5EEAD4' : '#00695C',
-        warning: isDarkMode ? '#FBBF24' : '#8A5A00',
-        hover: isDarkMode ? 'rgba(78, 163, 232, 0.16)' : 'rgba(1, 87, 155, 0.10)',
-        selected: isDarkMode ? 'rgba(78, 163, 232, 0.24)' : 'rgba(1, 87, 155, 0.16)',
-      };
+      const colors = getModeColors(theme);
 
       return createTheme({
         palette: {
@@ -119,7 +104,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
             main: colors.primary,
             dark: colors.primaryDark,
             light: colors.primaryLight,
-            contrastText: '#FFFFFF',
+            contrastText: appColors.common.white,
           },
           background: {
             default: colors.background,
@@ -142,10 +127,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
           action: {
             hover: colors.hover,
             selected: colors.selected,
-            disabled: isDarkMode ? 'rgba(215, 227, 239, 0.42)' : 'rgba(51, 65, 85, 0.42)',
-            disabledBackground: isDarkMode
-              ? 'rgba(215, 227, 239, 0.14)'
-              : 'rgba(51, 65, 85, 0.14)',
+            disabled: appColors.action.disabled[theme],
+            disabledBackground: appColors.action.disabledBackground[theme],
           },
         },
         shape: {
@@ -221,9 +204,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
                 color: colors.textPrimary,
                 '&.Mui-selected': {
                   backgroundColor: colors.primary,
-                  color: '#FFFFFF',
+                  color: appColors.common.white,
                   '&:hover': {
-                    backgroundColor: isDarkMode ? '#2F86CC' : '#003F73',
+                    backgroundColor: appColors.interaction.selectedButtonHover[theme],
                   },
                 },
               },

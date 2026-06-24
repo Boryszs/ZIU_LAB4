@@ -8,6 +8,7 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { FullFormData } from "../schemas/schemas";
+import { appColors } from "../theme/colors";
 
 const getPasswordStrength = (password: string) => {
   let score = 0;
@@ -19,9 +20,9 @@ const getPasswordStrength = (password: string) => {
   if (/[0-9]/.test(password)) score++;
   if (/[^A-Za-z0-9]/.test(password)) score++;
 
-  if (score <= 2) return { label: "Słabe", value: 25, color: "#C62828" };
-  if (score <= 4) return { label: "Średnie", value: 66, color: "#8A5A00" };
-  return { label: "Silne", value: 100, color: "#2E7D32" };
+  if (score <= 2) return { label: "Słabe", value: 25, color: appColors.passwordStrength.weak };
+  if (score <= 4) return { label: "Średnie", value: 66, color: appColors.passwordStrength.medium };
+  return { label: "Silne", value: 100, color: appColors.passwordStrength.strong };
 };
 
 type Props = {

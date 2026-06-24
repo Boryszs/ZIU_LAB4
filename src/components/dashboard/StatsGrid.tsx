@@ -4,6 +4,7 @@ import CircleOutlinedIcon from "@mui/icons-material/CircleOutlined";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import { useTodoContext } from "../../context/TodoContext";
 import { usePageTitle } from "../../hooks/usePageTitle";
+import { appColors } from "../../theme/colors";
 import StatsCard from "./StatsCard";
 
 interface StatsGridProps {
@@ -32,22 +33,22 @@ export default function StatsGrid({ title }: StatsGridProps) {
         title="Wszystkie zadania"
         value={total}
         icon={FormatListBulletedIcon}
-        color="#014F86"
-        bgColor="#C7E0F4"
+        color={appColors.dashboard.total.color}
+        bgColor={appColors.dashboard.total.bgColor}
       />
       <StatsCard
         title="Ukończone"
         value={completed}
         icon={CheckCircleIcon}
-        color="#005C4B"
-        bgColor="#BFE7D7"
+        color={appColors.dashboard.completed.color}
+        bgColor={appColors.dashboard.completed.bgColor}
       />
       <StatsCard
         title="Oczekujące"
         value={pending}
         icon={CircleOutlinedIcon}
-        color="#7A3E00"
-        bgColor="#F1CF9D"
+        color={appColors.dashboard.pending.color}
+        bgColor={appColors.dashboard.pending.bgColor}
       />
     </Box>
   );
