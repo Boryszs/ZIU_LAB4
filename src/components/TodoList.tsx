@@ -9,6 +9,7 @@ import Typography from "@mui/material/Typography";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { motion, useReducedMotion } from "framer-motion";
+import { priorityLabels } from "../constants/priorityOptions";
 import { Filter, Todo } from "../types/todo.types";
 import { listVariants, itemVariants, reducedItemVariants } from "../shared/animations/variants";
 import { appColors } from "../theme/colors";
@@ -21,12 +22,6 @@ interface TodoListProps {
   onDelete: (id: string) => void;
   onStartEdit: (id: string) => void;
 }
-
-const priorityLabel = {
-  low: "Niski",
-  medium: "Średni",
-  high: "Wysoki",
-} as const;
 
 const priorityColor = appColors.priority;
 
@@ -185,7 +180,7 @@ export function TodoList({
               </Box>
 
               <Chip
-                label={priorityLabel[todo.priority]}
+                label={priorityLabels[todo.priority]}
                 size="small"
                 variant="outlined"
                 sx={{

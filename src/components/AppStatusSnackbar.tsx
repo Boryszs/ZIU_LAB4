@@ -1,7 +1,7 @@
 import Alert from "@mui/material/Alert";
 import CircularProgress from "@mui/material/CircularProgress";
 import Snackbar from "@mui/material/Snackbar";
-import type { AppStatus } from "../types/todo.types";
+import type { AppStatus } from "../types/appStatus.types";
 
 interface AppStatusSnackbarProps {
   status: AppStatus;

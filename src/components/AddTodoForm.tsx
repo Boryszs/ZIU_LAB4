@@ -11,6 +11,7 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { trackFormAbandonment, trackFormSubmit } from "../analytics";
+import { priorityOptions } from "../constants/priorityOptions";
 import { PriorityType, Todo } from "../types/todo.types";
 import { AppButton } from "./common/AppButton";
 
@@ -171,9 +172,11 @@ export function AddTodoForm({
                 setPriority(event.target.value as PriorityType);
               }}
             >
-              <MenuItem value="low">Niski</MenuItem>
-              <MenuItem value="medium">Średni</MenuItem>
-              <MenuItem value="high">Wysoki</MenuItem>
+              {priorityOptions.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
 

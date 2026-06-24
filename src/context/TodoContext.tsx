@@ -13,14 +13,16 @@ import {
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@mui/material/styles';
 import { todoReducer } from '../reducers/todoReducer';
+import type { AppThemeMode } from '../theme/colors';
 import { appColors, getModeColors } from '../theme/colors';
-import { AppStatus, PriorityType, Todo } from '../types/todo.types';
+import { AppStatus } from '../types/appStatus.types';
+import { PriorityType, Todo } from '../types/todo.types';
 
 const AppStatusSnackbar = lazy(() => import('../components/AppStatusSnackbar'));
 
 interface ThemeContextType {
-  theme: 'light' | 'dark';
-  setTheme: (t: 'light' | 'dark') => void;
+  theme: AppThemeMode;
+  setTheme: (t: AppThemeMode) => void;
   todos: Todo[];
   isFetching: boolean;
   appStatus: AppStatus;
@@ -41,7 +43,7 @@ const idleStatus: AppStatus = { type: 'idle', message: '' };
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+  const [theme, setTheme] = useState<AppThemeMode>(() => {
     const savedTheme = window.localStorage.getItem('theme');
 
     if (savedTheme === 'light' || savedTheme === 'dark') {
