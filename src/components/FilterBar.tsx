@@ -1,8 +1,5 @@
 import { useId, useState } from "react";
-import {
-  Filter as FilterType,
-  PriorityFilter,
-} from "../types/todo.types";
+import { Filter as FilterType, PriorityFilter } from "../types/todo.types";
 import { AppButton } from "./common/AppButton";
 
 interface FilterBarProps {
@@ -114,7 +111,7 @@ export function FilterBar({
               onChange={(event) =>
                 onPriorityFilterChange(event.target.value as PriorityFilter)
               }
-              className="mt-1 h-10 w-full rounded border border-app-borderStrong bg-app-hover px-3 font-normal text-control-text focus:outline-none focus:ring-4 focus:ring-app-primaryLight dark:border-appDark-borderStrong dark:bg-appDark-hover dark:text-appDark-text-primary"
+              className="mt-1 h-10 w-full rounded border border-app-borderStrong bg-app-hover px-3 font-normal text-control-text [color-scheme:light] [&>option]:bg-app-surface [&>option]:text-app-text-primary focus:outline-none focus:ring-4 focus:ring-app-primaryLight dark:border-appDark-borderStrong dark:bg-appDark-background dark:text-appDark-text-primary dark:[color-scheme:dark] dark:[&>option]:bg-appDark-background dark:[&>option]:text-appDark-text-primary"
             >
               <option value="all">Wszystkie</option>
               <option value="high">Wysoki</option>
