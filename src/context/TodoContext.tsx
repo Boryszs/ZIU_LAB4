@@ -16,7 +16,8 @@ import { todoReducer } from '../reducers/todoReducer';
 import type { AppThemeMode } from '../theme/colors';
 import { appColors, getModeColors } from '../theme/colors';
 import { AppStatus } from '../types/appStatus.types';
-import { PriorityType, Todo } from '../types/todo.types';
+import { PriorityType } from '../types/todo.types';
+import type { Todo } from '../types/todo.types';
 
 const AppStatusSnackbar = lazy(() => import('../components/AppStatusSnackbar'));
 
@@ -27,15 +28,15 @@ interface ThemeContextType {
   isFetching: boolean;
   appStatus: AppStatus;
   addTodo: (title: string, priority: PriorityType) => Promise<void>;
-  toggleTodo: (id: string) => Promise<void>;
-  deleteTodo: (id: string) => Promise<void>;
-  editTodo: (id: string, title: string, priority: PriorityType) => Promise<void>;
+  toggleTodo: (id: number) => Promise<void>;
+  deleteTodo: (id: number) => Promise<void>;
+  editTodo: (id: number, title: string, priority: PriorityType) => Promise<void>;
 }
 
 const initialTodos: Todo[] = [
-  { id: '1', title: 'Nauczyc sie Reacta', completed: false, priority: 'medium', date: '12-12-2026' },
-  { id: '2', title: 'Zrobic zakupy', completed: true, priority: 'low', date: '11-12-2026' },
-  { id: '3', title: 'Napisac raport', completed: false, priority: 'high', date: '10-12-2026' },
+  { id: 1, title: 'Nauczyc sie Reacta', completed: false, priority: PriorityType.Medium, date: '12-12-2026' },
+  { id: 2, title: 'Zrobic zakupy', completed: true, priority: PriorityType.Low, date: '11-12-2026' },
+  { id: 3, title: 'Napisac raport', completed: false, priority: PriorityType.High, date: '10-12-2026' },
 ];
 
 const idleStatus: AppStatus = { type: 'idle', message: '' };

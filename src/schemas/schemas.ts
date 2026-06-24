@@ -54,7 +54,7 @@ export const step3Schema = z.object({
 export type Step3Data = z.infer<typeof step3Schema>;
 
 export const fullSchema = step1Schema
-  .merge(step2Schema)
-  .merge(step3Schema);
+  .safeExtend(step2Schema.shape)
+  .safeExtend(step3Schema.shape);
 
-  export type FullFormData = z.infer<typeof fullSchema>;
+export type FullFormData = z.infer<typeof fullSchema>;

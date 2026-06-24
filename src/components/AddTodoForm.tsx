@@ -8,7 +8,8 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { trackFormAbandonment, trackFormSubmit } from "../analytics";
 import { priorityOptions } from "../constants/priorityOptions";
-import { PriorityType, Todo } from "../types/todo.types";
+import { PriorityType } from "../types/todo.types";
+import type { Todo } from "../types/todo.types";
 import { AppButton } from "./common/AppButton";
 import { AppSelectField } from "./common/AppSelectField";
 
@@ -29,7 +30,7 @@ export function AddTodoForm({
 }: AddTodoFormProps) {
   const [inputValue, setInputValue] = useState(initialData?.title || "");
   const [priority, setPriority] = useState<PriorityType>(
-    initialData?.priority || "medium",
+    initialData?.priority || PriorityType.Medium,
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const hasInteractedRef = useRef(false);
@@ -61,7 +62,7 @@ export function AddTodoForm({
 
   useEffect(() => {
     setInputValue(initialData?.title || "");
-    setPriority(initialData?.priority || "medium");
+    setPriority(initialData?.priority || PriorityType.Medium);
     setTitleTouched(false);
   }, [initialData]);
 

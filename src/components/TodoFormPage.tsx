@@ -24,7 +24,10 @@ export default function TodoFormPage({ mode, title }: TodoFormPageProps) {
   const { todoId } = useParams<{ todoId: string }>();
   const { todos, addTodo, editTodo, isFetching } = useTodoContext();
   const isEditing = mode === "edit";
-  const todo = isEditing ? todos.find((item) => item.id === todoId) : undefined;
+  const parsedTodoId = todoId ? Number(todoId) : null;
+  const todo = isEditing
+    ? todos.find((item) => item.id === parsedTodoId)
+    : undefined;
 
   const goBackToTasks = () => {
     navigate("/tasks");
@@ -32,8 +35,8 @@ export default function TodoFormPage({ mode, title }: TodoFormPageProps) {
 
   const handleSave = async (title: string, priority: PriorityType) => {
     if (isEditing) {
-      if (!todoId) return;
-      await editTodo(todoId, title, priority);
+      if (parsedTodoId === null || Number.isNaN(parsedTodoId)) return;
+      await editTodo(parsedTodoId, title, priority);
     } else {
       await addTodo(title, priority);
     }

@@ -1,8 +1,8 @@
 import type { SelectOption } from "../../types/select.types";
-import type { Filter } from "../../types/todo.types";
+import { Filter } from "../../types/todo.types";
 
 export const statusFilterOptions: readonly SelectOption<Filter>[] = [
-  { value: "all", label: "Wszystkie" },
-  { value: "active", label: "Aktywne" },
-  { value: "completed", label: "Ukończone" },
+  { value: Filter.All, label: "Wszystkie" },
+  { value: Filter.Active, label: "Aktywne" },
+  { value: Filter.Completed, label: "Ukończone" },
 ];

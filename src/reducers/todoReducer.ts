@@ -13,7 +13,13 @@ function formatDate(date: Date) {
 export function todoReducer(state: Todo[], action: TodoAction): Todo[] {
   switch (action.type) {
     case 'ADD':
-      return [{ id: crypto.randomUUID(), title: action.payload.title, completed: false, priority: action.payload.priority, date: formatDate(new Date())}, ...state];
+      return [{
+        id: state.length > 0 ? Math.max(...state.map((todo) => todo.id)) + 1 : 1,
+        title: action.payload.title,
+        completed: false,
+        priority: action.payload.priority,
+        date: formatDate(new Date()),
+      }, ...state];
     case 'TOGGLE':
       return state.map(t => t.id === action.payload ? { ...t, completed: !t.completed } : t);
     case 'DELETE':

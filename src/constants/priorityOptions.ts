@@ -1,21 +1,21 @@
 import type { SelectOption } from "../types/select.types";
-import type { PriorityFilter, PriorityType } from "../types/todo.types";
+import { PriorityFilter, PriorityType } from "../types/todo.types";
 
 export const priorityLabels: Record<PriorityType, string> = {
-  low: "Niski",
-  medium: "Średni",
-  high: "Wysoki",
+  [PriorityType.Low]: "Niski",
+  [PriorityType.Medium]: "Średni",
+  [PriorityType.High]: "Wysoki",
 };
 
 export const priorityOptions: readonly SelectOption<PriorityType>[] = [
-  { value: "low", label: priorityLabels.low },
-  { value: "medium", label: priorityLabels.medium },
-  { value: "high", label: priorityLabels.high },
+  { value: PriorityType.Low, label: priorityLabels[PriorityType.Low] },
+  { value: PriorityType.Medium, label: priorityLabels[PriorityType.Medium] },
+  { value: PriorityType.High, label: priorityLabels[PriorityType.High] },
 ];
 
 export const priorityFilterOptions: readonly SelectOption<PriorityFilter>[] = [
-  { value: "all", label: "Wszystkie" },
-  { value: "high", label: priorityLabels.high },
-  { value: "medium", label: priorityLabels.medium },
-  { value: "low", label: priorityLabels.low },
+  { value: PriorityFilter.All, label: "Wszystkie" },
+  { value: PriorityFilter.High, label: priorityLabels[PriorityType.High] },
+  { value: PriorityFilter.Medium, label: priorityLabels[PriorityType.Medium] },
+  { value: PriorityFilter.Low, label: priorityLabels[PriorityType.Low] },
 ];

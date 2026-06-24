@@ -10,7 +10,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { motion, useReducedMotion } from "framer-motion";
 import { priorityLabels } from "../constants/priorityOptions";
-import { Filter, Todo } from "../types/todo.types";
+import { Filter } from "../types/todo.types";
+import type { Todo } from "../types/todo.types";
 import { listVariants, itemVariants, reducedItemVariants } from "../shared/animations/variants";
 import { appColors } from "../theme/colors";
 import { AppButton } from "./common/AppButton";
@@ -18,9 +19,9 @@ import { AppButton } from "./common/AppButton";
 interface TodoListProps {
   todos: Todo[];
   filter: Filter;
-  onToggle: (id: string) => void;
-  onDelete: (id: string) => void;
-  onStartEdit: (id: string) => void;
+  onToggle: (id: number) => void;
+  onDelete: (id: number) => void;
+  onStartEdit: (id: number) => void;
 }
 
 const priorityColor = appColors.priority;
@@ -53,8 +54,8 @@ export function TodoList({
   const infoAlert = appColors.alert.info;
 
   const filteredTodos = useMemo(() => {
-    if (filter === "active") return todos.filter((todo) => !todo.completed);
-    if (filter === "completed") return todos.filter((todo) => todo.completed);
+    if (filter === Filter.Active) return todos.filter((todo) => !todo.completed);
+    if (filter === Filter.Completed) return todos.filter((todo) => todo.completed);
     return todos;
   }, [todos, filter]);
 

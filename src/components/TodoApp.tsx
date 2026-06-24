@@ -8,6 +8,7 @@ import { trackCtaClick } from "../analytics";
 import { useTodoContext } from "../context/TodoContext";
 import {
   Filter as FilterType,
+  PriorityType,
   PriorityFilter,
 } from "../types/todo.types";
 import { FilterBar } from "./FilterBar";
@@ -27,14 +28,14 @@ const visuallyHidden = {
 };
 
 export default function TodoApp() {
-  const [filter, setFilter] = useState<FilterType>("all");
+  const [filter, setFilter] = useState<FilterType>(FilterType.All);
   const [priorityFilter, setPriorityFilter] =
-    useState<PriorityFilter>("all");
+    useState<PriorityFilter>(PriorityFilter.All);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   const { todos, toggleTodo, deleteTodo } = useTodoContext();
 
-  const handleStartEdit = (id: string) => {
+  const handleStartEdit = (id: number) => {
     navigate(`/tasks/${id}/edit`);
   };
 
@@ -45,8 +46,18 @@ export default function TodoApp() {
       const matchesSearch = todo.title
         .toLowerCase()
         .includes(normalizedSearchTerm);
-      const matchesPriority =
-        priorityFilter === "all" || todo.priority === priorityFilter;
+      const matchesPriority = (() => {
+        switch (priorityFilter) {
+          case PriorityFilter.All:
+            return true;
+          case PriorityFilter.Low:
+            return todo.priority === PriorityType.Low;
+          case PriorityFilter.Medium:
+            return todo.priority === PriorityType.Medium;
+          case PriorityFilter.High:
+            return todo.priority === PriorityType.High;
+        }
+      })();
 
       return matchesSearch && matchesPriority;
     });
