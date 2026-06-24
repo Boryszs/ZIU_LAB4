@@ -3,10 +3,6 @@ import AddIcon from "@mui/icons-material/Add";
 import CancelIcon from "@mui/icons-material/Cancel";
 import SaveIcon from "@mui/icons-material/Save";
 import Box from "@mui/material/Box";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
@@ -14,6 +10,7 @@ import { trackFormAbandonment, trackFormSubmit } from "../analytics";
 import { priorityOptions } from "../constants/priorityOptions";
 import { PriorityType, Todo } from "../types/todo.types";
 import { AppButton } from "./common/AppButton";
+import { AppSelectField } from "./common/AppSelectField";
 
 interface AddTodoFormProps {
   onSave: (title: string, priority: PriorityType) => Promise<void>;
@@ -160,25 +157,17 @@ export function AddTodoForm({
             fullWidth
           />
 
-          <FormControl fullWidth disabled={isSubmitting}>
-            <InputLabel id="todo-priority-label">Priorytet</InputLabel>
-            <Select
-              labelId="todo-priority-label"
-              id="todo-priority"
-              value={priority}
-              label="Priorytet"
-              onChange={(event) => {
-                hasInteractedRef.current = true;
-                setPriority(event.target.value as PriorityType);
-              }}
-            >
-              {priorityOptions.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <AppSelectField
+            id="todo-priority"
+            disabled={isSubmitting}
+            label="Priorytet"
+            options={priorityOptions}
+            value={priority}
+            onChange={(event) => {
+              hasInteractedRef.current = true;
+              setPriority(event.target.value as PriorityType);
+            }}
+          />
 
           <Stack
             direction={{ xs: "column", sm: "row" }}
