@@ -2,8 +2,6 @@ import { lazy, Suspense, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
@@ -11,6 +9,7 @@ import LightModeIcon from "@mui/icons-material/LightMode";
 import MenuIcon from "@mui/icons-material/Menu";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { useTheme } from "../../context/TodoContext";
+import { AppButton } from "../common/AppButton";
 import type { NavItem } from "./Sidebar";
 import { drawerWidth } from "./DashboardLayout";
 
@@ -45,18 +44,19 @@ export default function AppHeader({ navItems, title }: AppHeaderProps) {
         }}
       >
         <Toolbar sx={{ gap: 2, px: { xs: 2, sm: 3 } }}>
-          <IconButton
+          <AppButton
             type="button"
-            edge="start"
-            color="inherit"
+            iconOnly
+            tone="neutral"
+            variant="text"
             onClick={() => setIsOpen(true)}
             aria-controls="mobile-menu"
             aria-label="Otwórz menu"
             aria-expanded={isOpen}
-            sx={{ display: { xs: "inline-flex", md: "none" } }}
+            sx={{ display: { xs: "inline-flex", md: "none" }, ml: -1 }}
           >
             <MenuIcon />
-          </IconButton>
+          </AppButton>
 
           <Box sx={{ minWidth: 0, flex: 1 }}>
             <Typography
@@ -76,10 +76,11 @@ export default function AppHeader({ navItems, title }: AppHeaderProps) {
             </Typography>
           </Box>
 
-          <Button
+          <AppButton
             type="button"
             variant="outlined"
-            color="inherit"
+            tone="neutral"
+            radius="pill"
             startIcon={theme === "light" ? <DarkModeIcon /> : <LightModeIcon />}
             onClick={toggleTheme}
             aria-label={themeButtonLabel}
@@ -87,15 +88,16 @@ export default function AppHeader({ navItems, title }: AppHeaderProps) {
             sx={{
               display: { xs: "none", sm: "inline-flex" },
               minWidth: 132,
-              borderRadius: 999,
             }}
           >
             {theme === "light" ? "Tryb ciemny" : "Tryb jasny"}
-          </Button>
+          </AppButton>
 
-          <IconButton
+          <AppButton
             type="button"
-            color="inherit"
+            iconOnly
+            tone="neutral"
+            variant="text"
             onClick={toggleTheme}
             aria-label={themeButtonLabel}
             aria-pressed={theme === "dark"}
@@ -106,18 +108,20 @@ export default function AppHeader({ navItems, title }: AppHeaderProps) {
             }}
           >
             {theme === "light" ? <DarkModeIcon /> : <LightModeIcon />}
-          </IconButton>
+          </AppButton>
 
-          <IconButton
+          <AppButton
             type="button"
-            color="inherit"
+            iconOnly
+            tone="neutral"
+            variant="text"
             aria-label="Powiadomienia"
             sx={{ display: { xs: "none", sm: "inline-flex" } }}
           >
             <Badge variant="dot" color="error">
               <NotificationsIcon />
             </Badge>
-          </IconButton>
+          </AppButton>
         </Toolbar>
       </AppBar>
 

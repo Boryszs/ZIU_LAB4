@@ -3,6 +3,7 @@ import {
   Filter as FilterType,
   PriorityFilter,
 } from "../types/todo.types";
+import { AppButton } from "./common/AppButton";
 
 interface FilterBarProps {
   activeFilter: FilterType;
@@ -33,13 +34,17 @@ export function FilterBar({
       className="mx-auto my-5 flex w-full max-w-[700px] flex-col items-center gap-2.5"
     >
       <div className="flex w-full justify-end">
-        <button
+        <AppButton
           type="button"
           aria-label="Pokaż lub ukryj filtry zadań"
           aria-controls={filtersId}
           aria-expanded={showFilters}
           onClick={() => setShowFilters((prev) => !prev)}
-          className="flex h-9 w-9 items-center justify-center rounded border border-app-border bg-app-hover text-app-text-secondary transition hover:bg-app-selected focus:outline-none focus:ring-4 focus:ring-app-primaryLight dark:border-appDark-border dark:bg-appDark-hover dark:text-appDark-text-primary"
+          compact
+          iconOnly
+          tone="neutral"
+          variant="soft"
+          sx={{ border: 1, borderColor: "divider" }}
         >
           <svg
             className="h-4 w-4"
@@ -54,7 +59,7 @@ export function FilterBar({
           >
             <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
           </svg>
-        </button>
+        </AppButton>
       </div>
 
       {showFilters && (
@@ -75,20 +80,25 @@ export function FilterBar({
                 const isActive = activeFilter === filter;
 
                 return (
-                  <button
+                  <AppButton
                     type="button"
                     aria-label={`Pokaż ${filterNames[filter].toLowerCase()} zadania`}
                     aria-pressed={isActive}
                     key={filter}
                     onClick={() => onFilterChange(filter)}
-                    className={`h-10 min-w-0 rounded border px-2 text-sm transition focus:outline-none focus:ring-4 sm:px-3 ${
-                      isActive
-                        ? "border-control-active bg-control-active text-common-white focus:ring-app-primaryLight"
-                        : "border-app-borderStrong bg-app-hover text-control-text hover:bg-app-selected focus:ring-app-primaryLight dark:border-appDark-borderStrong dark:bg-appDark-hover dark:text-appDark-text-primary"
-                    }`}
+                    compact
+                    fullWidth
+                    size="small"
+                    tone={isActive ? "primary" : "neutral"}
+                    variant={isActive ? "contained" : "outlined"}
+                    sx={{
+                      height: 40,
+                      minWidth: 0,
+                      px: { xs: 1, sm: 1.5 },
+                    }}
                   >
                     {filterNames[filter]}
-                  </button>
+                  </AppButton>
                 );
               })}
             </div>

@@ -1,13 +1,13 @@
 import { useNavigate, useParams } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { useTodoContext } from "../context/TodoContext";
 import { usePageTitle } from "../hooks/usePageTitle";
 import { PriorityType } from "../types/todo.types";
 import { AddTodoForm } from "./AddTodoForm";
+import { AppButton } from "./common/AppButton";
 import { FormPageSkeleton } from "./loading/LoadingSkeletons";
 
 interface TodoFormPageProps {
@@ -94,9 +94,9 @@ export default function TodoFormPage({ mode, title }: TodoFormPageProps) {
         <Alert severity="error" role="alert" sx={{ mb: 2 }}>
           Nie znaleziono zadania do edycji.
         </Alert>
-        <Button type="button" variant="contained" onClick={goBackToTasks}>
+        <AppButton type="button" variant="contained" onClick={goBackToTasks}>
           Wróć do listy
-        </Button>
+        </AppButton>
       </Box>
     );
   }

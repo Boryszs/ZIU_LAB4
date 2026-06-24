@@ -1,7 +1,7 @@
 import { lazy, Suspense, useRef, useState } from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import { AppButton } from "./components/common/AppButton";
 import { usePageTitle } from "./hooks/usePageTitle";
 
 const ModalDialog = lazy(() =>
@@ -28,7 +28,7 @@ export default function SettingsPage({ title }: SettingsPageProps) {
       <Typography color="text.secondary" sx={{ mb: 3 }}>
         Strona ustawień jest w budowie.
       </Typography>
-      <Button
+      <AppButton
         ref={openModalButtonRef}
         type="button"
         variant="contained"
@@ -38,7 +38,7 @@ export default function SettingsPage({ title }: SettingsPageProps) {
         onClick={() => setIsModalOpen(true)}
       >
         Otwórz okno modalne
-      </Button>
+      </AppButton>
 
       {isModalOpen && (
         <Suspense fallback={null}>

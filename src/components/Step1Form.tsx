@@ -1,7 +1,6 @@
 import React from "react";
 import { useFormContext } from "react-hook-form";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import InputAdornment from "@mui/material/InputAdornment";
 import LinearProgress from "@mui/material/LinearProgress";
 import Stack from "@mui/material/Stack";
@@ -9,6 +8,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { FullFormData } from "../schemas/schemas";
 import { appColors } from "../theme/colors";
+import { AppButton } from "./common/AppButton";
 
 const getPasswordStrength = (password: string) => {
   let score = 0;
@@ -134,16 +134,17 @@ export const Step1Form = ({ onNext }: Props) => {
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <Button
+                <AppButton
                   type="button"
                   size="small"
                   variant="text"
+                  compact
                   aria-label={showPassword ? "Ukryj hasło" : "Pokaż hasło"}
                   aria-pressed={showPassword}
                   onClick={() => setShowPassword((prev) => !prev)}
                 >
                   {showPassword ? "Ukryj" : "Pokaż"}
-                </Button>
+                </AppButton>
               </InputAdornment>
             ),
           }}
@@ -199,16 +200,17 @@ export const Step1Form = ({ onNext }: Props) => {
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
-              <Button
+              <AppButton
                 type="button"
                 size="small"
                 variant="text"
+                compact
                 aria-label={showConfirmPassword ? "Ukryj hasło" : "Pokaż hasło"}
                 aria-pressed={showConfirmPassword}
                 onClick={() => setShowConfirmPassword((prev) => !prev)}
               >
                 {showConfirmPassword ? "Ukryj" : "Pokaż"}
-              </Button>
+              </AppButton>
             </InputAdornment>
           ),
         }}
@@ -216,9 +218,9 @@ export const Step1Form = ({ onNext }: Props) => {
         {...register("confirmPassword")}
       />
 
-      <Button type="submit" variant="contained" disabled={isSubmitting} aria-busy={isSubmitting}>
+      <AppButton type="submit" variant="contained" loading={isSubmitting}>
         {isSubmitting ? "Wysyłanie..." : "Dalej"}
-      </Button>
+      </AppButton>
     </Stack>
   );
 };

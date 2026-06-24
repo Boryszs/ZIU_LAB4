@@ -3,7 +3,6 @@ import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
-import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -12,6 +11,7 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import MenuIcon from "@mui/icons-material/Menu";
+import { AppButton } from "../common/AppButton";
 import type { NavItem } from "./Sidebar";
 
 interface MobileNavigationDrawerProps {
@@ -53,17 +53,19 @@ export default function MobileNavigationDrawer({
         alignItems="center"
         sx={{ height: 80, px: 2.5 }}
       >
-        <IconButton
+        <AppButton
           type="button"
-          edge="start"
-          color="inherit"
+          iconOnly
+          tone="neutral"
+          variant="text"
           onClick={onClose}
           aria-controls="mobile-menu"
           aria-label="Zamknij menu"
           aria-expanded={open}
+          sx={{ ml: -1 }}
         >
           <MenuIcon />
-        </IconButton>
+        </AppButton>
         <Avatar sx={{ bgcolor: "primary.main", fontWeight: 800 }}>T</Avatar>
         <Box sx={{ minWidth: 0 }}>
           <Typography component="p" variant="h6" noWrap fontWeight={800}>

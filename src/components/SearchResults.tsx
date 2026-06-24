@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import { AppButton } from "./common/AppButton";
 import type { Todo } from "../types/todo.types";
 
 interface SearchResultsProps {
@@ -81,9 +81,9 @@ export function SearchResults({
           size="small"
           fullWidth
         />
-        <Button type="submit" variant="contained" color="primary" sx={{ minWidth: 112 }}>
+        <AppButton type="submit" variant="contained" sx={{ minWidth: 112 }}>
           Szukaj
-        </Button>
+        </AppButton>
       </Stack>
 
       <Typography

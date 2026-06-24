@@ -3,17 +3,16 @@ import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import FormHelperText from "@mui/material/FormHelperText";
 import FormLabel from "@mui/material/FormLabel";
-import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import { FullFormData } from "../schemas/schemas";
+import { AppButton } from "./common/AppButton";
 
 type Step2Props = {
   onNext: () => void | Promise<void>;
@@ -79,22 +78,24 @@ export const Step2Form = ({ onNext, onBack }: Step2Props) => {
                     {...register(`categories.${index}.value`)}
                   />
 
-                  <IconButton
+                  <AppButton
                     type="button"
-                    color="error"
+                    iconOnly
+                    tone="danger"
+                    variant="text"
                     onClick={() => remove(index)}
                     aria-label={`Usuń kategorię ${index + 1}`}
                     sx={{ mt: 0.5 }}
                   >
                     <DeleteIcon />
-                  </IconButton>
+                  </AppButton>
                 </Stack>
               </Box>
             );
           })}
         </Stack>
 
-        <Button
+        <AppButton
           type="button"
           variant="text"
           startIcon={<AddIcon />}
@@ -102,7 +103,7 @@ export const Step2Form = ({ onNext, onBack }: Step2Props) => {
           sx={{ alignSelf: "flex-start", mt: 1 }}
         >
           Dodaj kategorię
-        </Button>
+        </AppButton>
 
         {categoriesMessage && (
           <FormHelperText role="alert">{categoriesMessage}</FormHelperText>
@@ -163,19 +164,18 @@ export const Step2Form = ({ onNext, onBack }: Step2Props) => {
       />
 
       <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5}>
-        <Button type="button" variant="outlined" color="inherit" onClick={onBack} fullWidth>
+        <AppButton type="button" variant="outlined" tone="neutral" onClick={onBack} fullWidth>
           Wstecz
-        </Button>
+        </AppButton>
 
-        <Button
+        <AppButton
           type="submit"
           variant="contained"
-          disabled={isSubmitting}
-          aria-busy={isSubmitting}
+          loading={isSubmitting}
           fullWidth
         >
           {isSubmitting ? "Zapisywanie..." : "Dalej"}
-        </Button>
+        </AppButton>
       </Stack>
     </Stack>
   );

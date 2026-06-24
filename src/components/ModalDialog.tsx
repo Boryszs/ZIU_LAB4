@@ -1,9 +1,9 @@
 import { useId, type ReactNode, type RefObject } from "react";
-import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import { AppButton } from "./common/AppButton";
 
 interface ModalDialogProps {
   id?: string;
@@ -39,12 +39,12 @@ export function ModalDialog({
       <DialogTitle id={titleId}>{title}</DialogTitle>
       <DialogContent id={descriptionId}>{children}</DialogContent>
       <DialogActions sx={{ flexWrap: "wrap", gap: 1, px: 3, pb: 3 }}>
-        <Button type="button" variant="outlined" color="inherit" onClick={onClose}>
+        <AppButton type="button" variant="outlined" tone="neutral" onClick={onClose}>
           Zamknij
-        </Button>
-        <Button type="button" variant="contained" onClick={onClose}>
+        </AppButton>
+        <AppButton type="button" variant="contained" onClick={onClose}>
           OK
-        </Button>
+        </AppButton>
       </DialogActions>
     </Dialog>
   );

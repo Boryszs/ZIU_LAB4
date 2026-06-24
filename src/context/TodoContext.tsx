@@ -189,14 +189,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
               },
             },
           },
-          MuiIconButton: {
-            styleOverrides: {
-              root: {
-                minHeight: 44,
-                minWidth: 44,
-              },
-            },
-          },
           MuiToggleButton: {
             styleOverrides: {
               root: {

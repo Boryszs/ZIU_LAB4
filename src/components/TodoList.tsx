@@ -3,7 +3,6 @@ import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
 import Chip from "@mui/material/Chip";
-import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
@@ -13,6 +12,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Filter, Todo } from "../types/todo.types";
 import { listVariants, itemVariants, reducedItemVariants } from "../shared/animations/variants";
 import { appColors } from "../theme/colors";
+import { AppButton } from "./common/AppButton";
 
 interface TodoListProps {
   todos: Todo[];
@@ -203,22 +203,26 @@ export function TodoList({
                 spacing={0.25}
                 sx={{ justifySelf: "end" }}
               >
-                <IconButton
+                <AppButton
                   type="button"
-                  color="primary"
+                  iconOnly
+                  tone="primary"
+                  variant="text"
                   onClick={() => onStartEdit(todo.id)}
                   aria-label={`Edytuj zadanie ${todo.title}`}
                 >
                   <EditIcon />
-                </IconButton>
-                <IconButton
+                </AppButton>
+                <AppButton
                   type="button"
-                  color="error"
+                  iconOnly
+                  tone="danger"
+                  variant="text"
                   onClick={() => onDelete(todo.id)}
                   aria-label={`Usuń zadanie ${todo.title}`}
                 >
                   <DeleteIcon />
-                </IconButton>
+                </AppButton>
               </Stack>
             </Box>
           );

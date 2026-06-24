@@ -6,6 +6,7 @@ import {
   isAnalyticsInitialized,
   trackPageView,
 } from "../analytics";
+import { AppButton } from "./common/AppButton";
 
 const CONSENT_STORAGE_KEY = "analytics_consent";
 
@@ -60,16 +61,19 @@ export function AnalyticsConsent() {
         className="fixed bottom-4 left-4 z-[2000] rounded-lg border border-app-border bg-app-surface px-3 py-2 text-sm text-app-text-secondary shadow-lg dark:border-appDark-border dark:bg-appDark-surface dark:text-appDark-text-primary"
       >
         <span>Analityka wylaczona</span>
-        <button
+        <AppButton
           type="button"
           onClick={() => {
             clearConsent();
             setConsent(null);
           }}
-          className="ml-3 font-semibold text-link underline-offset-4 hover:underline"
+          compact
+          tone="link"
+          variant="text"
+          sx={{ ml: 1 }}
         >
           Zmien
-        </button>
+        </AppButton>
       </aside>
     );
   }
@@ -97,21 +101,24 @@ export function AnalyticsConsent() {
         </p>
 
         <div className="flex shrink-0 flex-wrap gap-2">
-          <button
+          <AppButton
             type="button"
             onClick={declineAnalytics}
-            className="min-h-[40px] rounded-lg border border-app-border bg-app-surface px-4 py-2 text-sm font-semibold text-app-text-secondary transition hover:bg-app-hover focus:outline-none focus:ring-4 focus:ring-app-primaryLight dark:border-appDark-border dark:bg-appDark-surface dark:text-appDark-text-primary dark:hover:bg-appDark-hover"
+            compact
+            tone="neutral"
+            variant="outlined"
           >
             Odrzuc
-          </button>
-          <button
+          </AppButton>
+          <AppButton
             type="button"
             onClick={acceptAnalytics}
             disabled={!hasAnalyticsMeasurementId()}
-            className="min-h-[40px] rounded-lg bg-link px-4 py-2 text-sm font-semibold text-common-white transition hover:bg-link-hover focus:outline-none focus:ring-4 focus:ring-app-primaryLight"
+            compact
+            variant="contained"
           >
             Akceptuj
-          </button>
+          </AppButton>
         </div>
       </div>
     </section>

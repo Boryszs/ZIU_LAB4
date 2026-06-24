@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import Divider from "@mui/material/Divider";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -11,6 +10,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { trackFormSubmit } from "../analytics";
 import { FullFormData } from "../schemas/schemas";
+import { AppButton } from "./common/AppButton";
 
 type Step3Props = {
   goToStep1: () => void;
@@ -151,20 +151,19 @@ export const Step3Form = ({ goToStep1, onBack, onComplete }: Step3Props) => {
       )}
 
       <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5}>
-        <Button type="button" variant="outlined" color="inherit" onClick={handleBack} fullWidth>
+        <AppButton type="button" variant="outlined" tone="neutral" onClick={handleBack} fullWidth>
           Wstecz
-        </Button>
+        </AppButton>
 
-        <Button
+        <AppButton
           type="submit"
           variant="contained"
-          color="success"
-          disabled={isSubmitting}
-          aria-busy={isSubmitting}
+          tone="success"
+          loading={isSubmitting}
           fullWidth
         >
           {isSubmitting ? "Rejestrowanie..." : "Zarejestruj się"}
-        </Button>
+        </AppButton>
       </Stack>
     </Stack>
   );

@@ -3,8 +3,6 @@ import AddIcon from "@mui/icons-material/Add";
 import CancelIcon from "@mui/icons-material/Cancel";
 import SaveIcon from "@mui/icons-material/Save";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import CircularProgress from "@mui/material/CircularProgress";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -14,6 +12,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { trackFormAbandonment, trackFormSubmit } from "../analytics";
 import { PriorityType, Todo } from "../types/todo.types";
+import { AppButton } from "./common/AppButton";
 
 interface AddTodoFormProps {
   onSave: (title: string, priority: PriorityType) => Promise<void>;
@@ -183,33 +182,26 @@ export function AddTodoForm({
             spacing={1.5}
             justifyContent="flex-end"
           >
-            <Button
+            <AppButton
               type="button"
               variant="outlined"
-              color="inherit"
+              tone="neutral"
               startIcon={<CancelIcon />}
               onClick={handleCancel}
               disabled={isSubmitting}
             >
               Anuluj
-            </Button>
+            </AppButton>
 
-            <Button
+            <AppButton
               type="submit"
               variant="contained"
               disabled={!inputValue.trim() || isSubmitting}
-              startIcon={
-                isSubmitting ? (
-                  <CircularProgress size={20} color="inherit" />
-                ) : isEditing ? (
-                  <SaveIcon />
-                ) : (
-                  <AddIcon />
-                )
-              }
+              loading={isSubmitting}
+              startIcon={isEditing ? <SaveIcon /> : <AddIcon />}
             >
               {isSubmitting ? "Zapisywanie..." : isEditing ? "Zapisz zmiany" : "Dodaj"}
-            </Button>
+            </AppButton>
           </Stack>
         </Stack>
       </Box>
