@@ -1,4 +1,5 @@
 import { useId, useState } from "react";
+import FilterListIcon from "@mui/icons-material/FilterList";
 import { priorityFilterOptions } from "../constants/priorityOptions";
 import { Filter as FilterType, PriorityFilter } from "../types/todo.types";
 import { AppButton } from "./common/AppButton";
@@ -40,19 +41,7 @@ export function FilterBar({
           variant="soft"
           sx={{ border: 1, borderColor: "divider" }}
         >
-          <svg
-            className="h-4 w-4"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
-          </svg>
+          <FilterListIcon fontSize="small" />
         </AppButton>
       </div>
 

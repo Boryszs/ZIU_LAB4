@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Alert from "@mui/material/Alert";
-import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
-import Typography from "@mui/material/Typography";
 import { useTodoContext } from "../context/TodoContext";
 import { usePageTitle } from "../hooks/usePageTitle";
 import { PriorityType } from "../types/todo.types";
@@ -11,6 +9,7 @@ import type { Todo } from "../types/todo.types";
 import { AddTodoForm } from "./AddTodoForm";
 import { AppButton } from "./common/AppButton";
 import { FormPageSkeleton } from "./loading/LoadingSkeletons";
+import { TodoFormPageLayout } from "./todo/TodoFormPageLayout";
 
 interface TodoFormPageProps {
   mode: "add" | "edit";
@@ -89,84 +88,31 @@ export default function TodoFormPage({ mode, title }: TodoFormPageProps) {
 
   if (isEditing && isLoadingTodo) {
     return (
-      <Box
-        component="section"
-        aria-labelledby={headingId}
-        sx={{
-          mx: "auto",
-          width: "100%",
-          maxWidth: 560,
-          py: { xs: 2, md: 3 },
-        }}
-      >
-        <Typography
-          id={headingId}
-          component="h1"
-          variant="h4"
-          fontWeight={800}
-          sx={{ mb: 2 }}
-        >
-          {title}
-        </Typography>
+      <TodoFormPageLayout headingId={headingId} title={title}>
         <FormPageSkeleton
+          contained
           label="Ładowanie zadania do edycji"
           showHeading={false}
         />
-      </Box>
+      </TodoFormPageLayout>
     );
   }
 
   if (isEditing && !todo) {
     return (
-      <Box
-        component="section"
-        aria-labelledby={headingId}
-        sx={{
-          mx: "auto",
-          width: "100%",
-          maxWidth: 560,
-          py: { xs: 2, md: 3 },
-        }}
-      >
-        <Typography
-          id={headingId}
-          component="h1"
-          variant="h4"
-          fontWeight={800}
-          sx={{ mb: 2 }}
-        >
-          Nie znaleziono zadania
-        </Typography>
+      <TodoFormPageLayout headingId={headingId} title="Nie znaleziono zadania">
         <Alert severity="error" role="alert" sx={{ mb: 2 }}>
           Nie znaleziono zadania do edycji.
         </Alert>
         <AppButton type="button" variant="contained" onClick={goBackToTasks}>
           Wróć do listy
         </AppButton>
-      </Box>
+      </TodoFormPageLayout>
     );
   }
 
   return (
-    <Box
-      component="section"
-      aria-labelledby={headingId}
-      sx={{
-        mx: "auto",
-        width: "100%",
-        maxWidth: 560,
-        py: { xs: 2, md: 3 },
-      }}
-    >
-      <Typography
-        id={headingId}
-        component="h1"
-        variant="h4"
-        fontWeight={800}
-        sx={{ mb: 2 }}
-      >
-        {title}
-      </Typography>
+    <TodoFormPageLayout headingId={headingId} title={title}>
       <Paper
         variant="outlined"
         sx={{
@@ -182,6 +128,6 @@ export default function TodoFormPage({ mode, title }: TodoFormPageProps) {
           showHeading={false}
         />
       </Paper>
-    </Box>
+    </TodoFormPageLayout>
   );
 }

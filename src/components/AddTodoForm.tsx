@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useId, useRef, useState, type FormEvent } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import CancelIcon from "@mui/icons-material/Cancel";
 import SaveIcon from "@mui/icons-material/Save";
@@ -42,7 +42,7 @@ export function AddTodoForm({
   const formNameRef = useRef(formName);
   const isMounted = useRef(true);
 
-  const emitAbandonment = () => {
+  const emitAbandonment = useCallback(() => {
     if (
       hasInteractedRef.current &&
       !submittedRef.current &&
@@ -51,7 +51,7 @@ export function AddTodoForm({
       trackFormAbandonment(formNameRef.current);
       abandonmentSentRef.current = true;
     }
-  };
+  }, []);
 
   useEffect(() => {
     isMounted.current = true;
@@ -71,17 +71,8 @@ export function AddTodoForm({
   }, [formName]);
 
   useEffect(() => {
-    return () => {
-      if (
-        hasInteractedRef.current &&
-        !submittedRef.current &&
-        !abandonmentSentRef.current
-      ) {
-        trackFormAbandonment(formNameRef.current);
-        abandonmentSentRef.current = true;
-      }
-    };
-  }, []);
+    return emitAbandonment;
+  }, [emitAbandonment]);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

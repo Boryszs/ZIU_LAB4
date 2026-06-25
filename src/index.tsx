@@ -11,6 +11,7 @@ import "@fontsource/roboto/700.css";
 
 async function enableMocking() {
   if (process.env.NODE_ENV !== "development") {
+    console.log("Mocking is disabled in production mode.");
     return;
   }
 
@@ -21,10 +22,10 @@ async function enableMocking() {
       return;
     },
     serviceWorker: {
-      url: "/mockServiceWorker.js",
-      options: {
-        scope: "/",
-      },
+      url:
+        window.location.hostname === "localhost"
+          ? "/mockServiceWorker.js"
+          : "/ZIU_LAB4/mockServiceWorker.js",
     },
   });
 }

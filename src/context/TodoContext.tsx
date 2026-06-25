@@ -70,6 +70,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const isLoadingTodosRef = useRef(false);
   const todoDetailsRequestsRef = useRef(new Map<number, Promise<Todo>>());
 
+  useEffect(() => {
+    // Inicjalne ładowanie zadań przy montowaniu komponentu
+    void loadTodos();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const setLoadingStatus = useCallback((message: string) => {
     setAppStatus({ type: 'loading', message });
   }, []);

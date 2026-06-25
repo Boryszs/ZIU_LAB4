@@ -8,6 +8,7 @@ interface LoadingStateProps {
 }
 
 interface FormPageSkeletonProps extends LoadingStateProps {
+  contained?: boolean;
   showHeading?: boolean;
 }
 
@@ -83,33 +84,6 @@ export function PageSkeleton({
   );
 }
 
-export function StatsGridSkeleton({
-  label = "Ładowanie statystyk",
-}: LoadingStateProps) {
-  return (
-    <Box
-      {...loadingStateProps(label)}
-      sx={{
-        display: "grid",
-        gridTemplateColumns: { xs: "1fr", sm: "repeat(3, 1fr)" },
-        gap: { xs: 2, md: 3 },
-      }}
-    >
-      {[0, 1, 2].map((item) => (
-        <Paper key={item} variant="outlined" sx={{ p: 3, borderRadius: 2 }}>
-          <Stack direction="row" justifyContent="space-between" spacing={2}>
-            <Box sx={{ flex: 1 }}>
-              <Skeleton width="65%" />
-              <Skeleton variant="text" width="35%" height={56} />
-            </Box>
-            <Skeleton variant="circular" width={48} height={48} />
-          </Stack>
-        </Paper>
-      ))}
-    </Box>
-  );
-}
-
 export function TodoListSkeleton({
   label = "Ładowanie zadań",
 }: LoadingStateProps) {
@@ -145,9 +119,34 @@ export function TodoListSkeleton({
 }
 
 export function FormPageSkeleton({
+  contained = false,
   label = "Ładowanie formularza",
   showHeading = true,
 }: FormPageSkeletonProps) {
+  const skeletonContent = (
+    <Paper
+      variant="outlined"
+      sx={{ mt: showHeading ? 2 : 0, p: { xs: 2, sm: 3 } }}
+    >
+      <Stack spacing={3}>
+        <Skeleton variant="rounded" height={56} />
+        <Skeleton variant="rounded" height={56} />
+        <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+          <Skeleton variant="rounded" height={44} sx={{ flex: 1 }} />
+          <Skeleton variant="rounded" height={44} sx={{ flex: 1 }} />
+        </Stack>
+      </Stack>
+    </Paper>
+  );
+
+  if (contained) {
+    return (
+      <Box {...loadingStateProps(label)}>
+        {skeletonContent}
+      </Box>
+    );
+  }
+
   return (
     <Box
       {...loadingStateProps(label)}
@@ -161,19 +160,7 @@ export function FormPageSkeleton({
       {showHeading && (
         <Skeleton variant="text" width="60%" height={48} />
       )}
-      <Paper
-        variant="outlined"
-        sx={{ mt: showHeading ? 2 : 0, p: { xs: 2, sm: 3 } }}
-      >
-        <Stack spacing={3}>
-          <Skeleton variant="rounded" height={56} />
-          <Skeleton variant="rounded" height={56} />
-          <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-            <Skeleton variant="rounded" height={44} sx={{ flex: 1 }} />
-            <Skeleton variant="rounded" height={44} sx={{ flex: 1 }} />
-          </Stack>
-        </Stack>
-      </Paper>
+      {skeletonContent}
     </Box>
   );
 }
