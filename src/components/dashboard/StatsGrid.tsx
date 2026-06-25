@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CircleOutlinedIcon from "@mui/icons-material/CircleOutlined";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import { useTodoContext } from "../../context/TodoContext";
+import { useAppContext } from "../../context/AppContext";
 import { usePageTitle } from "../../hooks/usePageTitle";
 import { appColors } from "../../theme/colors";
 import StatsCard from "./StatsCard";
@@ -14,7 +14,7 @@ interface StatsGridProps {
 export default function StatsGrid({ title }: StatsGridProps) {
   usePageTitle(title);
 
-  const { todos } = useTodoContext();
+  const { todos } = useAppContext();
   const total = todos.length;
   const completed = todos.filter((todo) => todo.completed).length;
   const pending = todos.filter((todo) => !todo.completed).length;

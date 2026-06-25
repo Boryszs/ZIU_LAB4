@@ -23,7 +23,7 @@ import type { Todo } from '../types/todo.types';
 
 const AppStatusSnackbar = lazy(() => import('../components/AppStatusSnackbar'));
 
-interface ThemeContextType {
+interface AppContextType {
   theme: AppThemeMode;
   setTheme: (t: AppThemeMode) => void;
   todos: Todo[];
@@ -49,9 +49,9 @@ function formatDate(date: Date) {
     .replace(/\./g, '-');
 }
 
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+const AppContext = createContext<AppContextType | undefined>(undefined);
 
-export function ThemeProvider({ children }: { children: ReactNode }) {
+export function AppProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<AppThemeMode>(() => {
     const savedTheme = window.localStorage.getItem('theme');
 
@@ -269,7 +269,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     window.localStorage.setItem('theme', theme);
   }, [theme]);
 
-  const value = useMemo<ThemeContextType>(() => ({
+  const value = useMemo<AppContextType>(() => ({
     theme,
     setTheme,
     todos,
@@ -347,9 +347,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   return (
     <MuiThemeProvider theme={muiTheme}>
       <CssBaseline />
-      <ThemeContext.Provider value={value}>
+      <AppContext.Provider value={value}>
         {children}
-      </ThemeContext.Provider>
+      </AppContext.Provider>
       {isStatusOpen && (
         <Suspense fallback={null}>
           <AppStatusSnackbar
@@ -362,18 +362,16 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useTheme() {
-  const ctx = useContext(ThemeContext);
+export function useAppContext() {
+  const ctx = useContext(AppContext);
   if (!ctx) {
-    throw new Error('useTheme must be used within a ThemeProvider');
+    throw new Error('useAppContext must be used within an AppProvider');
   }
   return ctx;
 }
 
-export function useTodoContext() {
-  const ctx = useContext(ThemeContext);
-  if (!ctx) {
-    throw new Error('useTodoContext must be used within a ThemeProvider');
-  }
-  return ctx;
+export function useAppTheme() {
+  const { theme, setTheme } = useAppContext();
+
+  return { theme, setTheme };
 }

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import Paper from "@mui/material/Paper";
-import { useTodoContext } from "../context/TodoContext";
+import { useAppContext } from "../context/AppContext";
 import { usePageTitle } from "../hooks/usePageTitle";
 import { PriorityType } from "../types/todo.types";
 import type { Todo } from "../types/todo.types";
@@ -23,7 +23,7 @@ export default function TodoFormPage({ mode, title }: TodoFormPageProps) {
 
   const navigate = useNavigate();
   const { todoId } = useParams<{ todoId: string }>();
-  const { addTodo, editTodo, getTodoDetails } = useTodoContext();
+  const { addTodo, editTodo, getTodoDetails } = useAppContext();
   const isEditing = mode === "edit";
   const parsedTodoId = todoId ? Number(todoId) : null;
   const [todo, setTodo] = useState<Todo | undefined>();

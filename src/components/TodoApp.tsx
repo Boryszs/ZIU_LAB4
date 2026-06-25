@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 import Fab from "@mui/material/Fab";
 import Typography from "@mui/material/Typography";
 import { trackCtaClick } from "../analytics";
-import { useTodoContext } from "../context/TodoContext";
+import { useAppContext } from "../context/AppContext";
 import {
   Filter as FilterType,
   PriorityType,
@@ -34,7 +34,7 @@ export default function TodoApp() {
     useState<PriorityFilter>(PriorityFilter.All);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
-  const { todos, isFetching, loadTodos, toggleTodo, deleteTodo } = useTodoContext();
+  const { todos, isFetching, loadTodos, toggleTodo, deleteTodo } = useAppContext();
 
   useEffect(() => {
     loadTodos();

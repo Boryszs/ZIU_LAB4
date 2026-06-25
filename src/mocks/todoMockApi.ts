@@ -4,7 +4,8 @@ import type { Todo } from '../types/todo.types';
 type CreateTodoData = Omit<Todo, 'id'>;
 type UpdateTodoData = Partial<Omit<Todo, 'id'>>;
 
-const RESPONSE_DELAY_MS = 250;
+const MIN_RESPONSE_DELAY_MS = 50;
+const MAX_RESPONSE_DELAY_MS = 400;
 
 const mockDatabase: Todo[] = [
   { id: 1, title: 'Nauczyc sie Reacta', completed: false, priority: PriorityType.Medium, date: '12-12-2026' },
@@ -13,8 +14,12 @@ const mockDatabase: Todo[] = [
 ];
 
 function delayResponse() {
+  const responseDelayMs =
+    Math.floor(Math.random() * (MAX_RESPONSE_DELAY_MS - MIN_RESPONSE_DELAY_MS + 1)) +
+    MIN_RESPONSE_DELAY_MS;
+
   return new Promise((resolve) => {
-    setTimeout(resolve, RESPONSE_DELAY_MS);
+    setTimeout(resolve, responseDelayMs);
   });
 }
 

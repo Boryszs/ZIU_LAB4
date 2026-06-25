@@ -8,7 +8,7 @@ import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import MenuIcon from "@mui/icons-material/Menu";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import { useTheme } from "../../context/TodoContext";
+import { useAppTheme } from "../../context/AppContext";
 import { AppButton } from "../common/AppButton";
 import type { NavItem } from "./Sidebar";
 import { drawerWidth } from "./DashboardLayout";
@@ -23,7 +23,7 @@ interface AppHeaderProps {
 }
 
 export default function AppHeader({ navItems, title }: AppHeaderProps) {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme } = useAppTheme();
   const [isOpen, setIsOpen] = useState(false);
   const themeButtonLabel =
     theme === "light" ? "Włącz tryb ciemny" : "Włącz tryb jasny";

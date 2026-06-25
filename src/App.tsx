@@ -5,7 +5,7 @@ import {
   Route,
   Routes,
 } from "react-router-dom";
-import { ThemeProvider } from "./context/TodoContext";
+import { AppProvider } from "./context/AppContext";
 import { AppShellSkeleton } from "./components/loading/LoadingSkeletons";
 
 const DashboardLayout = lazy(() => import("./components/dashboard/DashboardLayout"));
@@ -40,7 +40,7 @@ function App() {
         Przejdź do treści głównej
       </a>
       <Router future={routerFuture}>
-        <ThemeProvider>
+        <AppProvider>
           <Suspense fallback={null}>
             <AnalyticsConsent />
           </Suspense>
@@ -81,7 +81,7 @@ function App() {
               </Route>
             </Routes>
           </Suspense>
-        </ThemeProvider>
+        </AppProvider>
       </Router>
     </>
   );
