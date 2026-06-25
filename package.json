@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "homepage": "https://Boryszs.github.io/ZIU_LAB4",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Boryszs/ZIU_LAB4.git"
+  },
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
