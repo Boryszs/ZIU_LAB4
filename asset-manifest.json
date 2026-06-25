@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/ZIU_LAB4/static/css/main.5fadfaf2.css",
-    "main.js": "/ZIU_LAB4/static/js/main.f1380553.js",
+    "main.css": "/ZIU_LAB4/static/css/main.1598c98f.css",
+    "main.js": "/ZIU_LAB4/static/js/main.df7561e7.js",
     "static/js/849.3ed1428c.chunk.js": "/ZIU_LAB4/static/js/849.3ed1428c.chunk.js",
     "static/js/655.a8d9bbf5.chunk.js": "/ZIU_LAB4/static/js/655.a8d9bbf5.chunk.js",
     "static/js/811.fc24330a.chunk.js": "/ZIU_LAB4/static/js/811.fc24330a.chunk.js",
     "static/js/144.d611876d.chunk.js": "/ZIU_LAB4/static/js/144.d611876d.chunk.js",
-    "static/js/492.428d83d8.chunk.js": "/ZIU_LAB4/static/js/492.428d83d8.chunk.js",
-    "static/js/50.f754133b.chunk.js": "/ZIU_LAB4/static/js/50.f754133b.chunk.js",
+    "static/js/686.8cef15d6.chunk.js": "/ZIU_LAB4/static/js/686.8cef15d6.chunk.js",
+    "static/js/770.ba4a7aea.chunk.js": "/ZIU_LAB4/static/js/770.ba4a7aea.chunk.js",
     "static/js/62.31a00f40.chunk.js": "/ZIU_LAB4/static/js/62.31a00f40.chunk.js",
     "static/js/273.02950bdc.chunk.js": "/ZIU_LAB4/static/js/273.02950bdc.chunk.js",
     "static/js/453.e33a3864.chunk.js": "/ZIU_LAB4/static/js/453.e33a3864.chunk.js",
@@ -25,7 +25,7 @@
     "static/js/595.bf74a232.chunk.js": "/ZIU_LAB4/static/js/595.bf74a232.chunk.js",
     "static/js/191.6bfe7cc9.chunk.js": "/ZIU_LAB4/static/js/191.6bfe7cc9.chunk.js",
     "static/js/974.af16722c.chunk.js": "/ZIU_LAB4/static/js/974.af16722c.chunk.js",
-    "static/js/683.0213a97a.chunk.js": "/ZIU_LAB4/static/js/683.0213a97a.chunk.js",
+    "static/js/70.848ea664.chunk.js": "/ZIU_LAB4/static/js/70.848ea664.chunk.js",
     "static/media/roboto-latin-700-normal.woff2": "/ZIU_LAB4/static/media/roboto-latin-700-normal.d89b03c583b9adb99987.woff2",
     "static/media/roboto-latin-500-normal.woff2": "/ZIU_LAB4/static/media/roboto-latin-500-normal.1c7e8aa0ba84e4f92e5f.woff2",
     "static/media/roboto-latin-300-normal.woff": "/ZIU_LAB4/static/media/roboto-latin-300-normal.c8fe44913c8a1c89e4c7.woff",
@@ -99,14 +99,14 @@
     "static/media/roboto-greek-ext-700-normal.woff": "/ZIU_LAB4/static/media/roboto-greek-ext-700-normal.5b51dabd754d1b37053e.woff",
     "static/media/roboto-greek-ext-300-normal.woff": "/ZIU_LAB4/static/media/roboto-greek-ext-300-normal.7e59ad18b38575208130.woff",
     "index.html": "/ZIU_LAB4/index.html",
-    "main.5fadfaf2.css.map": "/ZIU_LAB4/static/css/main.5fadfaf2.css.map",
-    "main.f1380553.js.map": "/ZIU_LAB4/static/js/main.f1380553.js.map",
+    "main.1598c98f.css.map": "/ZIU_LAB4/static/css/main.1598c98f.css.map",
+    "main.df7561e7.js.map": "/ZIU_LAB4/static/js/main.df7561e7.js.map",
     "849.3ed1428c.chunk.js.map": "/ZIU_LAB4/static/js/849.3ed1428c.chunk.js.map",
     "655.a8d9bbf5.chunk.js.map": "/ZIU_LAB4/static/js/655.a8d9bbf5.chunk.js.map",
     "811.fc24330a.chunk.js.map": "/ZIU_LAB4/static/js/811.fc24330a.chunk.js.map",
     "144.d611876d.chunk.js.map": "/ZIU_LAB4/static/js/144.d611876d.chunk.js.map",
-    "492.428d83d8.chunk.js.map": "/ZIU_LAB4/static/js/492.428d83d8.chunk.js.map",
-    "50.f754133b.chunk.js.map": "/ZIU_LAB4/static/js/50.f754133b.chunk.js.map",
+    "686.8cef15d6.chunk.js.map": "/ZIU_LAB4/static/js/686.8cef15d6.chunk.js.map",
+    "770.ba4a7aea.chunk.js.map": "/ZIU_LAB4/static/js/770.ba4a7aea.chunk.js.map",
     "62.31a00f40.chunk.js.map": "/ZIU_LAB4/static/js/62.31a00f40.chunk.js.map",
     "273.02950bdc.chunk.js.map": "/ZIU_LAB4/static/js/273.02950bdc.chunk.js.map",
     "453.e33a3864.chunk.js.map": "/ZIU_LAB4/static/js/453.e33a3864.chunk.js.map",
@@ -124,10 +124,10 @@
     "595.bf74a232.chunk.js.map": "/ZIU_LAB4/static/js/595.bf74a232.chunk.js.map",
     "191.6bfe7cc9.chunk.js.map": "/ZIU_LAB4/static/js/191.6bfe7cc9.chunk.js.map",
     "974.af16722c.chunk.js.map": "/ZIU_LAB4/static/js/974.af16722c.chunk.js.map",
-    "683.0213a97a.chunk.js.map": "/ZIU_LAB4/static/js/683.0213a97a.chunk.js.map"
+    "70.848ea664.chunk.js.map": "/ZIU_LAB4/static/js/70.848ea664.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.5fadfaf2.css",
-    "static/js/main.f1380553.js"
+    "static/css/main.1598c98f.css",
+    "static/js/main.df7561e7.js"
   ]
 }
