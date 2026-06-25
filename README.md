@@ -1,4 +1,6 @@
-# Todo App - ZIU LAB4
+# Todo App - Projekt
+
+## Opis projektu
 
 Responsywna aplikacja do zarządzania zadaniami przygotowana w ramach laboratorium ZIU. Projekt zawiera dashboard ze statystykami, listę zadań, formularze dodawania i edycji, globalne stany aplikacji oraz podstawowe rozwiązania dostępnościowe.
 
@@ -20,7 +22,7 @@ Aplikacja jest dostępna pod adresem:
 - zawiera elementy dostępności: skip link, widoczny fokus, semantyczne elementy HTML i komunikaty ARIA
 - wykorzystuje animacje z uwzględnieniem preferencji ograniczonego ruchu
 
-## Uruchomienie lokalne
+## Instrukcja uruchomienia
 
 Wymagania:
 
