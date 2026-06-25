@@ -10,10 +10,10 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
 async function enableMocking() {
-  if (process.env.NODE_ENV !== "development") {
-    console.log("Mocking is disabled in production mode.");
-    return;
-  }
+  // if (process.env.NODE_ENV !== "development") {
+  //   console.log("Mocking is disabled in production mode.");
+  //   return;
+  // }
 
   const { worker } = await import("./mocks/browser");
 
