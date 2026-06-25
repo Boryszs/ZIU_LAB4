@@ -1,7 +1,8 @@
 {
   "files": {
     "main.css": "/ZIU_LAB4/static/css/main.1598c98f.css",
-    "main.js": "/ZIU_LAB4/static/js/main.df7561e7.js",
+    "main.js": "/ZIU_LAB4/static/js/main.020b809b.js",
+    "static/js/369.137c004e.chunk.js": "/ZIU_LAB4/static/js/369.137c004e.chunk.js",
     "static/js/849.3ed1428c.chunk.js": "/ZIU_LAB4/static/js/849.3ed1428c.chunk.js",
     "static/js/655.a8d9bbf5.chunk.js": "/ZIU_LAB4/static/js/655.a8d9bbf5.chunk.js",
     "static/js/811.fc24330a.chunk.js": "/ZIU_LAB4/static/js/811.fc24330a.chunk.js",
@@ -21,10 +22,12 @@
     "static/js/685.4edc5373.chunk.js": "/ZIU_LAB4/static/js/685.4edc5373.chunk.js",
     "static/js/432.007686b7.chunk.js": "/ZIU_LAB4/static/js/432.007686b7.chunk.js",
     "static/js/312.7127006b.chunk.js": "/ZIU_LAB4/static/js/312.7127006b.chunk.js",
+    "static/js/205.e4b63686.chunk.js": "/ZIU_LAB4/static/js/205.e4b63686.chunk.js",
     "static/js/400.b23c0f84.chunk.js": "/ZIU_LAB4/static/js/400.b23c0f84.chunk.js",
     "static/js/595.bf74a232.chunk.js": "/ZIU_LAB4/static/js/595.bf74a232.chunk.js",
-    "static/js/191.6bfe7cc9.chunk.js": "/ZIU_LAB4/static/js/191.6bfe7cc9.chunk.js",
+    "static/js/93.8e6cf969.chunk.js": "/ZIU_LAB4/static/js/93.8e6cf969.chunk.js",
     "static/js/974.af16722c.chunk.js": "/ZIU_LAB4/static/js/974.af16722c.chunk.js",
+    "static/js/459.f5054222.chunk.js": "/ZIU_LAB4/static/js/459.f5054222.chunk.js",
     "static/js/70.848ea664.chunk.js": "/ZIU_LAB4/static/js/70.848ea664.chunk.js",
     "static/media/roboto-latin-700-normal.woff2": "/ZIU_LAB4/static/media/roboto-latin-700-normal.d89b03c583b9adb99987.woff2",
     "static/media/roboto-latin-500-normal.woff2": "/ZIU_LAB4/static/media/roboto-latin-500-normal.1c7e8aa0ba84e4f92e5f.woff2",
@@ -100,7 +103,8 @@
     "static/media/roboto-greek-ext-300-normal.woff": "/ZIU_LAB4/static/media/roboto-greek-ext-300-normal.7e59ad18b38575208130.woff",
     "index.html": "/ZIU_LAB4/index.html",
     "main.1598c98f.css.map": "/ZIU_LAB4/static/css/main.1598c98f.css.map",
-    "main.df7561e7.js.map": "/ZIU_LAB4/static/js/main.df7561e7.js.map",
+    "main.020b809b.js.map": "/ZIU_LAB4/static/js/main.020b809b.js.map",
+    "369.137c004e.chunk.js.map": "/ZIU_LAB4/static/js/369.137c004e.chunk.js.map",
     "849.3ed1428c.chunk.js.map": "/ZIU_LAB4/static/js/849.3ed1428c.chunk.js.map",
     "655.a8d9bbf5.chunk.js.map": "/ZIU_LAB4/static/js/655.a8d9bbf5.chunk.js.map",
     "811.fc24330a.chunk.js.map": "/ZIU_LAB4/static/js/811.fc24330a.chunk.js.map",
@@ -120,14 +124,16 @@
     "685.4edc5373.chunk.js.map": "/ZIU_LAB4/static/js/685.4edc5373.chunk.js.map",
     "432.007686b7.chunk.js.map": "/ZIU_LAB4/static/js/432.007686b7.chunk.js.map",
     "312.7127006b.chunk.js.map": "/ZIU_LAB4/static/js/312.7127006b.chunk.js.map",
+    "205.e4b63686.chunk.js.map": "/ZIU_LAB4/static/js/205.e4b63686.chunk.js.map",
     "400.b23c0f84.chunk.js.map": "/ZIU_LAB4/static/js/400.b23c0f84.chunk.js.map",
     "595.bf74a232.chunk.js.map": "/ZIU_LAB4/static/js/595.bf74a232.chunk.js.map",
-    "191.6bfe7cc9.chunk.js.map": "/ZIU_LAB4/static/js/191.6bfe7cc9.chunk.js.map",
+    "93.8e6cf969.chunk.js.map": "/ZIU_LAB4/static/js/93.8e6cf969.chunk.js.map",
     "974.af16722c.chunk.js.map": "/ZIU_LAB4/static/js/974.af16722c.chunk.js.map",
+    "459.f5054222.chunk.js.map": "/ZIU_LAB4/static/js/459.f5054222.chunk.js.map",
     "70.848ea664.chunk.js.map": "/ZIU_LAB4/static/js/70.848ea664.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.1598c98f.css",
-    "static/js/main.df7561e7.js"
+    "static/js/main.020b809b.js"
   ]
 }
