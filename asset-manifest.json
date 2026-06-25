@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/ZIU_LAB4/static/css/main.1598c98f.css",
-    "main.js": "/ZIU_LAB4/static/js/main.020b809b.js",
+    "main.js": "/ZIU_LAB4/static/js/main.b0ec5fa9.js",
     "static/js/369.137c004e.chunk.js": "/ZIU_LAB4/static/js/369.137c004e.chunk.js",
     "static/js/849.3ed1428c.chunk.js": "/ZIU_LAB4/static/js/849.3ed1428c.chunk.js",
     "static/js/655.a8d9bbf5.chunk.js": "/ZIU_LAB4/static/js/655.a8d9bbf5.chunk.js",
@@ -103,7 +103,7 @@
     "static/media/roboto-greek-ext-300-normal.woff": "/ZIU_LAB4/static/media/roboto-greek-ext-300-normal.7e59ad18b38575208130.woff",
     "index.html": "/ZIU_LAB4/index.html",
     "main.1598c98f.css.map": "/ZIU_LAB4/static/css/main.1598c98f.css.map",
-    "main.020b809b.js.map": "/ZIU_LAB4/static/js/main.020b809b.js.map",
+    "main.b0ec5fa9.js.map": "/ZIU_LAB4/static/js/main.b0ec5fa9.js.map",
     "369.137c004e.chunk.js.map": "/ZIU_LAB4/static/js/369.137c004e.chunk.js.map",
     "849.3ed1428c.chunk.js.map": "/ZIU_LAB4/static/js/849.3ed1428c.chunk.js.map",
     "655.a8d9bbf5.chunk.js.map": "/ZIU_LAB4/static/js/655.a8d9bbf5.chunk.js.map",
@@ -134,6 +134,6 @@
   },
   "entrypoints": [
     "static/css/main.1598c98f.css",
-    "static/js/main.020b809b.js"
+    "static/js/main.b0ec5fa9.js"
   ]
 }
