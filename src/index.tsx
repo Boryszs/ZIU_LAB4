@@ -22,10 +22,7 @@ async function enableMocking() {
       return;
     },
     serviceWorker: {
-      url:
-        window.location.hostname === "localhost"
-          ? "/mockServiceWorker.js"
-          : "/ZIU_LAB4/mockServiceWorker.js",
+      url: `${process.env.PUBLIC_URL || ""}/mockServiceWorker.js`,
     },
   });
 }
