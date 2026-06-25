@@ -19,7 +19,7 @@ import { AppButton } from "./common/AppButton";
 interface TodoListProps {
   todos: Todo[];
   filter: Filter;
-  onToggle: (id: number) => void;
+  onToggle: (id: number, status: boolean) => void;
   onDelete: (id: number) => void;
   onStartEdit: (id: number) => void;
 }
@@ -149,7 +149,7 @@ export function TodoList({
             >
               <Checkbox
                 checked={todo.completed}
-                onChange={() => onToggle(todo.id)}
+                onChange={(event) => onToggle(todo.id, event.target.checked)}
                 inputProps={{
                   "aria-label": todo.completed
                     ? `Oznacz zadanie '${todo.title}' jako nieukończone`

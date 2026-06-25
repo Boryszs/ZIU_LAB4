@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import Box from "@mui/material/Box";
@@ -12,6 +12,7 @@ import {
   PriorityFilter,
 } from "../types/todo.types";
 import { FilterBar } from "./FilterBar";
+import { TodoListSkeleton } from "./loading/LoadingSkeletons";
 import { SearchResults } from "./SearchResults";
 import { TodoList } from "./TodoList";
 
@@ -33,7 +34,11 @@ export default function TodoApp() {
     useState<PriorityFilter>(PriorityFilter.All);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
-  const { todos, toggleTodo, deleteTodo } = useTodoContext();
+  const { todos, isFetching, loadTodos, toggleTodo, deleteTodo } = useTodoContext();
+
+  useEffect(() => {
+    loadTodos();
+  }, [loadTodos]);
 
   const handleStartEdit = (id: number) => {
     navigate(`/tasks/${id}/edit`);
@@ -113,13 +118,17 @@ export default function TodoApp() {
           onPriorityFilterChange={setPriorityFilter}
         />
         
-        <TodoList
-          todos={filteredTodos}
-          filter={filter}
-          onToggle={toggleTodo}
-          onDelete={deleteTodo}
-          onStartEdit={handleStartEdit}
-        />
+        {isFetching ? (
+          <TodoListSkeleton label="Ładowanie listy zadań" />
+        ) : (
+          <TodoList
+            todos={filteredTodos}
+            filter={filter}
+            onToggle={toggleTodo}
+            onDelete={deleteTodo}
+            onStartEdit={handleStartEdit}
+          />
+        )}
 
         <Box
           sx={{

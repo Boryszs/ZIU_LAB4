@@ -1,8 +1,8 @@
 // src/mocks/handlers.ts
-import { http, HttpResponse, delay } from 'msw';
+import { http, HttpResponse } from 'msw';
 import { z } from "zod";
 import { PriorityType } from '../types/todo.types';
-import type { Todo } from '../types/todo.types';
+import { todoMockApi } from './todoMockApi';
 
 const createTodoSchema = z.object({
   title: z.string().min(1, "Tytuł nie może być pusty"),
@@ -15,44 +15,31 @@ const createTodoSchema = z.object({
 
 const updateTodoSchema = createTodoSchema.partial();
 
-let mockDatabase: Todo[] = [
-  { id: 1, title: 'Nauczyc sie Reacta', completed: false, priority: PriorityType.Medium, date: '12-12-2026' },
-  { id: 2, title: 'Zrobic zakupy', completed: true, priority: PriorityType.Low, date: '11-12-2026' },
-  { id: 3, title: 'Napisac raport', completed: false, priority: PriorityType.High, date: '10-12-2026' },
-];
-
 export const handlers = [
   // 1. GET: Pobieranie listy
   http.get('/api/todos', async () => {
-    await delay();
-    return HttpResponse.json(mockDatabase);
+    const todos = await todoMockApi.getAll();
+
+    return HttpResponse.json(todos);
   }),
 
   // 2. GET: Pobieranie szczegółów
   http.get('/api/todos/:id', async ({ params }) => {
-    await delay();
-    const id = Number(params.id); // <-- Konwersja na liczbę
-    const item = mockDatabase.find((item) => item.id === id);
+    try {
+      const item = await todoMockApi.getDetails(String(params.id));
 
-    if (!item) {
+      return HttpResponse.json(item);
+    } catch (error) {
       return new HttpResponse(null, { status: 404, statusText: 'Not Found' });
     }
-    return HttpResponse.json(item);
   }),
 
   // 3. POST: Tworzenie zadania
   http.post('/api/todos', async ({ request }) => {
-    await delay();
     try {
       const body = await request.json();
       const validatedData = createTodoSchema.parse(body);
-
-      // <-- Szukamy najwyższego ID i dodajemy 1
-      const newId = mockDatabase.length > 0 ? Math.max(...mockDatabase.map(i => i.id)) + 1 : 1;
-      
-      const newTodo: Todo = { id: newId, ...validatedData };
-
-      mockDatabase.push(newTodo);
+      const newTodo = await todoMockApi.create(validatedData);
 
       return HttpResponse.json(newTodo, { status: 201 });
     } catch (error) {
@@ -62,24 +49,14 @@ export const handlers = [
 
   // 4. PUT: Edycja zadania
   http.put('/api/todos/:id', async ({ params, request }) => {
-    await delay();
     const id = Number(params.id); // <-- Konwersja na liczbę
-    const index = mockDatabase.findIndex((item) => item.id === id);
-
-    if (index === -1) {
-      return new HttpResponse(null, { status: 404 });
-    }
 
     try {
       const body = await request.json();
       const validatedData = updateTodoSchema.parse(body);
+      const updatedTodo = await todoMockApi.update(id, validatedData);
 
-      mockDatabase[index] = {
-        ...mockDatabase[index],
-        ...validatedData,
-      };
-
-      return HttpResponse.json(mockDatabase[index]);
+      return HttpResponse.json(updatedTodo);
     } catch (error) {
       return HttpResponse.json({ error: 'Invalid data' }, { status: 400 });
     }
@@ -87,14 +64,14 @@ export const handlers = [
 
   // 5. DELETE: Usuwanie zadania
   http.delete('/api/todos/:id', async ({ params }) => {
-    await delay();
     const id = Number(params.id); // <-- Konwersja na liczbę
-    const index = mockDatabase.findIndex((item) => item.id === id);
-    
-    if (index !== -1) {
-      mockDatabase.splice(index, 1);
+
+    try {
+      await todoMockApi.delete(id);
+
+      return new HttpResponse(null, { status: 204 });
+    } catch (error) {
+      return new HttpResponse(null, { status: 404 });
     }
-    
-    return new HttpResponse(null, { status: 204 });
   }),
 ];

@@ -27,7 +27,7 @@ export interface Todo {
 }
 
 export type TodoAction =
-  | { type: 'ADD'; payload: { title: string; priority: PriorityType } }
-  | { type: 'TOGGLE'; payload: number }
-  | { type: 'DELETE'; payload: number }
-  | { type: 'EDIT'; payload: { id: number; title: string; priority: PriorityType } };
+  | { type: 'LOAD_TODOS'; payload: Todo[] }
+  | { type: 'ADD_TODO'; payload: Todo }
+  | { type: 'UPDATE_TODO'; payload: Todo }
+  | { type: 'DELETE_TODO'; payload: number };

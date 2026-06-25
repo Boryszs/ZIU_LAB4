@@ -7,11 +7,13 @@ import {
   useEffect,
   useMemo,
   useReducer,
+  useRef,
   useState,
   ReactNode,
 } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@mui/material/styles';
+import { todoApiService } from '../api/todoApiService';
 import { todoReducer } from '../reducers/todoReducer';
 import type { AppThemeMode } from '../theme/colors';
 import { appColors, getModeColors } from '../theme/colors';
@@ -27,19 +29,25 @@ interface ThemeContextType {
   todos: Todo[];
   isFetching: boolean;
   appStatus: AppStatus;
+  loadTodos: () => Promise<void>;
   addTodo: (title: string, priority: PriorityType) => Promise<void>;
-  toggleTodo: (id: number) => Promise<void>;
+  toggleTodo: (id: number, status: boolean) => Promise<void>;
   deleteTodo: (id: number) => Promise<void>;
   editTodo: (id: number, title: string, priority: PriorityType) => Promise<void>;
+  getTodoDetails: (id: number) => Promise<Todo>;
 }
 
-const initialTodos: Todo[] = [
-  { id: 1, title: 'Nauczyc sie Reacta', completed: false, priority: PriorityType.Medium, date: '12-12-2026' },
-  { id: 2, title: 'Zrobic zakupy', completed: true, priority: PriorityType.Low, date: '11-12-2026' },
-  { id: 3, title: 'Napisac raport', completed: false, priority: PriorityType.High, date: '10-12-2026' },
-];
-
 const idleStatus: AppStatus = { type: 'idle', message: '' };
+
+function formatDate(date: Date) {
+  return new Intl.DateTimeFormat('pl-PL', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  })
+    .format(date)
+    .replace(/\./g, '-');
+}
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
@@ -56,26 +64,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       : 'light';
   });
   
-  const [todos, dispatch] = useReducer(todoReducer, initialTodos);
-  const [isFetching, setIsFetching] = useState(true);
+  const [todos, dispatch] = useReducer(todoReducer, []);
+  const [isFetching, setIsFetching] = useState(false);
   const [appStatus, setAppStatus] = useState<AppStatus>(idleStatus);
-
-  // Simulate initial network fetch
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsFetching(false);
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const simulateNetworkDelay = useCallback((shouldFail: boolean = false) => {
-    return new Promise<void>((resolve, reject) => {
-      setTimeout(() => {
-        if (shouldFail) reject(new Error('Network Error'));
-        else resolve();
-      }, 50);
-    });
-  }, []);
+  const isLoadingTodosRef = useRef(false);
+  const todoDetailsRequestsRef = useRef(new Map<number, Promise<Todo>>());
 
   const setLoadingStatus = useCallback((message: string) => {
     setAppStatus({ type: 'loading', message });
@@ -88,6 +81,57 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const setErrorStatus = useCallback((message: string) => {
     setAppStatus({ type: 'error', message });
   }, []);
+
+  const loadTodos = useCallback(
+    async () => {
+      if (isLoadingTodosRef.current) {
+        return;
+      }
+
+      isLoadingTodosRef.current = true;
+      setIsFetching(true);
+
+      try {
+        const fetchedTodos = await todoApiService.getAll();
+        dispatch({ type: 'LOAD_TODOS', payload: fetchedTodos });
+      } catch (err) {
+        setErrorStatus('Nie udało się pobrać listy zadań.');
+      } finally {
+        isLoadingTodosRef.current = false;
+        setIsFetching(false);
+      }
+    },
+    [setErrorStatus],
+  );
+
+  const getTodoDetails = useCallback(
+    async (id: number) => {
+      const currentRequest = todoDetailsRequestsRef.current.get(id);
+
+      if (currentRequest) {
+        return currentRequest;
+      }
+
+      const request = todoApiService
+        .getDetails(id)
+        .catch((err) => {
+          setErrorStatus('Nie udało się pobrać szczegółów zadania.');
+          throw err;
+        })
+        .finally(() => {
+          todoDetailsRequestsRef.current.delete(id);
+        });
+
+      todoDetailsRequestsRef.current.set(id, request);
+
+      try {
+        return await request;
+      } catch (err) {
+        throw err;
+      }
+    },
+    [setErrorStatus],
+  );
 
   const handleCloseStatus = useCallback(() => {
     setAppStatus((currentStatus) =>
@@ -225,25 +269,33 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     todos,
     isFetching,
     appStatus,
+    loadTodos,
+    getTodoDetails,
     addTodo: async (title, priority) => {
       setLoadingStatus('Dodawanie zadania...');
 
       try {
-        const isError = title.toLowerCase().includes('error');
-        await simulateNetworkDelay(isError);
-        dispatch({ type: 'ADD', payload: { title, priority } });
+        const createdTodo = await todoApiService.create({
+          title,
+          priority,
+          completed: false,
+          date: formatDate(new Date()),
+        });
+
+        dispatch({ type: 'ADD_TODO', payload: createdTodo });
         setSuccessStatus('Zadanie dodane pomyślnie!');
       } catch (err) {
         setErrorStatus('Wystąpił błąd podczas dodawania zadania.');
         throw err;
       }
     },
-    toggleTodo: async (id) => {
+    toggleTodo: async (id, status) => {
       setLoadingStatus('Aktualizowanie statusu zadania...');
 
       try {
-        await simulateNetworkDelay();
-        dispatch({ type: 'TOGGLE', payload: id });
+        const updatedTodo = await todoApiService.toggle(id, status);
+
+        dispatch({ type: 'UPDATE_TODO', payload: updatedTodo });
         setSuccessStatus('Status zadania został zaktualizowany.');
       } catch (err) {
         setErrorStatus('Nie udało się zaktualizować statusu.');
@@ -253,8 +305,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       setLoadingStatus('Usuwanie zadania...');
 
       try {
-        await simulateNetworkDelay();
-        dispatch({ type: 'DELETE', payload: id });
+        await todoApiService.delete(id);
+        dispatch({ type: 'DELETE_TODO', payload: id });
         setSuccessStatus('Zadanie zostało usunięte.');
       } catch (err) {
         setErrorStatus('Nie udało się usunąć zadania.');
@@ -264,9 +316,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       setLoadingStatus('Zapisywanie zmian...');
 
       try {
-        const isError = title.toLowerCase().includes('error');
-        await simulateNetworkDelay(isError);
-        dispatch({ type: 'EDIT', payload: { id, title, priority } });
+        const updatedTodo = await todoApiService.update(id, { title, priority });
+
+        dispatch({ type: 'UPDATE_TODO', payload: updatedTodo });
         setSuccessStatus('Zadanie zapisane pomyślnie!');
       } catch (err) {
         setErrorStatus('Wystąpił błąd podczas zapisywania zadania.');
@@ -279,9 +331,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     setErrorStatus,
     setLoadingStatus,
     setSuccessStatus,
-    simulateNetworkDelay,
     theme,
     todos,
+    loadTodos,
+    getTodoDetails,
   ]);
 
   const isStatusOpen = appStatus.type !== 'idle' && Boolean(appStatus.message);

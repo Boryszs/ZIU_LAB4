@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
@@ -6,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import { useTodoContext } from "../context/TodoContext";
 import { usePageTitle } from "../hooks/usePageTitle";
 import { PriorityType } from "../types/todo.types";
+import type { Todo } from "../types/todo.types";
 import { AddTodoForm } from "./AddTodoForm";
 import { AppButton } from "./common/AppButton";
 import { FormPageSkeleton } from "./loading/LoadingSkeletons";
@@ -22,12 +24,53 @@ export default function TodoFormPage({ mode, title }: TodoFormPageProps) {
 
   const navigate = useNavigate();
   const { todoId } = useParams<{ todoId: string }>();
-  const { todos, addTodo, editTodo, isFetching } = useTodoContext();
+  const { addTodo, editTodo, getTodoDetails } = useTodoContext();
   const isEditing = mode === "edit";
   const parsedTodoId = todoId ? Number(todoId) : null;
-  const todo = isEditing
-    ? todos.find((item) => item.id === parsedTodoId)
-    : undefined;
+  const [todo, setTodo] = useState<Todo | undefined>();
+  const [isLoadingTodo, setIsLoadingTodo] = useState(isEditing);
+
+  useEffect(() => {
+    if (!isEditing) {
+      setTodo(undefined);
+      setIsLoadingTodo(false);
+      return;
+    }
+
+    if (parsedTodoId === null || Number.isNaN(parsedTodoId)) {
+      setTodo(undefined);
+      setIsLoadingTodo(false);
+      return;
+    }
+
+    let isActive = true;
+
+    const loadTodoDetails = async () => {
+      setIsLoadingTodo(true);
+
+      try {
+        const loadedTodo = await getTodoDetails(parsedTodoId);
+
+        if (isActive) {
+          setTodo(loadedTodo);
+        }
+      } catch (err) {
+        if (isActive) {
+          setTodo(undefined);
+        }
+      } finally {
+        if (isActive) {
+          setIsLoadingTodo(false);
+        }
+      }
+    };
+
+    loadTodoDetails();
+
+    return () => {
+      isActive = false;
+    };
+  }, [getTodoDetails, isEditing, parsedTodoId]);
 
   const goBackToTasks = () => {
     navigate("/tasks");
@@ -44,7 +87,7 @@ export default function TodoFormPage({ mode, title }: TodoFormPageProps) {
     goBackToTasks();
   };
 
-  if (isEditing && isFetching) {
+  if (isEditing && isLoadingTodo) {
     return (
       <Box
         component="section"
