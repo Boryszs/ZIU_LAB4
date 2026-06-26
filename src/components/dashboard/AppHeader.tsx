@@ -10,12 +10,10 @@ import MenuIcon from "@mui/icons-material/Menu";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { useAppTheme } from "../../context/AppContext";
 import { AppButton } from "../common/AppButton";
-import type { NavItem } from "./Sidebar";
 import { drawerWidth } from "./DashboardLayout";
+import type { NavItem } from "./NavigationList";
 
-const MobileNavigationDrawer = lazy(
-  () => import("./MobileNavigationDrawer"),
-);
+const MobileNavigationDrawer = lazy(() => import("./MobileNavigationDrawer"));
 
 interface AppHeaderProps {
   navItems: NavItem[];
@@ -59,18 +57,6 @@ export default function AppHeader({ navItems, title }: AppHeaderProps) {
           </AppButton>
 
           <Box sx={{ minWidth: 0, flex: 1 }}>
-            <Typography
-              component="p"
-              variant="caption"
-              sx={{
-                color: "primary.main",
-                fontWeight: 700,
-                letterSpacing: 0,
-                textTransform: "uppercase",
-              }}
-            >
-              {/* TodoApp */}
-            </Typography>
             <Typography component="h2" variant="h5" noWrap fontWeight={800}>
               {title}
             </Typography>

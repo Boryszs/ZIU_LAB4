@@ -41,6 +41,21 @@ code {
   outline-offset: 3px;
 }
 
+.dark
+  :where(
+    a,
+    button,
+    input,
+    select,
+    textarea,
+    summary,
+    [role="button"],
+    [role="checkbox"],
+    [tabindex]:not([tabindex="-1"])
+  ):focus-visible {
+  outline-color: theme("colors.appDark.primary") !important;
+}
+
 .skip-link {
   position: absolute;
   top: -40px;

@@ -7,7 +7,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import AppHeader from "./AppHeader";
-import type { NavItem } from "./Sidebar";
+import type { NavItem } from "./NavigationList";
 import { pageVariants, reducedPageVariants } from "../../shared/animations/variants";
 import { PageSkeleton } from "../loading/LoadingSkeletons";
 

@@ -1,18 +1,13 @@
-import { Link as RouterLink, useLocation } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
-import List from "@mui/material/List";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import MenuIcon from "@mui/icons-material/Menu";
 import { AppButton } from "../common/AppButton";
-import type { NavItem } from "./Sidebar";
+import { NavigationList, type NavItem } from "./NavigationList";
 
 interface MobileNavigationDrawerProps {
   navItems: NavItem[];
@@ -25,8 +20,6 @@ export default function MobileNavigationDrawer({
   open,
   onClose,
 }: MobileNavigationDrawerProps) {
-  const location = useLocation();
-
   return (
     <Drawer
       id="mobile-menu"
@@ -66,7 +59,7 @@ export default function MobileNavigationDrawer({
         >
           <MenuIcon />
         </AppButton>
-        <Avatar sx={{ bgcolor: "primary.main", fontWeight: 800 }}>T</Avatar>
+        <Avatar sx={{ bgcolor: "primary.main", color: "primary.contrastText", fontWeight: 800 }}>T</Avatar>
         <Box sx={{ minWidth: 0 }}>
           <Typography component="p" variant="h6" noWrap fontWeight={800}>
             Panel zadań
@@ -76,41 +69,11 @@ export default function MobileNavigationDrawer({
       <Divider sx={{ mx: 2 }} />
 
       <Box component="nav" aria-label="Menu mobilne">
-        <List>
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = location.pathname === item.path;
-
-            return (
-              <ListItemButton
-                key={item.path}
-                component={RouterLink}
-                to={item.path}
-                selected={isActive}
-                aria-current={isActive ? "page" : undefined}
-                onClick={onClose}
-                sx={{
-                  minHeight: 48,
-                  mx: 1,
-                  borderRadius: 2,
-                  "&.Mui-selected": {
-                    bgcolor: "primary.main",
-                    color: "primary.contrastText",
-                    "&:hover": { bgcolor: "primary.dark" },
-                    "& .MuiListItemIcon-root": {
-                      color: "primary.contrastText",
-                    },
-                  },
-                }}
-              >
-                <ListItemIcon sx={{ minWidth: 44 }}>
-                  <Icon />
-                </ListItemIcon>
-                <ListItemText primary={item.label} />
-              </ListItemButton>
-            );
-          })}
-        </List>
+        <NavigationList
+          navItems={navItems}
+          onNavigate={onClose}
+          variant="mobile"
+        />
       </Box>
 
       <Box sx={{ flex: 1 }} />
@@ -121,7 +84,7 @@ export default function MobileNavigationDrawer({
         sx={{ m: 2, p: 1.5, borderRadius: 2 }}
       >
         <Stack direction="row" spacing={1.5} alignItems="center">
-          <Avatar sx={{ bgcolor: "primary.main", width: 40, height: 40 }}>
+          <Avatar sx={{ bgcolor: "primary.main", color: "primary.contrastText", width: 40, height: 40 }}>
             U
           </Avatar>
           <Box sx={{ minWidth: 0 }}>

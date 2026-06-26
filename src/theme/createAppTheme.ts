@@ -13,7 +13,7 @@ export function createAppTheme(mode: AppThemeMode) {
         main: colors.primary,
         dark: colors.primaryDark,
         light: colors.primaryLight,
-        contrastText: appColors.common.white,
+        contrastText: colors.contrastText,
       },
       background: {
         default: colors.background,
@@ -26,12 +26,15 @@ export function createAppTheme(mode: AppThemeMode) {
       divider: colors.border,
       error: {
         main: colors.error,
+        contrastText: colors.contrastText,
       },
       success: {
         main: colors.success,
+        contrastText: colors.contrastText,
       },
       warning: {
         main: colors.warning,
+        contrastText: colors.contrastText,
       },
       action: {
         hover: colors.hover,
@@ -105,7 +108,7 @@ export function createAppTheme(mode: AppThemeMode) {
             color: colors.textPrimary,
             "&.Mui-selected": {
               backgroundColor: colors.primary,
-              color: appColors.common.white,
+              color: colors.contrastText,
               "&:hover": {
                 backgroundColor: appColors.interaction.selectedButtonHover[mode],
               },

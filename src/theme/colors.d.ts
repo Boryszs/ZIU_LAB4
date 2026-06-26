@@ -6,6 +6,7 @@ export type ModeColors = {
   primaryLight: string;
   background: string;
   surface: string;
+  contrastText: string;
   textPrimary: string;
   textSecondary: string;
   border: string;
