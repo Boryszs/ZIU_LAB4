@@ -1,4 +1,4 @@
-import { lazy, Suspense, useRef, useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { AppButton } from "./components/common/AppButton";
@@ -18,7 +18,6 @@ export default function SettingsPage({ title }: SettingsPageProps) {
   usePageTitle(title);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const openModalButtonRef = useRef<HTMLButtonElement>(null);
 
   return (
     <Box component="section" sx={{ textAlign: "center" }}>
@@ -29,7 +28,6 @@ export default function SettingsPage({ title }: SettingsPageProps) {
         Strona ustawień jest w budowie.
       </Typography>
       <AppButton
-        ref={openModalButtonRef}
         type="button"
         variant="contained"
         aria-controls="settings-modal"
@@ -46,7 +44,6 @@ export default function SettingsPage({ title }: SettingsPageProps) {
             id="settings-modal"
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
-            triggerRef={openModalButtonRef}
             title="Przykładowy modal"
           >
             <Typography>

@@ -1,4 +1,4 @@
-import { useId, type ReactNode, type RefObject } from "react";
+import { useId, type ReactNode } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -11,7 +11,6 @@ interface ModalDialogProps {
   onClose: () => void;
   title: string;
   children: ReactNode;
-  triggerRef?: RefObject<HTMLElement | null>;
 }
 
 export function ModalDialog({

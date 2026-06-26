@@ -9,14 +9,14 @@ import {
   useReducer,
   useRef,
   useState,
-  ReactNode,
 } from 'react';
+import type { ReactNode } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
-import { ThemeProvider as MuiThemeProvider, createTheme } from '@mui/material/styles';
+import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import { todoApiService } from '../api/todoApiService';
 import { todoReducer } from '../reducers/todoReducer';
+import { createAppTheme } from '../theme/createAppTheme';
 import type { AppThemeMode } from '../theme/colors';
-import { appColors, getModeColors } from '../theme/colors';
 import { AppStatus } from '../types/appStatus.types';
 import { PriorityType } from '../types/todo.types';
 import type { Todo } from '../types/todo.types';
@@ -63,18 +63,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
       ? 'dark'
       : 'light';
   });
-  
+
   const [todos, dispatch] = useReducer(todoReducer, []);
   const [isFetching, setIsFetching] = useState(false);
   const [appStatus, setAppStatus] = useState<AppStatus>(idleStatus);
   const isLoadingTodosRef = useRef(false);
   const todoDetailsRequestsRef = useRef(new Map<number, Promise<Todo>>());
-
-  useEffect(() => {
-    // Inicjalne ładowanie zadań przy montowaniu komponentu
-    void loadTodos();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const setLoadingStatus = useCallback((message: string) => {
     setAppStatus({ type: 'loading', message });
@@ -100,7 +94,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       try {
         const fetchedTodos = await todoApiService.getAll();
         dispatch({ type: 'LOAD_TODOS', payload: fetchedTodos });
-      } catch (err) {
+      } catch {
         setErrorStatus('Nie udało się pobrać listy zadań.');
       } finally {
         isLoadingTodosRef.current = false;
@@ -109,6 +103,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     },
     [setErrorStatus],
   );
+
+  useEffect(() => {
+    void loadTodos();
+  }, [loadTodos]);
 
   const getTodoDetails = useCallback(
     async (id: number) => {
@@ -130,11 +128,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
       todoDetailsRequestsRef.current.set(id, request);
 
-      try {
-        return await request;
-      } catch (err) {
-        throw err;
-      }
+      return request;
     },
     [setErrorStatus],
   );
@@ -145,126 +139,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     );
   }, []);
 
-  const muiTheme = useMemo(
-    () => {
-      const colors = getModeColors(theme);
-
-      return createTheme({
-        palette: {
-          mode: theme,
-          contrastThreshold: 4.5,
-          primary: {
-            main: colors.primary,
-            dark: colors.primaryDark,
-            light: colors.primaryLight,
-            contrastText: colors.contrastText,
-          },
-          background: {
-            default: colors.background,
-            paper: colors.surface,
-          },
-          text: {
-            primary: colors.textPrimary,
-            secondary: colors.textSecondary,
-          },
-          divider: colors.border,
-          error: {
-            main: colors.error,
-            contrastText: colors.contrastText,
-          },
-          success: {
-            main: colors.success,
-            contrastText: colors.contrastText,
-          },
-          warning: {
-            main: colors.warning,
-            contrastText: colors.contrastText,
-          },
-          action: {
-            hover: colors.hover,
-            selected: colors.selected,
-            disabled: appColors.action.disabled[theme],
-            disabledBackground: appColors.action.disabledBackground[theme],
-          },
-        },
-        shape: {
-          borderRadius: 12,
-        },
-        typography: {
-          fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-        },
-        components: {
-          MuiPaper: {
-            styleOverrides: {
-              outlined: {
-                borderColor: colors.border,
-              },
-            },
-          },
-          MuiCard: {
-            styleOverrides: {
-              root: {
-                backgroundColor: colors.surface,
-                borderColor: colors.border,
-              },
-            },
-          },
-          MuiButton: {
-            styleOverrides: {
-              root: {
-                minHeight: 44,
-                textTransform: 'none',
-                fontWeight: 700,
-              },
-            },
-          },
-          MuiOutlinedInput: {
-            styleOverrides: {
-              notchedOutline: {
-                borderColor: colors.borderStrong,
-              },
-              root: {
-                backgroundColor: colors.surface,
-                '&:hover .MuiOutlinedInput-notchedOutline': {
-                  borderColor: colors.primary,
-                },
-              },
-            },
-          },
-          MuiInputLabel: {
-            styleOverrides: {
-              root: {
-                color: colors.textSecondary,
-              },
-            },
-          },
-          MuiFormLabel: {
-            styleOverrides: {
-              root: {
-                color: colors.textSecondary,
-              },
-            },
-          },
-          MuiToggleButton: {
-            styleOverrides: {
-              root: {
-                borderColor: colors.borderStrong,
-                color: colors.textPrimary,
-                '&.Mui-selected': {
-                  backgroundColor: colors.primary,
-                  color: colors.contrastText,
-                  '&:hover': {
-                    backgroundColor: appColors.interaction.selectedButtonHover[theme],
-                  },
-                },
-              },
-            },
-          },
-        },
-      });
-    },
-    [theme],
-  );
+  const muiTheme = useMemo(() => createAppTheme(theme), [theme]);
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
@@ -306,7 +181,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
         dispatch({ type: 'UPDATE_TODO', payload: updatedTodo });
         setSuccessStatus('Status zadania został zaktualizowany.');
-      } catch (err) {
+      } catch {
         setErrorStatus('Nie udało się zaktualizować statusu.');
       }
     },
@@ -317,7 +192,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         await todoApiService.delete(id);
         dispatch({ type: 'DELETE_TODO', payload: id });
         setSuccessStatus('Zadanie zostało usunięte.');
-      } catch (err) {
+      } catch {
         setErrorStatus('Nie udało się usunąć zadania.');
       }
     },
